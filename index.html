@@ -7,56 +7,50 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
-        :root { --gold: #D4AF37; --blue: #2563eb; --dark: #0f172a; --card: #1e293b; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--dark); color: white; margin: 0; padding: 10px; text-align: center; }
-        .container { max-width: 500px; margin: auto; }
-        .card { background: var(--card); border: 2px solid var(--gold); border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
-        h2, h3 { color: var(--gold); margin: 5px 0; font-size: 1.2em; }
-        input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; box-sizing: border-box; }
+        :root { --gold: #D4AF37; --blue: #2563eb; --dark: #0f172a; }
+        body { font-family: Arial, sans-serif; background: var(--dark); color: white; text-align: center; padding: 10px; }
+        .card { background: #1e293b; border: 2px solid var(--gold); border-radius: 12px; padding: 15px; margin: 10px auto; max-width: 450px; }
+        input { width: 90%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; }
         
-        /* أزرار فائقة الاستجابة */
-        .btn { width: 100%; padding: 14px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; font-size: 15px; margin: 5px 0; transition: 0.2s; display: block; }
-        .btn-gold { background: var(--gold); color: black; }
-        .btn-blue { background: var(--blue); color: white; }
-        .btn-green { background: #10b981; color: white; }
-        .btn:active { transform: scale(0.96); opacity: 0.8; }
+        /* أزرار تعمل باللمس المباشر */
+        .btn { width: 95%; padding: 15px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; font-size: 16px; margin: 5px 0; display: block; margin-left: auto; margin-right: auto; }
+        .btn-gold { background: var(--gold); color: black; box-shadow: 0 4px #8a7024; }
+        .btn-blue { background: var(--blue); color: white; box-shadow: 0 4px #1a45a3; }
+        .btn:active { transform: translateY(4px); box-shadow: none; }
 
-        #wall { background: rgba(0,0,0,0.3); border-radius: 10px; padding: 10px; margin-top: 10px; max-height: 250px; overflow-y: auto; text-align: right; border: 1px solid #444; }
-        .post { background: #26354a; border-right: 4px solid var(--gold); padding: 8px; margin-bottom: 8px; border-radius: 5px; font-size: 13px; }
-        #profileInfo { display: none; background: rgba(212, 175, 55, 0.1); border: 1px dashed var(--gold); padding: 10px; border-radius: 10px; margin-bottom: 10px; }
+        #wall { background: rgba(0,0,0,0.3); border-radius: 10px; padding: 10px; margin-top: 10px; text-align: right; min-height: 100px; border: 1px solid #444; }
+        .post { background: #26354a; border-right: 5px solid var(--gold); padding: 10px; margin-bottom: 8px; border-radius: 5px; }
     </style>
 </head>
-<body onload="initApp()">
+<body onload="checkUser()">
 
-    <div class="container">
-        <h2>🧬 منصة التعاون البحثي الدولي</h2>
+    <h2 style="color: var(--gold);">🧬 منصة التعاون البحثي الدولي</h2>
 
-        <div id="profileInfo" class="card">
-            <h3 style="font-size:1em;">👤 الباحثة: <span id="savedN"></span></h3>
-            <p id="savedB" style="font-size:0.8em; margin:0; opacity:0.8;"></p>
-        </div>
-
-        <div class="card" id="loginCard">
-            <h3>🔐 تفعيل هوية الباحث</h3>
-            <input type="text" id="uName" placeholder="الاسم الكامل...">
-            <input type="text" id="uBio" placeholder="التخصص الدقيق...">
+    <!-- 1. الملف الشخصي (يتحول لرسالة ترحيب فور الحفظ) -->
+    <div class="card" id="profileSection">
+        <h3 id="headT">👤 إعداد ملف الباحث</h3>
+        <div id="inputs">
+            <input type="text" id="uN" placeholder="الاسم الكامل...">
+            <input type="text" id="uB" placeholder="التخصص...">
             <button class="btn btn-gold" onclick="saveData()">حفظ التفعيل الدائم ✅</button>
         </div>
+        <div id="welcome" style="display:none; color:var(--gold); font-weight:bold; font-size:1.2em;"></div>
+    </div>
 
-        <div class="card">
-            <h3>📢 جدار التعاون (العربي والأجنبي)</h3>
-            <input type="text" id="msg" placeholder="اكتبي طلب التعاون هنا...">
-            <button class="btn btn-blue" onclick="sendPost()">نشر الإشعار للعالم 🚀</button>
-            <button class="btn" style="background:#475569; color:white; font-size:12px;" onclick="loadPosts()">تحديث الجدار لرؤية الزملاء 🔄</button>
-            <div id="wall">جاري جلب المنشورات...</div>
-        </div>
+    <!-- 2. جدار التعاون -->
+    <div class="card">
+        <h3>📢 جدار التعاون</h3>
+        <input type="text" id="msg" placeholder="اكتبي طلبكِ هنا...">
+        <button class="btn btn-blue" onclick="sendPost()">نشر الإشعار الآن 🚀</button>
+        <button class="btn" style="background:#475569; color:white; font-size:12px;" onclick="loadPosts()">تحديث الجدار لرؤية الزملاء 🔄</button>
+        <div id="wall">جاري التحميل...</div>
+    </div>
 
-        <div class="card" style="border-color: var(--blue);">
-            <h3>🏛️ قاعات الاجتماعات المباشرة</h3>
-            <button class="btn btn-blue" onclick="window.open('https://meet.jit.si/ZAW_Conference_Main', '_blank')">🏛️ القاعة الكبرى (المؤتمرات)</button>
-            <button class="btn btn-green" onclick="window.open('https://meet.jit.si/ZAW_Arabic_Scientists', '_blank')">🌍 غرفة الباحثين العرب</button>
-            <button class="btn btn-gold" onclick="window.open('https://meet.jit.si/ZAW_International_Lab', '_blank')">🔬 المختبر الدولي (للأجانب)</button>
-        </div>
+    <!-- 3. القاعات -->
+    <div class="card" style="border-color: var(--blue);">
+        <h3>🏛️ قاعات الاجتماعات</h3>
+        <button class="btn btn-blue" onclick="window.open('https://meet.jit.si/ZAW_Conference_Main')">🏛️ القاعة الكبرى</button>
+        <button class="btn btn-gold" onclick="window.open('https://meet.jit.si/ZAW_Arabic_Scientists')">🌍 الباحثين العرب والجانب</button>
     </div>
 
     <script>
@@ -65,51 +59,54 @@
         if (!firebase.apps.length) firebase.initializeApp(config);
         const db = firebase.database();
 
+        // حفظ البيانات
         function saveData() {
-            const n = document.getElementById('uName').value;
-            const b = document.getElementById('uBio').value;
+            var n = document.getElementById('uN').value;
+            var b = document.getElementById('uB').value;
             if(n && b) {
                 localStorage.setItem('dr_n', n);
                 localStorage.setItem('dr_b', b);
-                location.reload();
-            } else { alert("أكملي البيانات دكتورة"); }
+                location.reload(); // إعادة تحميل الصفحة لتفعيل الحفظ
+            } else { alert("لطفاً أدخلي الاسم والتخصص"); }
         }
 
-        function initApp() {
-            const n = localStorage.getItem('dr_n');
-            const b = localStorage.getItem('dr_b');
+        // التأكد من المستخدم
+        function checkUser() {
+            var n = localStorage.getItem('dr_n');
             if(n) {
-                document.getElementById('loginCard').style.display = 'none';
-                document.getElementById('profileInfo').style.display = 'block';
-                document.getElementById('savedN').innerText = n;
-                document.getElementById('savedB').innerText = b;
+                document.getElementById('inputs').style.display = 'none';
+                document.getElementById('headT').style.display = 'none';
+                document.getElementById('welcome').style.display = 'block';
+                document.getElementById('welcome').innerText = "مرحباً دكتورة " + n;
                 loadPosts();
             }
         }
 
+        // نشر المنشور
         function sendPost() {
-            const n = localStorage.getItem('dr_n');
-            const m = document.getElementById('msg').value;
-            if(!n) return alert("سجلي دخولكِ أولاً");
+            var n = localStorage.getItem('dr_n');
+            var m = document.getElementById('msg').value;
+            if(!n) { alert("احفظي ملفكِ الشخصي أولاً بالزر الذهبي!"); return; }
             if(!m) return;
 
-            db.ref('final_wall').push({ u: n, m: m, t: new Date().toLocaleTimeString('ar-EG') })
+            db.ref('final_posts').push({ u: n, m: m, t: new Date().toLocaleTimeString('ar-EG') })
             .then(() => { document.getElementById('msg').value = ""; loadPosts(); });
         }
 
+        // تحميل المنشورات
         function loadPosts() {
-            db.ref('final_wall').limitToLast(10).once('value', (s) => {
-                const wall = document.getElementById('wall');
+            db.ref('final_posts').limitToLast(10).once('value', (s) => {
+                var wall = document.getElementById('wall');
                 wall.innerHTML = "";
-                const data = s.val();
+                var data = s.val();
                 if(data) {
                     Object.values(data).reverse().forEach(p => {
-                        const d = document.createElement('div');
+                        var d = document.createElement('div');
                         d.className = 'post';
-                        d.innerHTML = <b>${p.u}</b>: ${p.m} <br><small style="color:var(--gold)">${p.t}</small>;
+                        d.innerHTML = "<b>" + p.u + "</b>: " + p.m;
                         wall.appendChild(d);
                     });
-                } else { wall.innerHTML = "لا توجد منشورات حالياً."; }
+                }
             });
         }
     </script>
