@@ -3,83 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة ZAW للتعاون البحثي</title>
+    <title>منصة ZAW للتعاون العلمي</title>
     <style>
         :root { --gold: #D4AF37; --blue: #2563eb; --dark: #0f172a; }
-        body { font-family: Arial, sans-serif; background: var(--dark); color: white; text-align: center; padding: 10px; }
-        .card { background: #1e293b; border: 2px solid var(--gold); border-radius: 12px; padding: 15px; margin: 10px auto; max-width: 450px; }
-        input { width: 90%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; font-size: 16px; }
-        .btn { width: 95%; padding: 15px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; font-size: 16px; margin: 5px 0; transition: 0.2s; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--dark); color: white; text-align: center; padding: 10px; margin: 0; }
+        .card { background: #1e293b; border: 1.5px solid var(--gold); border-radius: 12px; padding: 20px; margin: 10px auto; max-width: 480px; box-shadow: 0 8px 20px rgba(0,0,0,0.4); }
+        input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; font-size: 16px; box-sizing: border-box; }
+        
+        .btn { width: 100%; padding: 15px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 10px; transition: 0.3s; }
         .btn-gold { background: var(--gold); color: black; }
         .btn-blue { background: var(--blue); color: white; }
-        .btn:active { transform: scale(0.98); opacity: 0.8; }
-        #wall { background: rgba(0,0,0,0.3); border-radius: 10px; padding: 10px; margin-top: 10px; text-align: right; min-height: 50px; border: 1px solid #444; }
-        .post { background: #26354a; border-right: 5px solid var(--gold); padding: 10px; margin-bottom: 8px; border-radius: 5px; animation: slide 0.3s ease; }
-        @keyframes slide { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+        .btn:active { transform: translateY(2px); filter: brightness(1.2); }
+
+        #wall { background: rgba(0,0,0,0.2); border-radius: 10px; padding: 10px; margin-top: 15px; text-align: right; min-height: 100px; border: 1px dotted #444; }
+        .post { background: #26354a; border-right: 5px solid var(--gold); padding: 12px; margin-bottom: 10px; border-radius: 8px; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        .badge { display: inline-block; padding: 3px 8px; background: var(--gold); color: black; border-radius: 5px; font-size: 11px; margin-bottom: 5px; }
     </style>
 </head>
-<body onload="checkUser()">
+<body onload="initApp()">
 
-    <h2 style="color: var(--gold);">🧬 منصة التعاون البحثي الدولي</h2>
+    <h2 style="color: var(--gold); margin-top: 20px;">🧬 منصة التعاون البحثي الدولي</h2>
+    <p style="font-size: 13px; opacity: 0.8;">"العلمُ نُورٌ يُستضاءُ بهِ للجميع"</p>
 
-    <div class="card">
-        <div id="welcomeMsg" style="color:var(--gold); font-weight:bold; font-size:1.2em;"></div>
+    <!-- الملف الشخصي -->
+    <div class="card" id="regCard">
+        <h3>👤 تسجيل بيانات الباحث</h3>
+        <input type="text" id="uName" placeholder="الاسم الكامل (د. زينب عبد الله)...">
+        <input type="text" id="uBio" placeholder="التخصص (علم الأحياء المجهرية)...">
+        <button class="btn btn-gold" onclick="register()">حفظ وتفعيل العضوية الأكاديمية ✅</button>
     </div>
 
-    <div class="card">
-        <h3>📢 جدار التعاون</h3>
-        <input type="text" id="postText" placeholder="اكتبي موضوع البحث (مثلاً: Working on bacteria)...">
-        <button class="btn btn-blue" onclick="forcePost()">نشر الإشعار الآن 🚀</button>
-        <div id="wall">لا توجد منشورات جديدة بعد..</div>
+    <div class="card" id="welcomeCard" style="display:none; background: rgba(212, 175, 55, 0.05);">
+        <h3 id="greet"></h3>
+        <button class="btn btn-blue" style="width:auto; padding:5px 15px; font-size:12px;" onclick="localStorage.clear(); location.reload();">تغيير الباحث 🔄</button>
     </div>
 
+    <!-- جدار المنشورات العلمي -->
+    <div class="card">
+        <h3>📢 جدار تبادل الخبرات</h3>
+        <input type="text" id="pMsg" placeholder="اكتبي موضوع البحث أو طلب المساعدة...">
+        <button class="btn btn-blue" onclick="publish()">نشر الإشعار العلمي 🚀</button>
+        <div id="wall">جاري جلب آخر الأبحاث...</div>
+    </div>
+
+    <!-- القاعات التعليمية -->
     <div class="card" style="border-color: var(--blue);">
-        <h3>🏛️ قاعات الاجتماعات</h3>
-        <button class="btn btn-blue" onclick="window.open('https://meet.jit.si/ZAW_Main_Room')">🏛️ دخول القاعة العامة</button>
+        <h3>🏛️ قاعة المحاضرات والاجتماعات</h3>
+        <button class="btn btn-blue" onclick="window.open('https://meet.jit.si/ZAW_Research_Global')">دخول القاعة المباشرة 📹</button>
     </div>
 
     <script>
-        // التأكد من الهوية المحفوظة
-        function checkUser() {
-            var name = localStorage.getItem('dr_n') || "الباحثة";
-            document.getElementById('welcomeMsg').innerText = "مرحباً دكتورة " + name;
-            loadLocalPosts();
+        // استخدام رابط مباشر لقاعدة البيانات لضمان عدم الجمود
+        const dbURL = "https://zaw-platform-default-rtdb.firebaseio.com/posts.json";
+
+        function register() {
+            const n = document.getElementById('uName').value;
+            const b = document.getElementById('uBio').value;
+            if(n && b) {
+                localStorage.setItem('dr_n', n);
+                localStorage.setItem('dr_b', b);
+                location.reload();
+            }
         }
 
-        // وظيفة النشر "القوية"
-        function forcePost() {
-            var name = localStorage.getItem('dr_n') || "Zainab";
-            var text = document.getElementById('postText').value;
-            
-            if(!text) return;
-
-            // حفظ المنشور محلياً وعرضه فوراً لكسر الجمود
-            var posts = JSON.parse(localStorage.getItem('my_posts') || "[]");
-            posts.unshift({ u: name, m: text, t: new Date().toLocaleTimeString('ar-EG') });
-            localStorage.setItem('my_posts', JSON.stringify(posts.slice(0, 10)));
-
-            document.getElementById('postText').value = "";
-            loadLocalPosts();
-            
-            // محاولة إرسال الإشعار للسحابة في الخلفية دون تعطيل الزر
-            fetch("https://zaw-platform-default-rtdb.firebaseio.com/posts.json", {
-                method: "POST",
-                body: JSON.stringify({ u: name, m: text })
-            });
+        function initApp() {
+            const name = localStorage.getItem('dr_n');
+            if(name) {
+                document.getElementById('regCard').style.display = 'none';
+                document.getElementById('welcomeCard').style.display = 'block';
+                document.getElementById('greet').innerText = "مرحباً دكتورة " + name;
+                fetchPosts();
+            }
         }
 
-        function loadLocalPosts() {
-            var wall = document.getElementById('wall');
-            var posts = JSON.parse(localStorage.getItem('my_posts') || "[]");
+        async function publish() {
+            const name = localStorage.getItem('dr_n');
+            const msg = document.getElementById('pMsg').value;
+            if(!name) return alert("سجلي بياناتكِ أولاً دكتورة");
+            if(!msg) return;
+
+            const postData = { u: name, m: msg, t: new Date().toLocaleTimeString('ar-EG') };
             
-            if(posts.length > 0) {
-                wall.innerHTML = "";
-                posts.forEach(p => {
-                    var d = document.createElement('div');
-                    d.className = 'post';
-                    d.innerHTML = "<b>" + p.u + "</b>: " + p.m + "<br><small style='opacity:0.5'>" + p.t + "</small>";
-                    wall.appendChild(d);
+            // إرسال حقيقي للسحابة
+            await fetch(dbURL, { method: "POST", body: JSON.stringify(postData) });
+            document.getElementById('pMsg').value = "";
+            fetchPosts(); // تحديث فوري
+        }
+
+        async function fetchPosts() {
+            const res = await fetch(dbURL);
+            const data = await res.json();
+            const wall = document.getElementById('wall');
+            wall.innerHTML = "";
+            
+            if(data) {
+                Object.values(data).reverse().slice(0, 15).forEach(p => {
+                    const div = document.createElement('div');
+                    div.className = 'post';
+                    div.innerHTML = <div class='badge'>باحث مُشارك</div><br><b>${p.u}</b>: ${p.m}<br><small style='opacity:0.5'>${p.t}</small>;
+                    wall.appendChild(div);
                 });
+            } else {
+                wall.innerHTML = "كن أول باحث يضع بصمته هنا!";
             }
         }
     </script>
