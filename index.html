@@ -12,7 +12,7 @@
         input { width: 88%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; font-size: 16px; }
         .btn { width: 95%; padding: 15px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; color: white; background: var(--blue); margin-top: 5px; }
         #wall { background: rgba(0,0,0,0.3); border-radius: 10px; padding: 12px; margin-top: 10px; text-align: right; min-height: 60px; border: 1px solid #444; max-height: 300px; overflow-y: auto; }
-        .post { background: #26354a; border-right: 5px solid var(--gold); padding: 10px; margin-bottom: 8px; border-radius: 5px; font-size: 14px; color: #fff; }
+        .post { background: #26354a; border-right: 5px solid var(--gold); padding: 10px; margin-bottom: 8px; border-radius: 5px; font-size: 14px; }
         .lib-btn { display: inline-block; width: 44%; background: #334155; color: white; padding: 10px; margin: 4px; border-radius: 8px; text-decoration: none; font-size: 12px; border: 1px solid var(--gold); }
         .room-btn { display: block; text-decoration: none; background: #8b5cf6; color: white; padding: 12px; margin: 8px auto; border-radius: 10px; font-weight: bold; width: 90%; }
     </style>
@@ -20,11 +20,11 @@
 <body>
 
     <div class="card">
-        <h2 style="color: var(--gold); margin: 0;">🧬 منصة ZAW الدولية</h2>
+        <h2 style="color: var(--gold); margin: 0;">🧬 منصة ZAW الدولية للبحث</h2>
         <p>دكتورة زينب عبد الله وحيد - MTU</p>
     </div>
 
-    <!-- المكتبة العلمية -->
+    <!-- 1. المكتبة البحثية (كاملة) -->
     <div class="card" style="border-color: #10b981;">
         <h3>📚 المكتبة البحثية الشاملة</h3>
         <a href="https://scholar.google.com" target="_blank" class="lib-btn">Google Scholar</a>
@@ -33,16 +33,16 @@
         <a href="https://www.tandfonline.com" target="_blank" class="lib-btn">Taylor & Francis</a>
     </div>
 
-    <!-- جدار التواصل (السحابة المباشرة) -->
+    <!-- 2. جدار التواصل السحابي -->
     <div class="card">
-        <h3>📢 جدار التواصل (Live Cloud)</h3>
+        <h3>📢 جدار التواصل السحابي (Live)</h3>
         <input type="text" id="uName" placeholder="اسمكِ دكتورة...">
-        <input type="text" id="mInput" placeholder="اكتبي موضوع البحث (مثلاً: Bacteria)...">
-        <button class="btn" onclick="sendToCloud()">نشر الآن 🚀</button>
-        <div id="wall">جاري الاتصال بقاعدة البيانات...</div>
+        <input type="text" id="mInput" placeholder="اكتبي موضوع البحث (Bacteria)...">
+        <button class="btn" onclick="sendToCloud()">نشر الإشعار العلمي الآن 🚀</button>
+        <div id="wall">يتم الآن الاتصال بالسحابة...</div>
     </div>
 
-    <!-- القاعات والفروع -->
+    <!-- 3. القاعات والفروع (كاملة) -->
     <div class="card" style="border-color: var(--blue);">
         <h3>🏛️ القاعات والمؤتمرات الدولية</h3>
         <a href="https://meet.jit.si/ZAW_Conference" target="_blank" class="room-btn" style="background:var(--blue);">🏛️ دخول قاعة المؤتمرات الكبرى</a>
@@ -51,30 +51,22 @@
     </div>
 
     <script>
-        // الرابط الدقيق جداً من صورتكِ يا دكتورة
-        const cloudURL = "https://zaw-research-hub-default-rtdb.firebaseio.com/messages.json";
+        // الرابط المباشر من لقطة شاشتكِ
+        const cloudURL = "https://zaw-research-hub-default-rtdb.firebaseio.com/posts.json";
 
         async function sendToCloud() {
-            const name = document.getElementById('uName').value || "د. زينب";
+            const name = document.getElementById('uName').value || "د. زينب وحيد";
             const msg = document.getElementById('mInput').value;
             if(!msg) return;
 
             try {
-                const response = await fetch(cloudURL, {
+                await fetch(cloudURL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ user: name, text: msg, time: new Date().toLocaleTimeString('ar-EG') })
                 });
-                
-                if(response.ok) {
-                    document.getElementById('mInput').value = "";
-                    loadPosts();
-                } else {
-                    alert("السحابة ترفض الاتصال.. تأكدي من الـ Rules");
-                }
-            } catch (e) {
-                alert("خطأ في الإنترنت أو المتصفح!");
-            }
+                document.getElementById('mInput').value = "";
+                loadPosts();
+            } catch (e) { console.error("Error sending post"); }
         }
 
         async function loadPosts() {
@@ -87,15 +79,10 @@
                     Object.values(data).reverse().forEach(p => {
                         wall.innerHTML += <div class="post"><b>${p.user}:</b> ${p.text}<br><small style="color:var(--gold)">${p.time}</small></div>;
                     });
-                } else {
-                    wall.innerHTML = "الجدار جاهز.. بانتظار أول منشور علمي.";
-                }
-            } catch (e) {
-                document.getElementById('wall').innerHTML = "فشل تحديث البيانات.";
-            }
+                } else { wall.innerHTML = "الجدار جاهز لاستقبال منشوركِ الأول."; }
+            } catch (e) { wall.innerHTML = "خطأ في السحابة! تأكدي من الـ Rules."; }
         }
 
-        // تحديث كل 5 ثوانٍ
         setInterval(loadPosts, 5000);
         window.onload = loadPosts;
     </script>
