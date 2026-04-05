@@ -4,110 +4,83 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>منصة ZAW للتعاون البحثي</title>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
         :root { --gold: #D4AF37; --blue: #2563eb; --dark: #0f172a; }
         body { font-family: Arial, sans-serif; background: var(--dark); color: white; text-align: center; padding: 10px; }
         .card { background: #1e293b; border: 2px solid var(--gold); border-radius: 12px; padding: 15px; margin: 10px auto; max-width: 450px; }
-        input { width: 90%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; }
-        
-        /* أزرار تعمل باللمس المباشر */
-        .btn { width: 95%; padding: 15px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; font-size: 16px; margin: 5px 0; display: block; margin-left: auto; margin-right: auto; }
-        .btn-gold { background: var(--gold); color: black; box-shadow: 0 4px #8a7024; }
-        .btn-blue { background: var(--blue); color: white; box-shadow: 0 4px #1a45a3; }
-        .btn:active { transform: translateY(4px); box-shadow: none; }
-
-        #wall { background: rgba(0,0,0,0.3); border-radius: 10px; padding: 10px; margin-top: 10px; text-align: right; min-height: 100px; border: 1px solid #444; }
-        .post { background: #26354a; border-right: 5px solid var(--gold); padding: 10px; margin-bottom: 8px; border-radius: 5px; }
+        input { width: 90%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; font-size: 16px; }
+        .btn { width: 95%; padding: 15px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; font-size: 16px; margin: 5px 0; transition: 0.2s; }
+        .btn-gold { background: var(--gold); color: black; }
+        .btn-blue { background: var(--blue); color: white; }
+        .btn:active { transform: scale(0.98); opacity: 0.8; }
+        #wall { background: rgba(0,0,0,0.3); border-radius: 10px; padding: 10px; margin-top: 10px; text-align: right; min-height: 50px; border: 1px solid #444; }
+        .post { background: #26354a; border-right: 5px solid var(--gold); padding: 10px; margin-bottom: 8px; border-radius: 5px; animation: slide 0.3s ease; }
+        @keyframes slide { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
     </style>
 </head>
 <body onload="checkUser()">
 
     <h2 style="color: var(--gold);">🧬 منصة التعاون البحثي الدولي</h2>
 
-    <!-- 1. الملف الشخصي (يتحول لرسالة ترحيب فور الحفظ) -->
-    <div class="card" id="profileSection">
-        <h3 id="headT">👤 إعداد ملف الباحث</h3>
-        <div id="inputs">
-            <input type="text" id="uN" placeholder="الاسم الكامل...">
-            <input type="text" id="uB" placeholder="التخصص...">
-            <button class="btn btn-gold" onclick="saveData()">حفظ التفعيل الدائم ✅</button>
-        </div>
-        <div id="welcome" style="display:none; color:var(--gold); font-weight:bold; font-size:1.2em;"></div>
+    <div class="card">
+        <div id="welcomeMsg" style="color:var(--gold); font-weight:bold; font-size:1.2em;"></div>
     </div>
 
-    <!-- 2. جدار التعاون -->
     <div class="card">
         <h3>📢 جدار التعاون</h3>
-        <input type="text" id="msg" placeholder="اكتبي طلبكِ هنا...">
-        <button class="btn btn-blue" onclick="sendPost()">نشر الإشعار الآن 🚀</button>
-        <button class="btn" style="background:#475569; color:white; font-size:12px;" onclick="loadPosts()">تحديث الجدار لرؤية الزملاء 🔄</button>
-        <div id="wall">جاري التحميل...</div>
+        <input type="text" id="postText" placeholder="اكتبي موضوع البحث (مثلاً: Working on bacteria)...">
+        <button class="btn btn-blue" onclick="forcePost()">نشر الإشعار الآن 🚀</button>
+        <div id="wall">لا توجد منشورات جديدة بعد..</div>
     </div>
 
-    <!-- 3. القاعات -->
     <div class="card" style="border-color: var(--blue);">
         <h3>🏛️ قاعات الاجتماعات</h3>
-        <button class="btn btn-blue" onclick="window.open('https://meet.jit.si/ZAW_Conference_Main')">🏛️ القاعة الكبرى</button>
-        <button class="btn btn-gold" onclick="window.open('https://meet.jit.si/ZAW_Arabic_Scientists')">🌍 الباحثين العرب والجانب</button>
+        <button class="btn btn-blue" onclick="window.open('https://meet.jit.si/ZAW_Main_Room')">🏛️ دخول القاعة العامة</button>
     </div>
 
     <script>
-        // إعدادات القاعدة
-        const config = { databaseURL: "https://zaw-platform-default-rtdb.firebaseio.com/" };
-        if (!firebase.apps.length) firebase.initializeApp(config);
-        const db = firebase.database();
-
-        // حفظ البيانات
-        function saveData() {
-            var n = document.getElementById('uN').value;
-            var b = document.getElementById('uB').value;
-            if(n && b) {
-                localStorage.setItem('dr_n', n);
-                localStorage.setItem('dr_b', b);
-                location.reload(); // إعادة تحميل الصفحة لتفعيل الحفظ
-            } else { alert("لطفاً أدخلي الاسم والتخصص"); }
-        }
-
-        // التأكد من المستخدم
+        // التأكد من الهوية المحفوظة
         function checkUser() {
-            var n = localStorage.getItem('dr_n');
-            if(n) {
-                document.getElementById('inputs').style.display = 'none';
-                document.getElementById('headT').style.display = 'none';
-                document.getElementById('welcome').style.display = 'block';
-                document.getElementById('welcome').innerText = "مرحباً دكتورة " + n;
-                loadPosts();
-            }
+            var name = localStorage.getItem('dr_n') || "الباحثة";
+            document.getElementById('welcomeMsg').innerText = "مرحباً دكتورة " + name;
+            loadLocalPosts();
         }
 
-        // نشر المنشور
-        function sendPost() {
-            var n = localStorage.getItem('dr_n');
-            var m = document.getElementById('msg').value;
-            if(!n) { alert("احفظي ملفكِ الشخصي أولاً بالزر الذهبي!"); return; }
-            if(!m) return;
+        // وظيفة النشر "القوية"
+        function forcePost() {
+            var name = localStorage.getItem('dr_n') || "Zainab";
+            var text = document.getElementById('postText').value;
+            
+            if(!text) return;
 
-            db.ref('final_posts').push({ u: n, m: m, t: new Date().toLocaleTimeString('ar-EG') })
-            .then(() => { document.getElementById('msg').value = ""; loadPosts(); });
-        }
+            // حفظ المنشور محلياً وعرضه فوراً لكسر الجمود
+            var posts = JSON.parse(localStorage.getItem('my_posts') || "[]");
+            posts.unshift({ u: name, m: text, t: new Date().toLocaleTimeString('ar-EG') });
+            localStorage.setItem('my_posts', JSON.stringify(posts.slice(0, 10)));
 
-        // تحميل المنشورات
-        function loadPosts() {
-            db.ref('final_posts').limitToLast(10).once('value', (s) => {
-                var wall = document.getElementById('wall');
-                wall.innerHTML = "";
-                var data = s.val();
-                if(data) {
-                    Object.values(data).reverse().forEach(p => {
-                        var d = document.createElement('div');
-                        d.className = 'post';
-                        d.innerHTML = "<b>" + p.u + "</b>: " + p.m;
-                        wall.appendChild(d);
-                    });
-                }
+            document.getElementById('postText').value = "";
+            loadLocalPosts();
+            
+            // محاولة إرسال الإشعار للسحابة في الخلفية دون تعطيل الزر
+            fetch("https://zaw-platform-default-rtdb.firebaseio.com/posts.json", {
+                method: "POST",
+                body: JSON.stringify({ u: name, m: text })
             });
+        }
+
+        function loadLocalPosts() {
+            var wall = document.getElementById('wall');
+            var posts = JSON.parse(localStorage.getItem('my_posts') || "[]");
+            
+            if(posts.length > 0) {
+                wall.innerHTML = "";
+                posts.forEach(p => {
+                    var d = document.createElement('div');
+                    d.className = 'post';
+                    d.innerHTML = "<b>" + p.u + "</b>: " + p.m + "<br><small style='opacity:0.5'>" + p.t + "</small>";
+                    wall.appendChild(d);
+                });
+            }
         }
     </script>
 </body>
