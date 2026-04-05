@@ -1,76 +1,108 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ZAW Research Hub</title>
-  <style>
-    body { background-color: #0d1b2a; color: #e0e1dd; font-family: 'Segoe UI', Tahoma, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-    .card { background: #1b263b; padding: 30px; border-radius: 20px; border: 2px solid #e9c46a; text-align: center; width: 350px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-    img { width: 110px; height: 110px; border-radius: 50%; border: 3px solid #e9c46a; margin-bottom: 15px; object-fit: cover; }
-    h1 { color: #e9c46a; margin-bottom: 5px; font-size: 22px; }
-    p { font-size: 14px; margin-bottom: 25px; color: #a2adbb; font-weight: 500; }
-    input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: none; background: #415a77; color: white; box-sizing: border-box; text-align: center; font-size: 14px; }
-    button { width: 100%; padding: 12px; margin-top: 15px; border-radius: 10px; border: none; background: #e9c46a; color: #0d1b2a; font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 15px; }
-    button:hover { background: #f4a261; }
-    .links { margin-top: 20px; font-size: 13px; }
-    .links a { color: #e9c46a; text-decoration: none; cursor: pointer; border-bottom: 1px dashed #e9c46a; padding-bottom: 2px; }
-    #msg { margin-top: 20px; font-size: 13px; font-weight: bold; min-height: 24px; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZAW Research Hub | منصة الباحثين</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold: #D4AF37; --dark-blue: #1A2634; --white: #FFFFFF; }
+        body { font-family: 'Cairo', sans-serif; background-color: var(--dark-blue); color: var(--white); margin: 0; transition: 0.5s; }
+        
+        /* واجهة التسجيل */
+        #auth-container { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
+        .card { background: rgba(255,255,255,0.05); padding: 40px; border-radius: 20px; border: 2px solid var(--gold); text-align: center; width: 350px; }
+        .profile-img { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--gold); margin-bottom: 20px; }
+        input { width: 90%; padding: 12px; margin: 10px 0; border-radius: 10px; border: none; }
+        button { width: 100%; padding: 12px; background: var(--gold); color: var(--dark-blue); border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.3s; }
+        button:hover { background: #b8962d; transform: scale(1.05); }
+
+        /* لوحة التحكم (المختبر) */
+        #dashboard { display: none; padding: 40px; }
+        .header-hub { border-bottom: 2px solid var(--gold); padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
+        .search-box { width: 100%; max-width: 600px; padding: 15px; border-radius: 30px; border: 2px solid var(--gold); background: rgba(255,255,255,0.1); color: white; font-size: 18px; text-align: center; margin: 0 auto 40px auto; display: block; }
+        
+        .researchers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 25px; }
+        .researcher-card { background: rgba(255,255,255,0.08); padding: 20px; border-radius: 15px; border-top: 4px solid var(--gold); text-align: center; transition: 0.3s; }
+        .research researcher-card:hover { transform: translateY(-10px); background: rgba(255,255,255,0.15); }
+        .tag { background: var(--gold); color: black; padding: 4px 10px; border-radius: 5px; font-size: 12px; font-weight: bold; }
+        
+        .status-msg { color: #4BB543; margin-top: 15px; font-weight: bold; display: none; }
+    </style>
 </head>
 <body>
-  <div class="card">
-    <img src="dr_zainab.jpg" alt="Dr. Zainab">
-    <h1>ZAW Research Hub</h1>
-    <p>بوابة الباحثين المتطورة</p>
-    <input type="email" id="email" placeholder="البريد الإلكتروني">
-    <input type="password" id="password" placeholder="كلمة المرور">
-    <button onclick="signUp()">إنشاء حساب باحث جديد</button>
-    <div class="links">
-      <a onclick="resetPassword()">نسيت كلمة المرور؟</a>
+
+    <!-- قسم التسجيل -->
+    <div id="auth-container">
+        <div class="card">
+            <img src="https://raw.githubusercontent.com/zainab-abdullah33-bit/ZAW_Lab/main/zaw_profile.jpg" alt="Zainab" class="profile-img">
+            <h2 style="color: var(--gold); margin: 0;">ZAW Research Hub</h2>
+            <p style="font-size: 14px;">بوابة الباحثين المتطورة</p>
+            <input type="email" id="email" placeholder="البريد الجامعي أو الرسمي">
+            <input type="password" id="password" placeholder="كلمة المرور">
+            <button onclick="handleAuth()">إنشاء حساب باحث جديد</button>
+            <div id="status" class="status-msg">✅ تم تسجيلك كباحث جديد بنجاح!</div>
+            <button id="go-to-hub" style="margin-top:20px; display:none; background: #4BB543; color: white;" onclick="showDashboard()">دخول للمختبر الرقمي ➔</button>
+        </div>
     </div>
-    <div id="msg"></div>
-  </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    <!-- قسم لوحة التحكم (المختبر الرقمي) -->
+    <div id="dashboard">
+        <div class="header-hub">
+            <h1>مرحباً بكِ في مختبركِ الرقمي د. زينب 🧬</h1>
+            <button style="width: 120px;" onclick="location.reload()">تسجيل خروج</button>
+        </div>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyAqC7a5CRtjMRmuBwPWC5TXWMQkMGIlQuQ",
-      authDomain: "zaw-research-hub.firebaseapp.com",
-      projectId: "zaw-research-hub",
-      storageBucket: "zaw-research-hub.appspot.com",
-      messagingSenderId: "1093121510424",
-      appId: "1:1093121510424:web:6c6f72236a2872659e93b1"
-    };
+        <input type="text" class="search-box" id="searchInput" onkeyup="searchResearchers()" placeholder="🔍 ابحث عن باحث (Microbiology, Bioinformatics, SOD1)...">
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+        <h3 style="color: var(--gold);">الباحثين المقترحين للانضمام لمجموعتكِ:</h3>
+        
+        <div class="researchers-grid" id="researcherList">
+            <!-- باحث 1 -->
+            <div class="researcher-card">
+                <h3 style="margin: 10px 0;">د. أحمد علي</h3>
+                <p class="tag">Microbiology</p>
+                <p style="font-size: 14px; opacity: 0.8;">مهتم بأبحاث مقاومة المضادات الحيوية</p>
+                <button style="padding: 5px; font-size: 12px;">طلب تعاون بحثي</button>
+            </div>
+            <!-- باحث 2 -->
+            <div class="researcher-card">
+                <h3 style="margin: 10px 0;">د. سارة جاسم</h3>
+                <p class="tag">Bioinformatics</p>
+                <p style="font-size: 14px; opacity: 0.8;">متخصصة في GROMACS و Molecular Dynamics</p>
+                <button style="padding: 5px; font-size: 12px;">طلب تعاون بحثي</button>
+            </div>
+            <!-- باحث 3 -->
+            <div class="researcher-card">
+                <h3 style="margin: 10px 0;">د. زينب عبدالله</h3>
+                <p class="tag">Molecular Biology</p>
+                <p style="font-size: 14px; opacity: 0.8;">Protein Aggregation & Drug Design</p>
+                <button style="padding: 5px; font-size: 12px;">الملف الشخصي</button>
+            </div>
+        </div>
+    </div>
 
-    window.signUp = () => {
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-      const msg = document.getElementById('msg');
-      if (!email || !password) { msg.innerHTML = "<span style='color:#f87171;'>يرجى إدخال كافة البيانات</span>"; return; }
+    <script>
+        function handleAuth() {
+            document.getElementById('status').style.display = 'block';
+            document.getElementById('go-to-hub').style.display = 'block';
+        }
 
-      createUserWithEmailAndPassword(auth, email, password)
-        .then(() => { msg.innerHTML = "<span style='color:#4ade80;'>✅ تم تسجيلك كباحث جديد بنجاح!</span>"; })
-        .catch((error) => {
-          if (error.code === 'auth/email-already-in-use') { msg.innerHTML = "<span style='color:#e9c46a;'>هذا البريد مسجل مسبقاً كباحث!</span>"; }
-          else { msg.innerHTML = "<span style='color:#f87171;'>تنبيه: " + error.message + "</span>"; }
-        });
-    };
+        function showDashboard() {
+            document.getElementById('auth-container').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+            document.body.style.backgroundColor = "#0d1117";
+        }
 
-    window.resetPassword = () => {
-      const email = document.getElementById('email').value;
-      const msg = document.getElementById('msg');
-      if (!email) { msg.innerHTML = "<span style='color:#f87171;'>يرجى كتابة بريدك الإلكتروني أولاً</span>"; return; }
-      
-      sendPasswordResetEmail(auth, email)
-        .then(() => { msg.innerHTML = "<span style='color:#4ade80;'>تم إرسال رابط استعادة كلمة المرور لبريدك!</span>"; })
-        .catch(() => { msg.innerHTML = "<span style='color:#f87171;'>تأكد من صحة البريد المدخل</span>"; });
-    };
-  </script>
+        function searchResearchers() {
+            let input = document.getElementById('searchInput').value.toLowerCase();
+            let cards = document.getElementsByClassName('researcher-card');
+            
+            for (let i = 0; i < cards.length; i++) {
+                let text = cards[i].innerText.toLowerCase();
+                cards[i].style.display = text.includes(input) ? "block" : "none";
+            }
+        }
+    </script>
 </body>
 </html>
