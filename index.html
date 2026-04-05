@@ -4,82 +4,82 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>منصة ZAW الدولية للبحث العلمي</title>
+    <!-- استيراد مكتبات Firebase الأساسية -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <style>
         :root { --gold: #D4AF37; --blue: #2563eb; --dark: #0f172a; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--dark); color: white; text-align: center; padding: 10px; margin: 0; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--dark); color: white; text-align: center; padding: 10px; margin: 0; }
         .card { background: #1e293b; border: 2px solid var(--gold); border-radius: 15px; padding: 20px; margin: 15px auto; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-        h3 { color: var(--gold); margin: 10px 0; border-bottom: 1px dashed #444; padding-bottom: 5px; }
+        h3 { color: var(--gold); border-bottom: 1px dashed #444; padding-bottom: 5px; }
         input { width: 85%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; font-size: 16px; }
-        /* زر جديد بتصميم تفاعلي يظهر عند المرور عليه */
-        .btn { width: 95%; padding: 16px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; font-size: 16px; margin: 8px 0; color: white; transition: 0.3s; display: block; text-decoration: none; }
-        .btn:active { transform: scale(0.95); opacity: 0.8; }
-        .btn-blue { background: var(--blue); border-bottom: 4px solid #1e40af; }
-        .btn-green { background: #10b981; border-bottom: 4px solid #065f46; }
-        .btn-purple { background: #8b5cf6; border-bottom: 4px solid #5b21b6; }
-        #wall { background: rgba(0,0,0,0.4); border-radius: 10px; padding: 15px; margin-top: 15px; text-align: right; min-height: 60px; border: 1px dashed var(--gold); }
-        .post { background: #2d3748; border-right: 6px solid var(--gold); padding: 12px; margin-bottom: 10px; border-radius: 8px; }
+        .btn { width: 95%; padding: 14px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; color: white; background: var(--blue); box-shadow: 0 4px #1a45a3; }
+        #wall { background: rgba(0,0,0,0.3); border-radius: 10px; padding: 15px; margin-top: 15px; text-align: right; min-height: 50px; border: 1px solid #444; }
+        .post { background: #26354a; border-right: 5px solid var(--gold); padding: 10px; margin-bottom: 8px; border-radius: 5px; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <div class="card" style="background: linear-gradient(to bottom, #1e293b, #0f172a); border-width: 3px;">
-        <h2 style="color: var(--gold); margin: 0;">🧬 منصة ZAW للتعاون البحثي</h2>
-        <h3 style="border:none; font-size: 18px;">👤 دكتورة زينب عبد الله وحيد</h3>
-        <p style="font-size: 12px; opacity: 0.8;">قسم تقنيات المختبرات الطبية - MTU</p>
+    <h2 style="color: var(--gold); margin-top:20px;">🧬 منصة ZAW للتعاون البحثي الدولي</h2>
+    
+    <div class="card">
+        <h3 style="border:none;">👤 دكتورة زينب عبد الله وحيد</h3>
+        <p style="font-size: 12px; margin:0;">مركز القيادة العلمية والتعاون الدولي</p>
     </div>
 
     <div class="card">
-        <h3>📢 جدار التعاون الدولي (بث مباشر)</h3>
-        <input type="text" id="pName" placeholder="اكتبي اسمكِ هنا...">
-        <input type="text" id="pMsg" placeholder="اكتبي موضوع البحث (مثلاً: Bacteria)...">
-        <!-- الزر مع أمر مباشر جداً -->
-        <button type="button" class="btn btn-blue" id="mainBtn" onclick="forceSave()">نشر الإشعار العلمي الآن 🚀</button>
-        <div id="wall">الجدار بانتظار إبداعكِ العلمي...</div>
-    </div>
-
-    <div class="card">
-        <h3>🏛️ القاعات والمختبرات</h3>
-        <a href="https://meet.jit.si/ZAW_Conference" class="btn btn-blue">🏛️ دخول قاعة المؤتمرات</a>
-        <a href="https://meet.jit.si/ZAW_Microbiology" class="btn btn-purple">🧫 قسم الأحياء المجهرية</a>
-        <a href="https://meet.jit.si/ZAW_Bioinfo" class="btn btn-purple">💻 قسم المعلوماتية الحيوية</a>
-        <a href="https://meet.jit.si/ZAW_General_Chat" class="btn btn-green">💬 غرف الدردشة العلمية</a>
+        <h3>📢 جدار التواصل الفوري (Live Wall)</h3>
+        <input type="text" id="uName" placeholder="اكتبي اسمكِ دكتورة...">
+        <input type="text" id="mInput" placeholder="اكتبي موضوع البحث (مثلاً: Bacteria)...">
+        <button class="btn" onclick="sendToCloud()">نشر الإشعار العلمي الآن 🚀</button>
+        <div id="wall">جاري الربط بالسحابة...</div>
     </div>
 
     <script>
-        // دالة النشر الإجبارية
-        function forceSave() {
-            const n = document.getElementById('pName').value || "د. زينب وحيد";
-            const m = document.getElementById('pMsg').value;
-            
-            if(!m) {
-                alert("لطفاً اكتبي موضوع البحث أولاً يا دكتورة");
-                return;
-            }
+        // إعدادات Firebase الخاصة بكِ من الصورة
+        const firebaseConfig = {
+            apiKey: "AIzaSyAqc7a5CRtjMRmuBwPWC5TXWMQkMGIlQuQ",
+            authDomain: "zaw-research-hub.firebaseapp.com",
+            databaseURL: "https://zaw-research-hub-default-rtdb.firebaseio.com",
+            projectId: "zaw-research-hub",
+            storageBucket: "zaw-research-hub.firebasestorage.app",
+            messagingSenderId: "750460537109",
+            appId: "1:750460537109:web:687d785a83a3c8d2d2011c",
+            measurementId: "G-F95MJ5EQGX"
+        };
 
-            const db = JSON.parse(localStorage.getItem('zaw_final_db') || '[]');
-            db.unshift({ u: n, m: m, t: new Date().toLocaleTimeString('ar-EG') });
-            localStorage.setItem('zaw_final_db', JSON.stringify(db));
-            
-            document.getElementById('pMsg').value = "";
-            showPosts();
+        // تهيئة Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // وظيفة الإرسال للسحابة
+        function sendToCloud() {
+            const name = document.getElementById('uName').value || "د. زينب وحيد";
+            const msg = document.getElementById('mInput').value;
+            if(!msg) return;
+
+            db.ref("global_posts").push({
+                u: name,
+                m: msg,
+                t: new Date().toLocaleTimeString('ar-EG')
+            });
+            document.getElementById('mInput').value = "";
         }
 
-        function showPosts() {
+        // وظيفة الاستماع للبث المباشر (تحديث تلقائي فور وصول رسالة)
+        db.ref("global_posts").on("value", (snapshot) => {
             const wall = document.getElementById('wall');
-            const db = JSON.parse(localStorage.getItem('zaw_final_db') || '[]');
             wall.innerHTML = "";
-            
-            if(db.length > 0) {
-                db.forEach(p => {
-                    wall.innerHTML += <div class="post"><b>${p.u}</b>: ${p.m} <br><small style="color:var(--gold);">${p.t}</small></div>;
+            const data = snapshot.val();
+            if(data) {
+                Object.values(data).reverse().forEach(p => {
+                    wall.innerHTML += <div class="post"><b>${p.u}</b>: ${p.m} <br><small style="color:var(--gold); font-size:10px;">${p.t}</small></div>;
                 });
             } else {
-                wall.innerHTML = "الجدار جاهز لاستقبال منشوركِ الأول...";
+                wall.innerHTML = "الجدار بانتظار أول منشور علمي عالمي.";
             }
-        }
-        
-        // تشغيل العرض عند فتح الصفحة فوراً
-        window.onload = showPosts;
+        });
     </script>
 </body>
 </html>
