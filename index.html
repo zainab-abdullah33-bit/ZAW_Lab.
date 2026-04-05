@@ -2,116 +2,57 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>منصة التعاون البحثي الدولي</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #D4AF37; --blue: #2563eb; --dark: #0f172a; --card: #1e293b; }
-        body { font-family: 'Cairo', sans-serif; background: var(--dark); color: white; margin: 0; padding: 0; }
-        header { background: #000; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--gold); position: sticky; top: 0; z-index: 1000; }
-        .container { padding: 20px; max-width: 800px; margin: auto; }
-        .card { background: var(--card); border-radius: 15px; padding: 20px; margin-bottom: 20px; border: 1px solid rgba(212,175,55,0.3); box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
-        h1, h2, h3 { color: var(--gold); margin-top: 0; }
-        input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #334155; margin-bottom: 15px; background: #0f172a; color: white; box-sizing: border-box; font-family: 'Cairo'; }
-        .btn { width: 100%; padding: 14px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; font-family: 'Cairo'; font-size: 16px; transition: 0.3s; margin-bottom: 10px; }
-        .btn-gold { background: var(--gold); color: black; }
-        .btn-blue { background: var(--blue); color: white; }
-        .profile-info { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin-bottom: 15px; border-right: 4px solid var(--gold); }
-        #collabList { margin-top: 15px; text-align: right; }
-        .post-item { background: rgba(255,255,255,0.03); padding: 10px; border-radius: 8px; margin-bottom: 8px; border-bottom: 1px solid #334155; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f172a; color: white; text-align: center; padding: 20px; }
+        .box { background: #1e293b; border: 2px solid #D4AF37; border-radius: 15px; padding: 20px; margin: 15px auto; max-width: 500px; }
+        h1 { color: #D4AF37; }
+        input { width: 85%; padding: 12px; margin: 10px 0; border-radius: 8px; border: none; font-size: 16px; }
+        .btn { width: 90%; padding: 15px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; font-size: 17px; margin: 5px 0; }
+        .btn-gold { background: #D4AF37; color: black; }
+        .btn-blue { background: #2563eb; color: white; }
+        #resDisplay { background: rgba(255,255,255,0.1); padding: 10px; border-radius: 10px; margin-top: 10px; border-right: 5px solid #D4AF37; text-align: right; }
     </style>
 </head>
-<body onload="initPlatform()">
+<body>
 
-    <header>
-        <div style="font-weight: bold; color: var(--gold); font-size: 1.2em;">ZAW Global Platform</div>
-        <div id="userTag" style="font-size: 14px; color: #cbd5e1;">بانتظار تسجيل الباحث...</div>
-    </header>
+    <h1>🧬 منصة التعاون البحثي الدولي</h1>
 
-    <div class="container">
-        <h1 style="text-align: center; font-size: 1.8em; margin-bottom: 30px;">منصة التعاون البحثي الدولي</h1>
-
-        <div class="card">
-            <h2>👤 ملف الباحث</h2>
-            <div id="activeProfile" class="profile-info" style="display:none;">
-                <strong id="displayUserName" style="font-size: 1.1em;"></strong><br>
-                <span id="displayUserBio" style="color: var(--gold); font-size: 13px;"></span>
-            </div>
-            <input type="text" id="regName" placeholder="الاسم الكامل (مثلاً: د. زينب عبدالله)">
-            <input type="text" id="regBio" placeholder="التخصص الدقيق (مثلاً: Cellular Biology)">
-            <button class="btn btn-gold" onclick="saveProfile()">تحديث وحفظ البيانات ✅</button>
-        </div>
-
-        <div class="card">
-            <h2>🔍 محرك البحث الأكاديمي</h2>
-            <input type="text" id="searchBox" placeholder="اكتبي عنوان الورقة البحثية أو الكلمات المفتاحية...">
-            <button class="btn btn-blue" onclick="runSearch()">بحث في المجلات الرصينة 🔎</button>
-        </div>
-
-        <div class="card">
-            <h2>🤝 مركز طلبات التعاون</h2>
-            <button class="btn btn-gold" onclick="postRequest()">نشر طلب تعاون دولي باسمي</button>
-            <div id="collabList"></div>
-        </div>
-
-        <div class="card" style="border-color: var(--blue);">
-            <h2>🏛️ قاعة الاجتماعات الدولية</h2>
-            <p style="font-size: 14px; opacity: 0.8;">اضغطي للدخول إلى سمنار مباشر أو اجتماع بحثي عبر الفيديو.</p>
-            <button class="btn btn-blue" onclick="window.open('https://meet.jit.si/ZAW_Global_Research_Room', '_blank')">دخول القاعة الآن 📹</button>
+    <!-- 1. ملف الباحث - مفعل ومباشر -->
+    <div class="box">
+        <h3>👤 ملف الباحث الشخصي</h3>
+        <input type="text" id="n1" placeholder="اكتبي اسمكِ الكامل هنا...">
+        <input type="text" id="b1" placeholder="تخصصكِ الدقيق...">
+        <button class="btn btn-gold" onclick="localStorage.setItem('name', document.getElementById('n1').value); localStorage.setItem('bio', document.getElementById('b1').value); alert('تم حفظ ملفكِ بنجاح دكتورة!'); location.reload();">
+            تفعيل وحفظ ملفي الشخصي ✅
+        </button>
+        <div id="resDisplay">
+            <script>
+                var n = localStorage.getItem('name') || "لم يتم التسجيل";
+                var b = localStorage.getItem('bio') || "زائر";
+                document.write("<b>الباحث:</b> " + n + "<br><b>التخصص:</b> " + b);
+            </script>
         </div>
     </div>
 
-    <script>
-        // 1. وظيفة التهيئة وعرض البيانات المحفوظة
-        function initPlatform() {
-            const savedName = localStorage.getItem('zaw_name');
-            const savedBio = localStorage.getItem('zaw_bio');
-            if (savedName) {
-                document.getElementById('userTag').innerText = "مرحباً: " + savedName;
-                document.getElementById('displayUserName').innerText = "الباحث: " + savedName;
-                document.getElementById('displayUserBio').innerText = "التخصص: " + savedBio;
-                document.getElementById('activeProfile').style.display = 'block';
-            }
-        }
+    <!-- 2. البحث العلمي - مفعل برابط مباشر -->
+    <div class="box">
+        <h3>🔍 محرك البحث الأكاديمي</h3>
+        <input type="text" id="searchBox" placeholder="موضوع البحث...">
+        <button class="btn btn-blue" onclick="var q = document.getElementById('searchBox').value; if(q) { window.open('https://scholar.google.com/scholar?q=' + encodeURIComponent(q), '_blank'); } else { alert('يرجى كتابة موضوع البحث أولاً'); }">
+            تشغيل محرك البحث الآن 🔎
+        </button>
+    </div>
 
-        // 2. وظيفة حفظ الملف الشخصي (تفعيل الزر)
-        function saveProfile() {
-            const name = document.getElementById('regName').value;
-            const bio = document.getElementById('regBio').value;
-            if (name && bio) {
-                localStorage.setItem('zaw_name', name);
-                localStorage.setItem('zaw_bio', bio);
-                alert("تم تحديث هويتكِ الرقمية على المنصة بنجاح!");
-                initPlatform(); // تحديث العرض فوراً
-            } else {
-                alert("لطفاً دكتورة، أدخلي الاسم والتخصص أولاً.");
-            }
-        }
+    <!-- 3. قاعة الاجتماعات - مفعلة برابط مباشر -->
+    <div class="box">
+        <h3>🏛️ قاعة الاجتماعات الدولية</h3>
+        <button class="btn btn-blue" onclick="window.open('https://meet.jit.si/ZAW_Research_2026', '_blank')">
+            دخول القاعة (فيديو) 📹
+        </button>
+    </div>
 
-        // 3. وظيفة البحث (تفعيل الزر)
-        function runSearch() {
-            const q = document.getElementById('searchBox').value;
-            if (q) {
-                window.open('https://scholar.google.com/scholar?q=' + encodeURIComponent(q), '_blank');
-            } else {
-                alert("يرجى كتابة موضوع البحث.");
-            }
-        }
+    <p style="font-size: 12px; color: #64748b;">بوابة الأستاذة الدكتورة زينب عبدالله وحيد</p>
 
-        // 4. وظيفة نشر الطلب
-        function postRequest() {
-            const name = localStorage.getItem('zaw_name');
-            if (!name) {
-                alert("يرجى حفظ ملفكِ الشخصي أولاً ليتم النشر باسمكِ.");
-                return;
-            }
-            const list = document.getElementById('collabList');
-            const item = document.createElement('div');
-            item.className = 'post-item';
-            item.innerHTML = <strong>📍 ${name}</strong> متاح الآن للتعاون في مشروع بحثي جديد.;
-            list.prepend(item);
-            alert("تم نشر طلبكِ في لوحة التعاون الدولي ✅");
-        }
-    </script>
 </body>
 </html>
