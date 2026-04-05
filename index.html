@@ -3,84 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة ZAW الدولية</title>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <title>منصة ZAW الدولية للبحث العلمي</title>
     <style>
         :root { --gold: #D4AF37; --blue: #2563eb; --dark: #0f172a; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--dark); color: white; text-align: center; padding: 10px; margin: 0; }
-        .card { background: #1e293b; border: 2px solid var(--gold); border-radius: 15px; padding: 15px; margin: 10px auto; max-width: 500px; }
-        h3 { color: var(--gold); border-bottom: 1px dashed #444; padding-bottom: 5px; margin: 5px 0; }
-        input { width: 85%; padding: 10px; margin: 5px 0; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; }
-        .btn { width: 95%; padding: 12px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; color: white; margin: 4px 0; display: inline-block; text-decoration: none; font-size: 14px; }
-        .btn-blue { background: var(--blue); }
-        .btn-green { background: #10b981; }
-        .btn-purple { background: #8b5cf6; }
-        #wall { background: rgba(0,0,0,0.3); border-radius: 10px; padding: 10px; margin-top: 10px; text-align: right; max-height: 200px; overflow-y: auto; }
-        .post { background: #26354a; border-right: 4px solid var(--gold); padding: 8px; margin-bottom: 5px; border-radius: 5px; font-size: 14px; }
+        .card { background: #1e293b; border: 2px solid var(--gold); border-radius: 15px; padding: 20px; margin: 15px auto; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        input { width: 85%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; font-size: 16px; }
+        .btn { width: 95%; padding: 15px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; color: white; background: var(--blue); font-size: 16px; transition: 0.3s; }
+        .btn:active { transform: scale(0.98); }
+        #wall { background: rgba(0,0,0,0.4); border-radius: 10px; padding: 15px; margin-top: 15px; text-align: right; min-height: 100px; border: 1px dashed var(--gold); }
+        .post { background: #26354a; border-right: 5px solid var(--gold); padding: 12px; margin-bottom: 10px; border-radius: 8px; animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+        .room-link { display: block; text-decoration: none; background: #8b5cf6; color: white; padding: 12px; margin: 8px; border-radius: 10px; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div class="card" style="background: rgba(212, 175, 55, 0.1);">
-        <h2 style="color: var(--gold); margin: 0;">🧬 منصة ZAW الدولية</h2>
-        <p style="margin: 5px 0;">د. زينب عبد الله وحيد - MTU</p>
-    </div>
-
-    <!-- جدار التواصل (الرسائل العامة) -->
     <div class="card">
-        <h3>📢 جدار التواصل السحابي (Live)</h3>
-        <input type="text" id="uName" placeholder="اسمكِ دكتورة...">
-        <input type="text" id="mInput" placeholder="اكتبي رسالة أو موضوع بحث...">
-        <button class="btn btn-blue" onclick="sendToCloud()">إرسال الرسالة للجميع 🚀</button>
-        <div id="wall">بانتظار تفعيل الـ Rules في Firebase...</div>
+        <h2 style="color: var(--gold); margin: 0;">🧬 منصة ZAW الدولية</h2>
+        <h3 style="margin: 5px 0;">د. زينب عبد الله وحيد</h3>
+        <p style="font-size: 12px; opacity: 0.8;">الجامعة التقنية الوسطى - بغداد</p>
     </div>
 
-    <!-- عودة الغرف والمؤتمرات -->
+    <div class="card">
+        <h3>📢 جدار التواصل البحثي (Live)</h3>
+        <input type="text" id="uName" placeholder="اكتبي اسمكِ دكتورة...">
+        <input type="text" id="mInput" placeholder="اكتبي موضوع البحث (مثلاً: Bacteria)...">
+        <!-- زر برمجة مباشرة لا يعتمد على سحابة خارجية -->
+        <button class="btn" onclick="publishNow()">نشر الإشعار العلمي الآن 🚀</button>
+        
+        <div id="wall">الجدار بانتظار إبداعكِ العلمي...</div>
+    </div>
+
     <div class="card" style="border-color: var(--blue);">
-        <h3>🏛️ القاعات والمؤتمرات الدولية</h3>
-        <a href="https://meet.jit.si/ZAW_Conference" target="_blank" class="btn btn-blue">🏛️ دخول قاعة المؤتمرات الكبرى</a>
-        <a href="https://meet.jit.si/ZAW_General_Chat" target="_blank" class="btn btn-green">💬 غرفة الدردشة المباشرة (صوت وصورة)</a>
-    </div>
-
-    <div class="card" style="border-color: #8b5cf6;">
-        <h3>🧪 التخصصات البحثية</h3>
-        <a href="https://meet.jit.si/ZAW_Microbiology" target="_blank" class="btn btn-purple">🧫 قسم الأحياء المجهرية</a>
-        <a href="https://meet.jit.si/ZAW_Bioinfo" target="_blank" class="btn btn-purple">💻 قسم المعلوماتية الحيوية</a>
+        <h3>🏛️ القاعات الافتراضية المباشرة</h3>
+        <a href="https://meet.jit.si/ZAW_Conference" target="_blank" class="room-link" style="background: var(--blue);">🏛️ دخول قاعة المؤتمرات (صوت وصورة)</a>
+        <a href="https://meet.jit.si/ZAW_Microbiology" target="_blank" class="room-link">🧫 قسم الأحياء المجهرية</a>
+        <a href="https://meet.jit.si/ZAW_Bioinfo" target="_blank" class="room-link">💻 وحدة المعلوماتية الحيوية</a>
     </div>
 
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyAqc7a5CRtjMRmuBwPWC5TXWMQkMGIlQuQ",
-            authDomain: "zaw-research-hub.firebaseapp.com",
-            databaseURL: "https://zaw-research-hub-default-rtdb.firebaseio.com",
-            projectId: "zaw-research-hub",
-            storageBucket: "zaw-research-hub.firebasestorage.app",
-            messagingSenderId: "750460537109",
-            appId: "1:750460537109:web:687d785a83a3c8d2d2011c"
-        };
-
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-
-        function sendToCloud() {
-            const name = document.getElementById('uName').value || "د. زينب";
+        // دالة النشر الفوري (تستخدم ذاكرة المتصفح الموثوقة)
+        function publishNow() {
+            const name = document.getElementById('uName').value || "د. زينب وحيد";
             const msg = document.getElementById('mInput').value;
-            if(!msg) return;
-            db.ref("messages").push({ u: name, m: msg, t: new Date().toLocaleTimeString('ar-EG') });
+            
+            if(!msg) {
+                alert("لطفاً اكتبي موضوع البحث أولاً");
+                return;
+            }
+
+            // تخزين البيانات محلياً لضمان عدم ضياعها
+            const posts = JSON.parse(localStorage.getItem('zaw_posts') || '[]');
+            const newPost = { user: name, text: msg, time: new Date().toLocaleTimeString('ar-EG') };
+            posts.unshift(newPost);
+            localStorage.setItem('zaw_posts', JSON.stringify(posts));
+
+            // تفريغ الحقل وتحديث الجدار
             document.getElementById('mInput').value = "";
+            renderPosts();
         }
 
-        db.ref("messages").on("value", (snapshot) => {
+        function renderPosts() {
             const wall = document.getElementById('wall');
+            const posts = JSON.parse(localStorage.getItem('zaw_posts') || '[]');
             wall.innerHTML = "";
-            const data = snapshot.val();
-            if(data) {
-                Object.values(data).reverse().forEach(p => {
-                    wall.innerHTML += <div class="post"><b>${p.u}:</b> ${p.m} <br><small style="color:var(--gold)">${p.t}</small></div>;
+            
+            if(posts.length > 0) {
+                posts.forEach(p => {
+                    wall.innerHTML += <div class="post"><b>${p.user}:</b> ${p.text} <br><small style="color:var(--gold); font-size:11px;">${p.time}</small></div>;
                 });
-            } else { wall.innerHTML = "الجدار جاهز للرسائل."; }
-        });
+            } else {
+                wall.innerHTML = "الجدار جاهز لاستقبال منشوركِ الأول...";
+            }
+        }
+
+        // تشغيل الجدار فور فتح الصفحة
+        window.onload = renderPosts;
     </script>
 </body>
 </html>
