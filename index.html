@@ -2,59 +2,151 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-	<link rel="manifest" href="manifest.json">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="ZAW Lab">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZAW Project | Official Research Hub</title>
+    <title>ZAW Research Hub | منصة الباحثين العالمية</title>
+    <link rel="manifest" href="manifest.json">
     <style>
-        body { background-color: #001f3f; color: #f0f0f0; font-family: 'Segoe UI', Tahoma; margin: 0; display: flex; flex-direction: column; align-items: center; }
-        .header { background: linear-gradient(180deg, #001f3f 0%, #00152b 100%); border-bottom: 4px solid #D4AF37; padding: 50px 20px; text-align: center; width: 100%; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-        .gold-text { color: #D4AF37; text-transform: uppercase; letter-spacing: 2px; margin: 10px 0; }
-        .profile-container { border: 4px solid #D4AF37; border-radius: 50%; width: 180px; height: 180px; margin: 0 auto 25px; overflow: hidden; box-shadow: 0 0 25px rgba(212, 175, 55, 0.4); background: #002d5a; }
-        .profile-container img { width: 100%; height: 100%; object-fit: cover; }
-        .content-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; padding: 50px 20px; max-width: 1200px; width: 100%; }
-        .card { background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(212, 175, 55, 0.3); border-right: 8px solid #D4AF37; padding: 30px; border-radius: 15px; transition: all 0.4s ease; backdrop-filter: blur(5px); }
-        .custom-file-upload { display: inline-block; padding: 12px 25px; cursor: pointer; background: linear-gradient(45deg, #D4AF37, #f1d592); color: #001f3f; border-radius: 8px; font-weight: bold; transition: 0.3s; margin-top: 15px; }
-        input[type="file"] { display: none; }
-        .status-msg { margin-top: 10px; font-size: 0.9em; color: #4CAF50; display: none; }
+        :root {
+            --gold: #D4AF37;
+            --dark-blue: #0a192f;
+            --white: #ffffff;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--dark-blue);
+            color: var(--white);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .hub-container {
+            width: 90%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid var(--gold);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+        .profile-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid var(--gold);
+            margin-bottom: 15px;
+        }
+        h1 { color: var(--gold); font-size: 24px; margin-bottom: 5px; }
+        p { color: #ccc; font-size: 14px; margin-bottom: 25px; }
+        
+        .auth-tabs { display: flex; margin-bottom: 20px; border-bottom: 1px solid #333; }
+        .tab { flex: 1; padding: 10px; cursor: pointer; color: #888; transition: 0.3s; }
+        .tab.active { color: var(--gold); border-bottom: 2px solid var(--gold); font-weight: bold; }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #333;
+            background: #112240;
+            color: white;
+            box-sizing: border-box;
+        }
+        .btn-main {
+            width: 100%;
+            padding: 15px;
+            background: var(--gold);
+            color: var(--dark-blue);
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+            transition: 0.3s;
+        }
+        .btn-main:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3); }
+        
+        #dashboard { display: none; }
+        .upload-area {
+            border: 2px dashed #333;
+            padding: 30px;
+            margin-top: 20px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="profile-container">
-            <img src="dr_zainab.jpg" alt="د. زينب عبد الله وحيد">
-        </div>
-        <h1 class="gold-text">د. زينب عبد الله وحيد</h1>
-        <p style="font-size: 1.2em; color: #e0e0e0;">مختبر المحاكاة الجزيئية والبحث العلمي المتطور</p>
-    </div>
 
-    <div class="content-grid">
-        <div class="card">
-            <h3 class="gold-text">🧬 وحدة المحاكاة الجزيئية</h3>
-            <p>تحليل ملفات PDB ونتائج GROMACS:</p>
-            <label class="custom-file-upload">
-                <input type="file" onchange="showStatus(this)"> اختيار ملف للمحاكاة
-            </label>
-            <div class="status-msg">✅ تم استلام ملف المحاكاة بنجاح</div>
+    <div class="hub-container">
+        <img src="dr_zainab.jpg" class="profile-img" alt="Dr. Zainab">
+        <h1>ZAW Research Hub</h1>
+        <p>بوابة الباحثين العلمية المتطورة</p>
+
+        <!-- نظام التسجيل -->
+        <div id="auth-section">
+            <div class="auth-tabs">
+                <div class="tab active" onclick="switchTab('login')">تسجيل الدخول</div>
+                <div class="tab" onclick="switchTab('signup')">إنشاء حساب باحث</div>
+            </div>
+
+            <div id="login-form">
+                <input type="email" placeholder="البريد الإلكتروني الجامعي">
+                <input type="password" placeholder="كلمة المرور">
+                <button class="btn-main" onclick="fakeLogin()">دخول للمنصة</button>
+            </div>
+
+            <div id="signup-form" style="display:none;">
+                <input type="text" placeholder="الاسم الكامل بالإنجليزية">
+                <input type="text" placeholder="الجامعة / المركز البحثي">
+                <select>
+                    <option>التخصص: بيولوجيا جزيئية</option>
+                    <option>التخصص: كيمياء حيوية</option>
+                    <option>التخصص: تقنيات طبية</option>
+                    <option>تخصص آخر</option>
+                </select>
+                <input type="email" placeholder="البريد الإلكتروني">
+                <input type="password" placeholder="كلمة مرور قوية">
+                <button class="btn-main" onclick="fakeLogin()">إنشاء الحساب والبدء</button>
+            </div>
         </div>
 
-        <div class="card">
-            <h3 class="gold-text">📝 إدارة المخطوطات البحثية</h3>
-            <p>تنسيق المراجعات مع اللجنة العلمية المختصة:</p>
-            <label class="custom-file-upload">
-                <input type="file" onchange="showStatus(this)"> رفع مسودة بحثية
-            </label>
-            <div class="status-msg">✅ تم رفع المسودة بنجاح للمراجعة</div>
+        <!-- لوحة التحكم (تظهر بعد الدخول) -->
+        <div id="dashboard">
+            <h2 style="color:var(--gold)">مرحباً بك في مختبرك الرقمي</h2>
+            <p>يمكنك الآن رفع ملفات PDB أو نتائج GROMACS للمشاركة والتحليل</p>
+            <div class="upload-area">
+                <p>اسحب ملفات البحث هنا أو اضغط للرفع</p>
+                <input type="file" id="fileUpload" style="display:none" onchange="alert('تم استلام الملف بنجاح في قاعدة بيانات Hub')">
+                <button onclick="document.getElementById('fileUpload').click()" style="background:none; border:1px solid var(--gold); color:var(--gold); padding:5px 15px; border-radius:5px; cursor:pointer;">اختيار ملف</button>
+            </div>
+            <button class="btn-main" style="background:#cc0000; color:white; margin-top:30px;" onclick="location.reload()">تسجيل الخروج</button>
         </div>
     </div>
 
     <script>
-        function showStatus(input) {
-            if (input.files.length > 0) {
-                input.parentElement.nextElementSibling.style.display = 'block';
-                alert("تم استلام الملف: " + input.files[0].name + " بنجاح دكتورة زينب");
+        function switchTab(type) {
+            const tabs = document.querySelectorAll('.tab');
+            if(type === 'login') {
+                document.getElementById('login-form').style.display = 'block';
+                document.getElementById('signup-form').style.display = 'none';
+                tabs[0].classList.add('active');
+                tabs[1].classList.remove('active');
+            } else {
+                document.getElementById('login-form').style.display = 'none';
+                document.getElementById('signup-form').style.display = 'block';
+                tabs[1].classList.add('active');
+                tabs[0].classList.remove('active');
             }
+        }
+
+        function fakeLogin() {
+            document.getElementById('auth-section').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
         }
     </script>
 </body>
