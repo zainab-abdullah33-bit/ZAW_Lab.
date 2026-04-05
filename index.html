@@ -38,9 +38,9 @@
 
     const firebaseConfig = {
       apiKey: "AIzaSyAqc7a5CRtjMRmuBwPWC5TXWMQkMGIlQuQ",
-      authDomain: "zaw-lab.firebaseapp.com",
-      projectId: "zaw-lab",
-      storageBucket: "zaw-lab.appspot.com",
+      authDomain: "zaw-research-hub.firebaseapp.com",
+      projectId: "zaw-research-hub",
+      storageBucket: "zaw-research-hub.appspot.com",
       messagingSenderId: "1093121510424",
       appId: "1:1093121510424:web:6c6f72236a2872659e93b1"
     };
@@ -58,7 +58,7 @@
         .then(() => { msg.innerHTML = "<span style='color:#4ade80;'>✅ تم تسجيلك كباحث جديد بنجاح!</span>"; })
         .catch((error) => {
           if (error.code === 'auth/email-already-in-use') { msg.innerHTML = "<span style='color:#e9c46a;'>هذا البريد مسجل مسبقاً كباحث!</span>"; }
-          else { msg.innerHTML = "<span style='color:#f87171;'>تنبيه: يرجى التأكد من صحة البيانات أو المفتاح</span>"; }
+          else { msg.innerHTML = "<span style='color:#f87171;'>تنبيه: " + error.message + "</span>"; }
         });
     };
 
