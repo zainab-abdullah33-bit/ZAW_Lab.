@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+[7:26 م، 2026/4/5] زينب عبدالله: <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -10,102 +10,127 @@
     <style>
         :root { --gold: #D4AF37; --blue: #2563eb; --dark: #0f172a; }
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--dark); color: white; text-align: center; margin: 0; padding: 15px; }
+        .card { background: #1e293b; border: 1.5px solid var(--gold); border-radius: 15px; padding: 20px; margin: 15px auto; max-…
+[7:28 م، 2026/4/5] زينب عبدالله: <!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة التعاون البحثي الدولي</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <style>
+        :root { --gold: #D4AF37; --blue: #2563eb; --dark: #0f172a; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--dark); color: white; text-align: center; margin: 0; padding: 15px; }
         .card { background: #1e293b; border: 1.5px solid var(--gold); border-radius: 15px; padding: 20px; margin: 15px auto; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.4); }
-        input { width: 95%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; font-size: 16px; }
-        .btn { width: 100%; padding: 15px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.3s; margin-top: 10px; }
+        input { width: 95%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; font-size: 16px; box-sizing: border-box; }
+        .btn { width: 100%; padding: 15px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 10px; transition: 0.3s; }
         .btn-gold { background: var(--gold); color: black; }
         .btn-blue { background: var(--blue); color: white; }
+        .btn:active { transform: scale(0.98); opacity: 0.8; }
+        
+        /* جدار التعاون */
         #wall { background: rgba(0,0,0,0.2); border-radius: 10px; padding: 10px; margin-top: 15px; max-height: 300px; overflow-y: auto; text-align: right; border: 1px solid #334155; }
-        .post { background: #26354a; border-right: 5px solid var(--gold); padding: 12px; margin-bottom: 10px; border-radius: 8px; animation: fadeIn 0.5s; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .profile-side { display: none; background: rgba(212, 175, 55, 0.1); padding: 10px; border-radius: 8px; margin-bottom: 15px; border: 1px dashed var(--gold); }
+        .post { background: #26354a; border-right: 5px solid var(--gold); padding: 12px; margin-bottom: 10px; border-radius: 8px; }
+        
+        /* الملف الشخصي الجانبي */
+        #profileView { display: none; background: rgba(212, 175, 55, 0.1); padding: 15px; border-radius: 12px; border: 1px dashed var(--gold); margin-bottom: 20px; }
     </style>
 </head>
-<body onload="initSystem()">
+<body onload="startApp()">
 
-    <h2 style="color: var(--gold);">🧬 منصة التعاون البحثي الدولي</h2>
+    <h2 style="color: var(--gold); margin-bottom: 20px;">🧬 منصة التعاون البحثي الدولي</h2>
 
-    <!-- صفحة الملف الشخصي (تظهر بعد التسجيل) -->
-    <div id="myProfile" class="profile-side card">
-        <h3 style="margin-top:0">👤 ملفي الأكاديمي</h3>
-        <p id="pName" style="font-weight:bold; font-size:1.2em; margin:5px 0;"></p>
-        <p id="pBio" style="color:var(--gold); margin:0;"></p>
+    <div id="profileView" class="card">
+        <h3 style="margin:0; color: var(--gold);">👤 ملف الباحث الأكاديمي</h3>
+        <p id="displayName" style="font-size: 1.3em; font-weight: bold; margin: 10px 0 5px 0;"></p>
+        <p id="displayBio" style="margin: 0; opacity: 0.8;"></p>
+        <button class="btn btn-blue" style="width: auto; padding: 5px 15px; font-size: 12px;" onclick="localStorage.clear(); location.reload();">تسجيل خروج</button>
     </div>
 
     <div class="card" id="loginBox">
-        <h3>🔐 دخول الباحث</h3>
+        <h3>🔐 تسجيل دخول الباحث</h3>
         <input type="text" id="uName" placeholder="الاسم الكامل (Zainab Abdullah)">
-        <input type="text" id="uBio" placeholder="التخصص (Biology)">
-        <button class="btn btn-gold" onclick="register()">حفظ البيانات وتفعيل الأزرار ✅</button>
+        <input type="text" id="uBio" placeholder="التخصص الدقيق (Cell Biology)">
+        <button class="btn btn-gold" onclick="register()">حفظ وتفعيل الحساب ✅</button>
     </div>
 
     <div class="card">
         <h3>📢 جدار التعاون العالمي (مباشر)</h3>
-        <input type="text" id="msgText" placeholder="اكتبي طلب التعاون هنا...">
-        <button class="btn btn-blue" onclick="sendToWorld()">نشر الإشعار للعالم 🚀</button>
-        <div id="wall">بانتظار اتصال الزملاء...</div>
+        <input type="text" id="postContent" placeholder="اكتبي موضوع البحث أو طلب التعاون...">
+        <button class="btn btn-blue" onclick="sendPost()">نشر الإشعار للزملاء 🚀</button>
+        <div id="wall">جاري الاتصال بالقاعدة العالمية...</div>
+    </div>
+
+    <div class="card" style="border-color: var(--blue);">
+        <h3>🏛️ قاعة المؤتمرات والدردشة</h3>
+        <p style="font-size: 13px; opacity: 0.7;">ادخلي هنا للاجتماع بصديقتكِ ومناقشة المشاريع عبر الفيديو.</p>
+        <button class="btn btn-blue" onclick="window.open('https://meet.jit.si/ZAW_Research_Global', '_blank')">دخول القاعة الآن 📹</button>
     </div>
 
     <script>
-        // إعدادات الربط العالمي - Firebase
+        // إعدادات Firebase
         const firebaseConfig = { databaseURL: "https://zaw-platform-default-rtdb.firebaseio.com/" };
         if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
         const db = firebase.database();
 
+        // وظيفة التسجيل
         function register() {
-            const n = document.getElementById('uName').value;
-            const b = document.getElementById('uBio').value;
-            if(n && b) {
-                localStorage.setItem('z_name', n);
-                localStorage.setItem('z_bio', b);
-                showProfile(n, b);
-                alert("تم تفعيل حسابكِ دكتورة! الآن يمكنكِ رؤية منشورات الآخرين.");
-            }
+            const name = document.getElementById('uName').value;
+            const bio = document.getElementById('uBio').value;
+            if(name && bio) {
+                localStorage.setItem('zaw_name', name);
+                localStorage.setItem('zaw_bio', bio);
+                updateUI(name, bio);
+            } else { alert("يرجى ملء البيانات أولاً دكتورة"); }
         }
 
-        function showProfile(n, b) {
+        // تحديث الواجهة
+        function updateUI(name, bio) {
             document.getElementById('loginBox').style.display = 'none';
-            document.getElementById('myProfile').style.display = 'block';
-            document.getElementById('pName').innerText = n;
-            document.getElementById('pBio').innerText = b;
+            document.getElementById('profileView').style.display = 'block';
+            document.getElementById('displayName').innerText = name;
+            document.getElementById('displayBio').innerText = bio;
         }
 
-        function sendToWorld() {
-            const name = localStorage.getItem('z_name');
-            const bio = localStorage.getItem('z_bio');
-            const text = document.getElementById('msgText').value;
+        // إرسال منشور للعالم
+        function sendPost() {
+            const name = localStorage.getItem('zaw_name');
+            const bio = localStorage.getItem('zaw_bio');
+            const text = document.getElementById('postContent').value;
 
-            if(!name) { alert("يرجى التسجيل أولاً دكتورة!"); return; }
+            if(!name) { alert("سجلي دخولكِ أولاً"); return; }
             if(!text) return;
 
-            db.ref('world_posts').push({
-                sender: name,
+            db.ref('global_feed').push({
+                user: name,
                 major: bio,
-                content: text,
+                msg: text,
                 time: new Date().toLocaleTimeString('ar-EG')
             });
-            document.getElementById('msgText').value = "";
+            document.getElementById('postContent').value = "";
         }
 
-        function initSystem() {
-            const n = localStorage.getItem('z_name');
-            const b = localStorage.getItem('z_bio');
-            if(n) showProfile(n, b);
+        // تشغيل النظام
+        function startApp() {
+            const savedName = localStorage.getItem('zaw_name');
+            const savedBio = localStorage.getItem('zaw_bio');
+            if(savedName) updateUI(savedName, savedBio);
 
-            // استلام المنشورات من العالم فوراً
-            db.ref('world_posts').limitToLast(10).on('value', (snapshot) => {
+            // استلام المنشورات حياً ومباشراً
+            db.ref('global_feed').limitToLast(15).on('value', (snap) => {
                 const wall = document.getElementById('wall');
                 wall.innerHTML = "";
-                const data = snapshot.val();
+                const data = snap.val();
                 if(data) {
-                    Object.values(data).reverse().forEach(post => {
+                    Object.values(data).reverse().forEach(p => {
                         const div = document.createElement('div');
                         div.className = 'post';
-                        div.innerHTML = <b>${post.sender}</b> (${post.major}):<br>${post.content}<br><small style="color:var(--gold)">${post.time}</small>;
+                        div.innerHTML = <b>${p.user}</b> (${p.major}):<br>${p.msg}<br><small style="color:var(--gold)">${p.time}</small>;
                         wall.appendChild(div);
                     });
                 } else {
-                    wall.innerHTML = "لا توجد منشورات تعاون حالياً.";
+                    wall.innerHTML = "لا توجد منشورات حالياً.";
                 }
             });
         }
