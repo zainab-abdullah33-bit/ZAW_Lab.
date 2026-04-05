@@ -6,80 +6,72 @@
     <title>منصة ZAW الدولية للبحث العلمي</title>
     <style>
         :root { --gold: #D4AF37; --blue: #2563eb; --dark: #0f172a; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--dark); color: white; text-align: center; padding: 10px; margin: 0; }
-        .card { background: #1e293b; border: 2px solid var(--gold); border-radius: 15px; padding: 20px; margin: 15px auto; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-        input { width: 85%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; font-size: 16px; }
-        .btn { width: 95%; padding: 15px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; color: white; background: var(--blue); font-size: 16px; transition: 0.3s; }
-        .btn:active { transform: scale(0.98); }
-        #wall { background: rgba(0,0,0,0.4); border-radius: 10px; padding: 15px; margin-top: 15px; text-align: right; min-height: 100px; border: 1px dashed var(--gold); }
-        .post { background: #26354a; border-right: 5px solid var(--gold); padding: 12px; margin-bottom: 10px; border-radius: 8px; animation: slideIn 0.3s ease-out; }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
-        .room-link { display: block; text-decoration: none; background: #8b5cf6; color: white; padding: 12px; margin: 8px; border-radius: 10px; font-weight: bold; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--dark); color: white; text-align: center; padding: 10px; }
+        .card { background: #1e293b; border: 2px solid var(--gold); border-radius: 15px; padding: 15px; margin: 10px auto; max-width: 500px; }
+        input { width: 85%; padding: 10px; margin: 5px 0; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; }
+        .btn { width: 95%; padding: 12px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; color: white; background: var(--blue); margin-top: 5px; }
+        #wall { background: rgba(0,0,0,0.3); border-radius: 10px; padding: 10px; margin-top: 10px; text-align: right; border: 1px solid #444; min-height: 50px; }
+        .post { background: #26354a; border-right: 4px solid var(--gold); padding: 8px; margin-bottom: 5px; border-radius: 5px; font-size: 14px; }
+        .lib-btn { display: inline-block; width: 45%; background: #334155; color: white; padding: 10px; margin: 4px; border-radius: 5px; text-decoration: none; font-size: 12px; border: 1px solid var(--gold); }
     </style>
 </head>
 <body>
 
     <div class="card">
         <h2 style="color: var(--gold); margin: 0;">🧬 منصة ZAW الدولية</h2>
-        <h3 style="margin: 5px 0;">د. زينب عبد الله وحيد</h3>
-        <p style="font-size: 12px; opacity: 0.8;">الجامعة التقنية الوسطى - بغداد</p>
+        <p>دكتورة زينب عبد الله وحيد - MTU</p>
     </div>
 
+    <!-- المكتبة العلمية الشاملة -->
+    <div class="card" style="border-color: #10b981;">
+        <h3>📚 المكتبة البحثية الشاملة</h3>
+        <a href="https://scholar.google.com" target="_blank" class="lib-btn">Google Scholar</a>
+        <a href="https://www.sciencedirect.com" target="_blank" class="lib-btn">Elsevier / SD</a>
+        <a href="https://link.springer.com" target="_blank" class="lib-btn">Springer</a>
+        <a href="https://www.tandfonline.com" target="_blank" class="lib-btn">Taylor & Francis</a>
+    </div>
+
+    <!-- جدار التواصل السحابي -->
     <div class="card">
-        <h3>📢 جدار التواصل البحثي (Live)</h3>
-        <input type="text" id="uName" placeholder="اكتبي اسمكِ دكتورة...">
-        <input type="text" id="mInput" placeholder="اكتبي موضوع البحث (مثلاً: Bacteria)...">
-        <!-- زر برمجة مباشرة لا يعتمد على سحابة خارجية -->
-        <button class="btn" onclick="publishNow()">نشر الإشعار العلمي الآن 🚀</button>
-        
-        <div id="wall">الجدار بانتظار إبداعكِ العلمي...</div>
-    </div>
-
-    <div class="card" style="border-color: var(--blue);">
-        <h3>🏛️ القاعات الافتراضية المباشرة</h3>
-        <a href="https://meet.jit.si/ZAW_Conference" target="_blank" class="room-link" style="background: var(--blue);">🏛️ دخول قاعة المؤتمرات (صوت وصورة)</a>
-        <a href="https://meet.jit.si/ZAW_Microbiology" target="_blank" class="room-link">🧫 قسم الأحياء المجهرية</a>
-        <a href="https://meet.jit.si/ZAW_Bioinfo" target="_blank" class="room-link">💻 وحدة المعلوماتية الحيوية</a>
+        <h3>📢 جدار التواصل (Live)</h3>
+        <input type="text" id="uName" placeholder="اسمكِ دكتورة...">
+        <input type="text" id="mInput" placeholder="اكتبي موضوع البحث...">
+        <button class="btn" onclick="sendToCloud()">نشر الآن 🚀</button>
+        <div id="wall">جاري فحص السحابة...</div>
     </div>
 
     <script>
-        // دالة النشر الفوري (تستخدم ذاكرة المتصفح الموثوقة)
-        function publishNow() {
-            const name = document.getElementById('uName').value || "د. زينب وحيد";
+        // هذا هو الرابط اللي كان ناقص بالصورة
+        const cloudURL = "https://zaw-research-hub-default-rtdb.firebaseio.com/posts.json";
+
+        async function sendToCloud() {
+            const name = document.getElementById('uName').value || "د. زينب";
             const msg = document.getElementById('mInput').value;
-            
-            if(!msg) {
-                alert("لطفاً اكتبي موضوع البحث أولاً");
-                return;
-            }
-
-            // تخزين البيانات محلياً لضمان عدم ضياعها
-            const posts = JSON.parse(localStorage.getItem('zaw_posts') || '[]');
-            const newPost = { user: name, text: msg, time: new Date().toLocaleTimeString('ar-EG') };
-            posts.unshift(newPost);
-            localStorage.setItem('zaw_posts', JSON.stringify(posts));
-
-            // تفريغ الحقل وتحديث الجدار
+            if(!msg) return;
+            await fetch(cloudURL, {
+                method: 'POST',
+                body: JSON.stringify({ user: name, text: msg, time: new Date().toLocaleTimeString('ar-EG') })
+            });
             document.getElementById('mInput').value = "";
-            renderPosts();
+            loadPosts();
         }
 
-        function renderPosts() {
-            const wall = document.getElementById('wall');
-            const posts = JSON.parse(localStorage.getItem('zaw_posts') || '[]');
-            wall.innerHTML = "";
-            
-            if(posts.length > 0) {
-                posts.forEach(p => {
-                    wall.innerHTML += <div class="post"><b>${p.user}:</b> ${p.text} <br><small style="color:var(--gold); font-size:11px;">${p.time}</small></div>;
-                });
-            } else {
-                wall.innerHTML = "الجدار جاهز لاستقبال منشوركِ الأول...";
-            }
+        async function loadPosts() {
+            try {
+                const res = await fetch(cloudURL);
+                const data = await res.json();
+                const wall = document.getElementById('wall');
+                wall.innerHTML = "";
+                if(data) {
+                    Object.values(data).reverse().forEach(p => {
+                        wall.innerHTML += <div class="post"><b>${p.user}:</b> ${p.text}<br><small style="color:var(--gold)">${p.time}</small></div>;
+                    });
+                } else { wall.innerHTML = "الجدار بانتظار أول منشور."; }
+            } catch (e) { wall.innerHTML = "خطأ في السحابة!"; }
         }
 
-        // تشغيل الجدار فور فتح الصفحة
-        window.onload = renderPosts;
+        setInterval(loadPosts, 5000);
+        window.onload = loadPosts;
     </script>
 </body>
 </html>
