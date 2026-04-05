@@ -7,24 +7,24 @@
     <style>
         :root { --gold: #D4AF37; --blue: #2563eb; --dark: #0f172a; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--dark); color: white; text-align: center; padding: 10px; margin: 0; }
-        .card { background: #1e293b; border: 2px solid var(--gold); border-radius: 15px; padding: 15px; margin: 10px auto; max-width: 500px; box-shadow: 0 8px 20px rgba(0,0,0,0.4); }
-        h3 { color: var(--gold); border-bottom: 1px dashed #444; padding-bottom: 5px; }
-        input { width: 88%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; font-size: 16px; }
-        .btn { width: 95%; padding: 15px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; color: white; background: var(--blue); margin-top: 5px; }
-        #wall { background: rgba(0,0,0,0.3); border-radius: 10px; padding: 12px; margin-top: 10px; text-align: right; min-height: 60px; border: 1px solid #444; max-height: 300px; overflow-y: auto; }
-        .post { background: #26354a; border-right: 5px solid var(--gold); padding: 10px; margin-bottom: 8px; border-radius: 5px; font-size: 14px; }
-        .lib-btn { display: inline-block; width: 44%; background: #334155; color: white; padding: 10px; margin: 4px; border-radius: 8px; text-decoration: none; font-size: 12px; border: 1px solid var(--gold); }
-        .room-btn { display: block; text-decoration: none; background: #8b5cf6; color: white; padding: 12px; margin: 8px auto; border-radius: 10px; font-weight: bold; width: 90%; }
+        .card { background: #1e293b; border: 2px solid var(--gold); border-radius: 15px; padding: 15px; margin: 10px auto; max-width: 600px; box-shadow: 0 8px 20px rgba(0,0,0,0.4); }
+        h3 { color: var(--gold); border-bottom: 1px dashed #444; padding-bottom: 5px; margin-top: 0; }
+        .lib-btn { display: inline-block; width: 44%; background: #334155; color: white; padding: 10px; margin: 4px; border-radius: 8px; text-decoration: none; font-size: 12px; border: 1px solid var(--gold); transition: 0.3s; }
+        .lib-btn:hover { background: var(--gold); color: black; }
+        .room-btn { display: block; text-decoration: none; background: #8b5cf6; color: white; padding: 12px; margin: 8px auto; border-radius: 10px; font-weight: bold; width: 90%; transition: 0.3s; }
+        .room-btn:hover { transform: scale(1.02); opacity: 0.9; }
+        /* تنسيق إطار الشبكة الاجتماعية */
+        .network-container { border-radius: 15px; overflow: hidden; border: 2px solid var(--blue); margin-top: 10px; }
     </style>
 </head>
 <body>
 
     <div class="card">
         <h2 style="color: var(--gold); margin: 0;">🧬 منصة ZAW الدولية للبحث</h2>
-        <p>دكتورة زينب عبد الله وحيد - MTU</p>
+        <p style="margin: 5px 0;">دكتورة زينب عبد الله وحيد - MTU</p>
     </div>
 
-    <!-- 1. المكتبة البحثية (كاملة) -->
+    <!-- 1. المكتبة البحثية الشاملة -->
     <div class="card" style="border-color: #10b981;">
         <h3>📚 المكتبة البحثية الشاملة</h3>
         <a href="https://scholar.google.com" target="_blank" class="lib-btn">Google Scholar</a>
@@ -33,58 +33,30 @@
         <a href="https://www.tandfonline.com" target="_blank" class="lib-btn">Taylor & Francis</a>
     </div>
 
-    <!-- 2. جدار التواصل السحابي -->
-    <div class="card">
-        <h3>📢 جدار التواصل السحابي (Live)</h3>
-        <input type="text" id="uName" placeholder="اسمكِ دكتورة...">
-        <input type="text" id="mInput" placeholder="اكتبي موضوع البحث (Bacteria)...">
-        <button class="btn" onclick="sendToCloud()">نشر الإشعار العلمي الآن 🚀</button>
-        <div id="wall">يتم الآن الاتصال بالسحابة...</div>
+    <!-- 2. شبكة التواصل البحثي (Padlet) -->
+    <div class="card" style="max-width: 800px; border-color: var(--blue);">
+        <h3>🌐 شبكة التواصل العلمي (Live Feed)</h3>
+        <p style="font-size: 13px; color: #cbd5e1;">هنا يلتقي الباحثون.. انشري أبحاثكِ، صور المختبر، أو تساؤلاتكِ العلمية.</p>
+        <div class="network-container">
+            <div class="padlet-embed" style="border:none;box-sizing:border-box;overflow:hidden;position:relative;width:100%;background:#F4F4F4">
+                <p style="padding:0;margin:0">
+                    <iframe src="https://padlet.com/embed/lgnv92ebf3luc7r9" frameborder="0" allow="camera;microphone;geolocation;display-capture;clipboard-write" style="width:100%;height:500px;display:block;padding:0;margin:0"></iframe>
+                </p>
+            </div>
+        </div>
     </div>
 
-    <!-- 3. القاعات والفروع (كاملة) -->
-    <div class="card" style="border-color: var(--blue);">
+    <!-- 3. القاعات والمؤتمرات الدولية -->
+    <div class="card">
         <h3>🏛️ القاعات والمؤتمرات الدولية</h3>
         <a href="https://meet.jit.si/ZAW_Conference" target="_blank" class="room-btn" style="background:var(--blue);">🏛️ دخول قاعة المؤتمرات الكبرى</a>
         <a href="https://meet.jit.si/ZAW_Microbiology" target="_blank" class="room-btn">🧫 قسم الأحياء المجهرية</a>
         <a href="https://meet.jit.si/ZAW_Bioinfo" target="_blank" class="room-btn">💻 وحدة المعلوماتية الحيوية</a>
     </div>
 
-    <script>
-        // الرابط المباشر من لقطة شاشتكِ
-        const cloudURL = "https://zaw-research-hub-default-rtdb.firebaseio.com/posts.json";
+    <footer style="font-size: 10px; color: #64748b; margin-top: 20px;">
+        ZAW International Research Platform &copy; 2026
+    </footer>
 
-        async function sendToCloud() {
-            const name = document.getElementById('uName').value || "د. زينب وحيد";
-            const msg = document.getElementById('mInput').value;
-            if(!msg) return;
-
-            try {
-                await fetch(cloudURL, {
-                    method: 'POST',
-                    body: JSON.stringify({ user: name, text: msg, time: new Date().toLocaleTimeString('ar-EG') })
-                });
-                document.getElementById('mInput').value = "";
-                loadPosts();
-            } catch (e) { console.error("Error sending post"); }
-        }
-
-        async function loadPosts() {
-            try {
-                const res = await fetch(cloudURL);
-                const data = await res.json();
-                const wall = document.getElementById('wall');
-                wall.innerHTML = "";
-                if(data) {
-                    Object.values(data).reverse().forEach(p => {
-                        wall.innerHTML += <div class="post"><b>${p.user}:</b> ${p.text}<br><small style="color:var(--gold)">${p.time}</small></div>;
-                    });
-                } else { wall.innerHTML = "الجدار جاهز لاستقبال منشوركِ الأول."; }
-            } catch (e) { wall.innerHTML = "خطأ في السحابة! تأكدي من الـ Rules."; }
-        }
-
-        setInterval(loadPosts, 5000);
-        window.onload = loadPosts;
-    </script>
 </body>
 </html>
