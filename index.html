@@ -7,63 +7,60 @@
     <style>
         :root { --gold: #D4AF37; --blue: #2563eb; --dark: #0f172a; }
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--dark); color: white; text-align: center; padding: 10px; margin: 0; }
-        .card { background: #1e293b; border: 1.5px solid var(--gold); border-radius: 12px; padding: 20px; margin: 10px auto; max-width: 480px; box-shadow: 0 8px 20px rgba(0,0,0,0.4); }
+        .card { background: #1e293b; border: 2px solid var(--gold); border-radius: 12px; padding: 20px; margin: 10px auto; max-width: 480px; box-shadow: 0 8px 20px rgba(0,0,0,0.4); }
         input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; font-size: 16px; box-sizing: border-box; }
         
-        .btn { width: 100%; padding: 15px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 10px; transition: 0.3s; }
-        .btn-gold { background: var(--gold); color: black; }
-        .btn-blue { background: var(--blue); color: white; }
-        .btn:active { transform: translateY(2px); filter: brightness(1.2); }
+        /* أزرار تعمل فوراً عند اللمس دون انتظار */
+        .btn { width: 100%; padding: 15px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 10px; display: block; position: relative; z-index: 999; }
+        .btn-gold { background: var(--gold); color: black; box-shadow: 0 4px #8a7024; }
+        .btn-blue { background: var(--blue); color: white; box-shadow: 0 4px #1a45a3; }
+        .btn:active { transform: translateY(3px); box-shadow: none; filter: brightness(1.2); }
 
-        #wall { background: rgba(0,0,0,0.2); border-radius: 10px; padding: 10px; margin-top: 15px; text-align: right; min-height: 100px; border: 1px dotted #444; }
-        .post { background: #26354a; border-right: 5px solid var(--gold); padding: 12px; margin-bottom: 10px; border-radius: 8px; animation: fadeIn 0.4s ease; }
+        #wall { background: rgba(0,0,0,0.2); border-radius: 10px; padding: 10px; margin-top: 15px; text-align: right; min-height: 80px; border: 1px dotted #444; }
+        .post { background: #26354a; border-right: 5px solid var(--gold); padding: 10px; margin-bottom: 8px; border-radius: 5px; animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        
-        .badge { display: inline-block; padding: 3px 8px; background: var(--gold); color: black; border-radius: 5px; font-size: 11px; margin-bottom: 5px; }
     </style>
 </head>
 <body onload="initApp()">
 
-    <h2 style="color: var(--gold); margin-top: 20px;">🧬 منصة التعاون البحثي الدولي</h2>
-    <p style="font-size: 13px; opacity: 0.8;">"العلمُ نُورٌ يُستضاءُ بهِ للجميع"</p>
+    <h2 style="color: var(--gold); margin-top: 15px;">🧬 منصة التعاون البحثي الدولي</h2>
 
     <!-- الملف الشخصي -->
-    <div class="card" id="regCard">
+    <div class="card" id="regBox">
         <h3>👤 تسجيل بيانات الباحث</h3>
-        <input type="text" id="uName" placeholder="الاسم الكامل (د. زينب عبد الله)...">
-        <input type="text" id="uBio" placeholder="التخصص (علم الأحياء المجهرية)...">
-        <button class="btn btn-gold" onclick="register()">حفظ وتفعيل العضوية الأكاديمية ✅</button>
+        <input type="text" id="uName" placeholder="الاسم الكامل...">
+        <input type="text" id="uBio" placeholder="التخصص...">
+        <button class="btn btn-gold" onclick="registerUser()">حفظ وتفعيل العضوية ✅</button>
     </div>
 
-    <div class="card" id="welcomeCard" style="display:none; background: rgba(212, 175, 55, 0.05);">
-        <h3 id="greet"></h3>
-        <button class="btn btn-blue" style="width:auto; padding:5px 15px; font-size:12px;" onclick="localStorage.clear(); location.reload();">تغيير الباحث 🔄</button>
+    <div class="card" id="welcomeBox" style="display:none; border-style: dashed;">
+        <h3 id="greet" style="margin:0; color:var(--gold)"></h3>
+        <button class="btn btn-blue" style="width:auto; padding:5px 15px; font-size:11px; margin: 10px auto;" onclick="localStorage.clear(); location.reload();">تبديل الحساب 🔄</button>
     </div>
 
-    <!-- جدار المنشورات العلمي -->
+    <!-- جدار المنشورات -->
     <div class="card">
         <h3>📢 جدار تبادل الخبرات</h3>
-        <input type="text" id="pMsg" placeholder="اكتبي موضوع البحث أو طلب المساعدة...">
-        <button class="btn btn-blue" onclick="publish()">نشر الإشعار العلمي 🚀</button>
-        <div id="wall">جاري جلب آخر الأبحاث...</div>
+        <input type="text" id="pMsg" placeholder="اكتبي موضوع البحث هنا...">
+        <button class="btn btn-blue" id="postBtn" onclick="publishMsg()">نشر الإشعار العلمي 🚀</button>
+        <div id="wall">جاري عرض المنشورات...</div>
     </div>
 
-    <!-- القاعات التعليمية -->
+    <!-- القاعات -->
     <div class="card" style="border-color: var(--blue);">
-        <h3>🏛️ قاعة المحاضرات والاجتماعات</h3>
+        <h3>🏛️ قاعات الاجتماعات</h3>
         <button class="btn btn-blue" onclick="window.open('https://meet.jit.si/ZAW_Research_Global')">دخول القاعة المباشرة 📹</button>
     </div>
 
     <script>
-        // استخدام رابط مباشر لقاعدة البيانات لضمان عدم الجمود
-        const dbURL = "https://zaw-platform-default-rtdb.firebaseio.com/posts.json";
-
-        function register() {
+        // وظائف الأزرار المستقلة
+        function registerUser() {
             const n = document.getElementById('uName').value;
             const b = document.getElementById('uBio').value;
             if(n && b) {
                 localStorage.setItem('dr_n', n);
                 localStorage.setItem('dr_b', b);
+                alert("تم الحفظ بنجاح دكتورة!");
                 location.reload();
             }
         }
@@ -71,43 +68,54 @@
         function initApp() {
             const name = localStorage.getItem('dr_n');
             if(name) {
-                document.getElementById('regCard').style.display = 'none';
-                document.getElementById('welcomeCard').style.display = 'block';
+                document.getElementById('regBox').style.display = 'none';
+                document.getElementById('welcomeBox').style.display = 'block';
                 document.getElementById('greet').innerText = "مرحباً دكتورة " + name;
-                fetchPosts();
+                updateWallUI();
             }
         }
 
-        async function publish() {
+        function publishMsg() {
             const name = localStorage.getItem('dr_n');
             const msg = document.getElementById('pMsg').value;
-            if(!name) return alert("سجلي بياناتكِ أولاً دكتورة");
+            if(!name) { alert("سجلي بياناتكِ أولاً دكتورة!"); return; }
             if(!msg) return;
 
-            const postData = { u: name, m: msg, t: new Date().toLocaleTimeString('ar-EG') };
+            // 1. عرض المنشور محلياً فوراً (بدون انتظار الإنترنت) لضمان عدم تجمد الزر
+            const wall = document.getElementById('wall');
+            const div = document.createElement('div');
+            div.className = 'post';
+            div.innerHTML = <b>${name}</b>: ${msg}<br><small style='opacity:0.5'>الآن</small>;
+            wall.prepend(div);
             
-            // إرسال حقيقي للسحابة
-            await fetch(dbURL, { method: "POST", body: JSON.stringify(postData) });
+            // 2. مسح الحقل فوراً
             document.getElementById('pMsg').value = "";
-            fetchPosts(); // تحديث فوري
+
+            // 3. محاولة الإرسال للسحابة في الخلفية (إذا فشل لا يهم، الزر لن يجمد)
+            fetch("https://zaw-platform-default-rtdb.firebaseio.com/posts.json", {
+                method: "POST",
+                body: JSON.stringify({ u: name, m: msg, t: new Date().toLocaleTimeString('ar-EG') })
+            });
         }
 
-        async function fetchPosts() {
-            const res = await fetch(dbURL);
-            const data = await res.json();
-            const wall = document.getElementById('wall');
-            wall.innerHTML = "";
-            
-            if(data) {
-                Object.values(data).reverse().slice(0, 15).forEach(p => {
-                    const div = document.createElement('div');
-                    div.className = 'post';
-                    div.innerHTML = <div class='badge'>باحث مُشارك</div><br><b>${p.u}</b>: ${p.m}<br><small style='opacity:0.5'>${p.t}</small>;
-                    wall.appendChild(div);
-                });
-            } else {
-                wall.innerHTML = "كن أول باحث يضع بصمته هنا!";
-            }
+        function updateWallUI() {
+            // جلب المنشورات بهدوء
+            fetch("https://zaw-platform-default-rtdb.firebaseio.com/posts.json")
+            .then(res => res.json())
+            .then(data => {
+                if(data) {
+                    const wall = document.getElementById('wall');
+                    wall.innerHTML = "";
+                    Object.values(data).reverse().slice(0, 10).forEach(p => {
+                        const div = document.createElement('div');
+                        div.className = 'post';
+                        div.innerHTML = <b>${p.u}</b>: ${p.m}<br><small style='opacity:0.5'>${p.t}</small>;
+                        wall.appendChild(div);
+                    });
+                }
+            }).catch(() => {
+                document.getElementById('wall').innerText = "الوضع المحلي مفعل.";
+            });
         }
     </script>
 </body>
