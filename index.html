@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+	<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ZAW Lab">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZAW Project | Official Research Hub</title>
+    <style>
+        body { background-color: #001f3f; color: #f0f0f0; font-family: 'Segoe UI', Tahoma; margin: 0; display: flex; flex-direction: column; align-items: center; }
+        .header { background: linear-gradient(180deg, #001f3f 0%, #00152b 100%); border-bottom: 4px solid #D4AF37; padding: 50px 20px; text-align: center; width: 100%; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        .gold-text { color: #D4AF37; text-transform: uppercase; letter-spacing: 2px; margin: 10px 0; }
+        .profile-container { border: 4px solid #D4AF37; border-radius: 50%; width: 180px; height: 180px; margin: 0 auto 25px; overflow: hidden; box-shadow: 0 0 25px rgba(212, 175, 55, 0.4); background: #002d5a; }
+        .profile-container img { width: 100%; height: 100%; object-fit: cover; }
+        .content-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; padding: 50px 20px; max-width: 1200px; width: 100%; }
+        .card { background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(212, 175, 55, 0.3); border-right: 8px solid #D4AF37; padding: 30px; border-radius: 15px; transition: all 0.4s ease; backdrop-filter: blur(5px); }
+        .custom-file-upload { display: inline-block; padding: 12px 25px; cursor: pointer; background: linear-gradient(45deg, #D4AF37, #f1d592); color: #001f3f; border-radius: 8px; font-weight: bold; transition: 0.3s; margin-top: 15px; }
+        input[type="file"] { display: none; }
+        .status-msg { margin-top: 10px; font-size: 0.9em; color: #4CAF50; display: none; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="profile-container">
+            <img src="dr_zainab.jpg" alt="د. زينب عبد الله وحيد">
+        </div>
+        <h1 class="gold-text">د. زينب عبد الله وحيد</h1>
+        <p style="font-size: 1.2em; color: #e0e0e0;">مختبر المحاكاة الجزيئية والبحث العلمي المتطور</p>
+    </div>
+
+    <div class="content-grid">
+        <div class="card">
+            <h3 class="gold-text">🧬 وحدة المحاكاة الجزيئية</h3>
+            <p>تحليل ملفات PDB ونتائج GROMACS:</p>
+            <label class="custom-file-upload">
+                <input type="file" onchange="showStatus(this)"> اختيار ملف للمحاكاة
+            </label>
+            <div class="status-msg">✅ تم استلام ملف المحاكاة بنجاح</div>
+        </div>
+
+        <div class="card">
+            <h3 class="gold-text">📝 إدارة المخطوطات البحثية</h3>
+            <p>تنسيق المراجعات مع اللجنة العلمية المختصة:</p>
+            <label class="custom-file-upload">
+                <input type="file" onchange="showStatus(this)"> رفع مسودة بحثية
+            </label>
+            <div class="status-msg">✅ تم رفع المسودة بنجاح للمراجعة</div>
+        </div>
+    </div>
+
+    <script>
+        function showStatus(input) {
+            if (input.files.length > 0) {
+                input.parentElement.nextElementSibling.style.display = 'block';
+                alert("تم استلام الملف: " + input.files[0].name + " بنجاح دكتورة زينب");
+            }
+        }
+    </script>
+</body>
+</html>
