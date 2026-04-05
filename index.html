@@ -1,4 +1,18 @@
-<!DOCTYPE html>
+[6:17 م، 2026/4/5] زينب عبدالله: <!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZAW Global Research Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold: #D4AF37; --blue: #1e88e5; --dark: #1A2634; }
+        body { font-family: 'Cairo', sans-serif; background: var(--dark); color: white; margin: 0; padding: 0; text-align: center; }
+        
+        /* شريط علوي للملف الشخصي */
+        .top-bar { background: rgba(0,0,0,0.5); padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--gold); }
+        .user-info { display:…
+[6:21 م، 2026/4/5] زينب عبدالله: <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -10,120 +24,89 @@
         body { font-family: 'Cairo', sans-serif; background: var(--dark); color: white; margin: 0; padding-bottom: 50px; }
         
         /* الهيدر الجديد لضمان ظهور الملف الشخصي */
-        header { background: #000; padding: 10px 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--gold); position: sticky; top: 0; z-index: 1000; }
-        .user-pill { background: var(--card); border: 1px solid var(--gold); padding: 5px 15px; border-radius: 20px; cursor: pointer; display: flex; align-items: center; gap: 10px; }
-        .avatar { width: 30px; height: 30px; background: var(--gold); border-radius: 50%; color: black; display: flex; align-items: center; justify-content: center; font-weight: bold; }
-
-        .container { padding: 20px; max-width: 900px; margin: auto; }
-        .card { background: var(--card); border-radius: 15px; padding: 20px; margin-bottom: 20px; border: 1px solid rgba(212,175,55,0.3); box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
-        
-        h2 { color: var(--gold); margin-top: 0; font-size: 1.2em; }
-        input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #374151; margin-bottom: 10px; background: #111827; color: white; box-sizing: border-box; font-family: 'Cairo'; }
-        .btn { width: 100%; padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; font-family: 'Cairo'; transition: 0.2s; margin-bottom: 5px; }
+        header { background: #000; padding: 10px 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--gold); position: sticky; top: 0; …
+[6:24 م، 2026/4/5] زينب عبدالله: <!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZAW Global Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold: #D4AF37; --blue: #3b82f6; --dark: #0f172a; }
+        body { font-family: 'Cairo', sans-serif; background: var(--dark); color: white; margin: 0; padding: 0; }
+        header { background: #000; padding: 15px; display: flex; justify-content: space-between; border-bottom: 2px solid var(--gold); }
+        .container { padding: 20px; max-width: 600px; margin: auto; }
+        .card { background: #1e293b; border-radius: 15px; padding: 15px; margin-bottom: 15px; border: 1px solid var(--gold); }
+        input { width: 100%; padding: 12px; border-radius: 8px; margin-bottom: 10px; border: none; box-sizing: border-box; }
+        .btn { width: 100%; padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; font-family: 'Cairo'; }
         .btn-gold { background: var(--gold); color: black; }
-        .btn-blue { background: var(--blue); color: white; }
-
-        /* نافذة التسجيل */
-        .modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--card); padding: 25px; border-radius: 15px; border: 2px solid var(--gold); z-index: 2000; width: 85%; max-width: 400px; }
-        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1999; }
-        
-        #collabWall { background: rgba(0,0,0,0.2); border-radius: 10px; padding: 10px; margin-top: 10px; text-align: right; max-height: 150px; overflow-y: auto; }
-        .post { border-right: 3px solid var(--gold); background: rgba(255,255,255,0.05); padding: 8px; margin-bottom: 5px; font-size: 14px; }
+        .btn-blue { background: var(--blue); color: white; margin-top: 5px; }
+        .modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #1e293b; padding: 20px; border: 2px solid var(--gold); z-index: 100; width: 80%; }
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 50; }
     </style>
 </head>
-<body onload="checkUser()">
+<body onload="loadUser()">
 
     <header>
-        <div class="user-pill" onclick="openLogin()">
-            <div class="avatar" id="navInit">؟</div>
-            <span id="navName">تسجيل الباحث</span>
+        <div onclick="openPop()" style="cursor:pointer; border:1px solid var(--gold); padding:5px 10px; border-radius:20px;">
+            👤 <span id="topName">دخول الباحث</span>
         </div>
-        <div style="color: var(--gold); font-weight: bold;">ZAW HUB</div>
+        <div style="color:var(--gold); font-weight:bold;">ZAW HUB</div>
     </header>
 
     <div class="container">
-        <div style="text-align: center; margin-bottom: 25px;">
-            <h1 style="color: white; margin-bottom: 0;">منصة الأستاذة الدكتورة زينب عبدالله</h1>
-            <p style="color: var(--gold); font-size: 14px; margin-top: 5px;">🧬 Cellular & Molecular Biology Professional Hub</p>
-        </div>
+        <h2 style="text-align:center;">مشروع العمر الأكاديمي 🧬</h2>
 
-        <!-- 1. الملف الشخصي (ظاهر دائماً الآن) -->
-        <div id="profileBox" class="card" style="display:none; background: linear-gradient(to left, #1f2937, #111827);">
-            <h2 id="welcomeName">مرحباً دكتورة</h2>
-            <p id="welcomeBio" style="font-size: 13px; opacity: 0.8;"></p>
-            <button class="btn btn-blue" style="width: auto; padding: 5px 15px; font-size: 12px;" onclick="logout()">خروج</button>
-        </div>
-
-        <!-- 2. البحث العلمي -->
+        <!-- 1. البحث -->
         <div class="card">
-            <h2>🔍 البحث في المجلات الرصينة</h2>
-            <input type="text" id="sq" placeholder="ادخلي الكلمات المفتاحية للبحث...">
-            <button class="btn btn-blue" onclick="var v=document.getElementById('sq').value; if(v) window.open('https://scholar.google.com/scholar?q='+encodeURIComponent(v));">بحث في Google Scholar 🔎</button>
+            <h3 style="margin-top:0; color:var(--gold);">🔍 البحث العلمي</h3>
+            <input type="text" id="searchInput" placeholder="اكتبي عنوان البحث...">
+            <button class="btn btn-blue" onclick="var q=document.getElementById('searchInput').value; if(q) window.open('https://scholar.google.com/scholar?q='+encodeURIComponent(q));">بحث رصين 🔎</button>
         </div>
 
-        <!-- 3. التعاون البحثي -->
+        <!-- 2. التعاون -->
         <div class="card">
-            <h2>🤝 طلب تعاون بحثي</h2>
-            <button class="btn btn-gold" onclick="postCollab()">نشر طلب تعاون باسمي</button>
-            <div id="collabWall"><p style="text-align:center; font-size:12px; color:#666;">لا توجد طلبات تعاون حالياً</p></div>
+            <h3 style="margin-top:0; color:var(--gold);">🤝 طلب تعاون</h3>
+            <button class="btn btn-gold" onclick="addPost()">نشر طلب تعاون باسمي</button>
+            <div id="posts" style="margin-top:10px; font-size:14px;"></div>
         </div>
 
-        <!-- 4. قاعة المؤتمرات (أعدناها للظهور) -->
-        <div class="card" style="border-color: #1e88e5;">
-            <h2>🏛️ قاعة الاجتماعات والمؤتمرات</h2>
-            <p style="font-size: 13px;">عقد سمنار أو اجتماع بحثي فوري عبر الفيديو.</p>
-            <button class="btn btn-blue" onclick="window.open('https://meet.jit.si/ZAW_Conference_Room', '_blank')">دخول القاعة الافتراضية 📹</button>
+        <!-- 3. القاعة -->
+        <div class="card" style="border-color:var(--blue);">
+            <h3 style="margin-top:0; color:var(--blue);">🏛️ قاعة المؤتمرات</h3>
+            <button class="btn btn-blue" onclick="window.open('https://meet.jit.si/ZAW_Room_2026')">دخول الاجتماع 📹</button>
         </div>
     </div>
 
     <!-- نافذة التسجيل -->
-    <div class="overlay" id="overlay" onclick="closeLogin()"></div>
-    <div class="modal" id="loginModal">
-        <h2 style="text-align:center;">ملف الباحث</h2>
-        <input type="text" id="inName" placeholder="الاسم الكامل">
-        <input type="text" id="inBio" placeholder="التخصص الدقيق">
-        <button class="btn btn-gold" onclick="saveUser()">حفظ وإغلاق</button>
+    <div id="overlay" class="overlay" onclick="closePop()"></div>
+    <div id="pop" class="modal">
+        <h3>ملف الباحث</h3>
+        <input type="text" id="uName" placeholder="الاسم الكامل">
+        <input type="text" id="uBio" placeholder="التخصص">
+        <button class="btn btn-gold" onclick="save()">حفظ البيانات</button>
     </div>
 
     <script>
-        function openLogin() { document.getElementById('loginModal').style.display='block'; document.getElementById('overlay').style.display='block'; }
-        function closeLogin() { document.getElementById('loginModal').style.display='none'; document.getElementById('overlay').style.display='none'; }
-
-        function saveUser() {
-            const n = document.getElementById('inName').value;
-            const b = document.getElementById('inBio').value;
-            if(n && b) {
-                localStorage.setItem('zaw_name', n);
-                localStorage.setItem('zaw_bio', b);
-                location.reload();
-            }
+        function openPop() { document.getElementById('pop').style.display='block'; document.getElementById('overlay').style.display='block'; }
+        function closePop() { document.getElementById('pop').style.display='none'; document.getElementById('overlay').style.display='none'; }
+        function save() {
+            localStorage.setItem('n', document.getElementById('uName').value);
+            localStorage.setItem('b', document.getElementById('uBio').value);
+            location.reload();
         }
-
-        function checkUser() {
-            const n = localStorage.getItem('zaw_name');
-            const b = localStorage.getItem('zaw_bio');
-            if(n) {
-                document.getElementById('navName').innerText = n;
-                document.getElementById('navInit').innerText = n.charAt(0).toUpperCase();
-                document.getElementById('profileBox').style.display = 'block';
-                document.getElementById('welcomeName').innerText = "الباحثة: " + n;
-                document.getElementById('welcomeBio').innerText = "مجال البحث: " + b;
-            }
+        function loadUser() {
+            var n = localStorage.getItem('n');
+            if(n) { document.getElementById('topName').innerText = n; }
         }
-
-        function logout() { localStorage.clear(); location.reload(); }
-
-        function postCollab() {
-            const n = localStorage.getItem('zaw_name');
-            const b = localStorage.getItem('zaw_bio');
-            if(!n) { alert("لطفاً، سجلي دخولكِ أولاً دكتورة."); openLogin(); return; }
-            const wall = document.getElementById('collabWall');
-            if(wall.innerHTML.includes("لا توجد")) wall.innerHTML = "";
-            const div = document.createElement('div');
-            div.className = 'post';
-            div.innerHTML = <b>${n}</b><br><small>${b}</small>;
-            wall.prepend(div);
-            alert("تم النشر بنجاح! ✅");
+        function addPost() {
+            var n = localStorage.getItem('n');
+            if(!n) { alert('سجلي دخولكِ من الأعلى أولاً دكتورة'); openPop(); return; }
+            var d = document.createElement('div');
+            d.innerHTML = "📍 <b>" + n + "</b> طلب تعاوناً الآن";
+            d.style.padding = "5px"; d.style.borderBottom = "1px dashed #555";
+            document.getElementById('posts').prepend(d);
         }
     </script>
 </body>
