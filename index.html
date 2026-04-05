@@ -2,126 +2,101 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>منصة التعاون البحثي الدولي</title>
-    <!-- استدعاء مكتبات جوجل السحابية -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
         :root { --gold: #D4AF37; --blue: #2563eb; --dark: #0f172a; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--dark); color: white; text-align: center; margin: 0; padding: 15px; }
-        .box { background: #1e293b; border: 1.5px solid var(--gold); border-radius: 12px; padding: 15px; margin: 10px auto; max-width: 500px; box-shadow: 0 10px 20px rgba(0,0,0,0.4); }
-        h1, h2 { color: var(--gold); }
-        input { width: 90%; padding: 12px; margin: 8px 0; border-radius: 8px; border: none; font-size: 15px; background: #0f172a; color: white; }
-        .btn { width: 95%; padding: 14px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.3s; margin: 5px 0; }
+        body { font-family: 'Cairo', sans-serif; background: var(--dark); color: white; text-align: center; padding: 15px; }
+        .box { background: #1e293b; border: 1.5px solid var(--gold); border-radius: 12px; padding: 15px; margin: 10px auto; max-width: 500px; }
+        input { width: 90%; padding: 12px; margin: 8px 0; border-radius: 8px; border: none; background: #0f172a; color: white; }
+        .btn { width: 95%; padding: 14px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; }
         .btn-gold { background: var(--gold); color: black; }
         .btn-blue { background: var(--blue); color: white; }
-        
-        /* جدار التواصل العالمي */
-        #wall { background: rgba(0,0,0,0.2); border-radius: 10px; padding: 10px; margin-top: 15px; max-height: 400px; overflow-y: auto; text-align: right; border: 1px solid #334155; }
-        .post { background: #1e293b; border-right: 5px solid var(--gold); padding: 12px; margin-bottom: 10px; border-radius: 8px; animation: slideIn 0.4s ease; }
-        @keyframes slideIn { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        .time { font-size: 10px; color: var(--gold); display: block; margin-top: 5px; }
+        #wall { background: rgba(0,0,0,0.2); border-radius: 10px; padding: 10px; margin-top: 15px; max-height: 400px; overflow-y: auto; text-align: right; }
+        .post { background: #1e293b; border-right: 5px solid var(--gold); padding: 12px; margin-bottom: 10px; border-radius: 8px; }
     </style>
 </head>
-<body>
+<body onload="initApp()">
 
     <h1>🧬 منصة التعاون البحثي الدولي</h1>
 
     <div class="box">
-        <h2>👤 هويتكِ العلمية</h2>
-        <input type="text" id="userName" placeholder="الاسم الكامل (مثلاً: د. زينب عبدالله)">
-        <input type="text" id="userBio" placeholder="التخصص الدقيق...">
-        <button class="btn btn-gold" onclick="saveMyProfile()">حفظ وتفعيل الحساب ✅</button>
-        <p id="status" style="font-size:12px; color:#10b981;"></p>
-    </div>
-
-    <div class="box" style="border-color: var(--blue);">
-        <h2>📢 جدار التعاون العالمي</h2>
-        <p style="font-size: 13px; opacity: 0.8;">اكتبي طلبكِ البحثي ليراه الزملاء حول العالم</p>
-        <input type="text" id="postText" placeholder="مثلاً: أرغب في نشر بحث مشترك عن الخلايا الجذعية...">
-        <button class="btn btn-blue" onclick="sendPost()">نشر الإشعار للجميع 🚀</button>
-        
-        <div id="wall">
-            <p style="text-align:center; color:#64748b;">جاري تحميل المنشورات العالمية...</p>
-        </div>
+        <button class="btn btn-blue" onclick="askPermission()">تفعيل جرس التنبيهات 🔔</button>
+        <p id="notifStatus" style="font-size: 11px; margin-top: 5px;"></p>
     </div>
 
     <div class="box">
-        <h3>🏛️ القاعة والاجتماعات</h3>
-        <button class="btn btn-gold" onclick="window.open('https://meet.jit.si/ZAW_Global_Room')">دخول القاعة الدولية 📹</button>
+        <h3>👤 هويتكِ العلمية</h3>
+        <input type="text" id="userName" placeholder="الاسم الكامل">
+        <input type="text" id="userBio" placeholder="التخصص الدقيق">
+        <button class="btn btn-gold" onclick="saveProfile()">حفظ التفعيل ✅</button>
+    </div>
+
+    <div class="box">
+        <h3>📢 جدار التعاون العالمي</h3>
+        <input type="text" id="postText" placeholder="اكتبي طلبكِ البحثي هنا...">
+        <button class="btn btn-blue" onclick="sendPost()">نشر للجميع 🚀</button>
+        <div id="wall"></div>
     </div>
 
     <script>
-        // إعدادات قاعدة البيانات (Firebase) - نسخة تجريبية عامة للبدء فوراً
-        const firebaseConfig = {
-            databaseURL: "https://zaw-platform-default-rtdb.firebaseio.com/"
-        };
+        const firebaseConfig = { databaseURL: "https://zaw-platform-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // حفظ الملف الشخصي محلياً
-        function saveMyProfile() {
-            const n = document.getElementById('userName').value;
-            const b = document.getElementById('userBio').value;
-            if(n && b) {
-                localStorage.setItem('zaw_n', n);
-                localStorage.setItem('zaw_b', b);
-                document.getElementById('status').innerText = "تم التفعيل بنجاح دكتورة " + n;
-            } else { alert("أكملي البيانات دكتورة"); }
-        }
-
-        // إرسال المنشور إلى العالم (قاعدة البيانات)
-        function sendPost() {
-            const name = localStorage.getItem('zaw_n');
-            const bio = localStorage.getItem('zaw_b');
-            const text = document.getElementById('postText').value;
-
-            if(!name) { alert("سجلي هويتكِ أولاً في الصندوق الأعلى"); return; }
-            if(!text) { alert("اكتبي نص الطلب البحثي"); return; }
-
-            db.ref('posts').push({
-                name: name,
-                bio: bio,
-                text: text,
-                time: new Date().toLocaleString('ar-EG')
+        // 1. طلب إذن الإشعارات من المتصفح
+        function askPermission() {
+            Notification.requestPermission().then(perm => {
+                if(perm === "granted") {
+                    document.getElementById('notifStatus').innerText = "✅ الجرس مفعل! ستصلكِ تنبيهات فورية.";
+                    new Notification("منصة ZAW", { body: "تم تفعيل الإشعارات بنجاح دكتورة زينب" });
+                } else {
+                    alert("دكتورة، يرجى السماح بالإشعارات من إعدادات المتصفح (القفل بجانب الرابط).");
+                }
             });
-            document.getElementById('postText').value = ""; // مسح الخانة بعد النشر
         }
 
-        // استقبال المنشورات من العالم فوراً (Live Update)
-        db.ref('posts').limitToLast(20).on('value', (snapshot) => {
-            const wall = document.getElementById('wall');
-            wall.innerHTML = "";
-            const data = snapshot.val();
-            
-            // ترتيب المنشورات من الأحدث للأقدم
-            const entries = Object.values(data || {}).reverse();
-            
-            entries.forEach(post => {
+        function saveProfile() {
+            localStorage.setItem('zn', document.getElementById('userName').value);
+            localStorage.setItem('zb', document.getElementById('userBio').value);
+            alert("تم الحفظ");
+        }
+
+        function sendPost() {
+            const name = localStorage.getItem('zn');
+            const text = document.getElementById('postText').value;
+            if(!name || !text) return alert("أكملي البيانات دكتورة");
+
+            db.ref('posts').push({ name: name, text: text, time: new Date().toLocaleTimeString() });
+            document.getElementById('postText').value = "";
+        }
+
+        function initApp() {
+            // تحميل البيانات المحفوظة
+            document.getElementById('userName').value = localStorage.getItem('zn') || "";
+            document.getElementById('userBio').value = localStorage.getItem('zb') || "";
+
+            // مراقبة قاعدة البيانات وإرسال إشعار عند وجود منشور جديد
+            db.ref('posts').limitToLast(1).on('child_added', (snapshot) => {
+                const post = snapshot.val();
+                const wall = document.getElementById('wall');
+                
+                // إضافة المنشور للجدار
                 const div = document.createElement('div');
                 div.className = 'post';
-                div.innerHTML = `
-                    <strong>👤 ${post.name}</strong> <small>(${post.bio})</small>
-                    <p style="margin: 8px 0; color:#fff;">${post.text}</p>
-                    <span class="time">🕒 ${post.time}</span>
-                `;
-                wall.appendChild(div);
-            });
-            
-            if(entries.length === 0) {
-                wall.innerHTML = "<p style='text-align:center; color:#64748b;'>كن أول من ينشر طلباً بحثياً!</p>";
-            }
-        });
+                div.innerHTML = <strong>${post.name}</strong>: ${post.text};
+                wall.prepend(div);
 
-        // تعبئة البيانات تلقائياً إذا كانت محفوظة
-        window.onload = () => {
-            if(localStorage.getItem('zaw_n')) {
-                document.getElementById('userName').value = localStorage.getItem('zaw_n');
-                document.getElementById('userBio').value = localStorage.getItem('zaw_b');
-                document.getElementById('status').innerText = "مرحباً بكِ مجدداً دكتورة " + localStorage.getItem('zaw_n');
-            }
-        };
+                // إرسال إشعار (Notification) إذا كان المتصفح يدعم ذلك والمنشور ليس من صاحب الجهاز
+                if (Notification.permission === "granted" && post.name !== localStorage.getItem('zn')) {
+                    new Notification("طلب بحثي جديد!", {
+                        body: الباحث ${post.name} نشر طلباً جديداً الآن.,
+                        icon: "https://cdn-icons-png.flaticon.com/512/1043/1043301.png"
+                    });
+                }
+            });
+        }
     </script>
 </body>
 </html>
