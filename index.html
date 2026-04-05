@@ -4,117 +4,80 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>منصة ZAW للتعاون العلمي</title>
+    <!-- مكتبات سريعة جداً ومضادة للتجمد -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <style>
         :root { --gold: #D4AF37; --blue: #2563eb; --dark: #0f172a; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--dark); color: white; text-align: center; padding: 10px; margin: 0; }
-        .card { background: #1e293b; border: 2px solid var(--gold); border-radius: 12px; padding: 20px; margin: 10px auto; max-width: 480px; box-shadow: 0 8px 20px rgba(0,0,0,0.4); }
-        input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; font-size: 16px; box-sizing: border-box; }
-        
-        /* أزرار تعمل فوراً عند اللمس دون انتظار */
-        .btn { width: 100%; padding: 15px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 10px; display: block; position: relative; z-index: 999; }
-        .btn-gold { background: var(--gold); color: black; box-shadow: 0 4px #8a7024; }
-        .btn-blue { background: var(--blue); color: white; box-shadow: 0 4px #1a45a3; }
-        .btn:active { transform: translateY(3px); box-shadow: none; filter: brightness(1.2); }
-
-        #wall { background: rgba(0,0,0,0.2); border-radius: 10px; padding: 10px; margin-top: 15px; text-align: right; min-height: 80px; border: 1px dotted #444; }
-        .post { background: #26354a; border-right: 5px solid var(--gold); padding: 10px; margin-bottom: 8px; border-radius: 5px; animation: fadeIn 0.3s; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--dark); color: white; text-align: center; padding: 15px; }
+        .card { background: #1e293b; border: 2px solid var(--gold); border-radius: 15px; padding: 20px; max-width: 450px; margin: 15px auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; font-size: 16px; box-sizing: border-box; }
+        .btn { width: 100%; padding: 15px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.2s; background: var(--blue); color: white; margin-top: 10px; }
+        .btn:active { transform: scale(0.95); background: var(--gold); color: black; }
+        #wall { background: rgba(0,0,0,0.3); border-radius: 10px; padding: 10px; margin-top: 20px; text-align: right; min-height: 100px; border: 1px solid #444; }
+        .post { background: #26354a; border-right: 5px solid var(--gold); padding: 12px; margin-bottom: 10px; border-radius: 8px; font-size: 14px; animation: fadeIn 0.5s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
-<body onload="initApp()">
+<body onload="connectZAW()">
 
-    <h2 style="color: var(--gold); margin-top: 15px;">🧬 منصة التعاون البحثي الدولي</h2>
-
-    <!-- الملف الشخصي -->
-    <div class="card" id="regBox">
-        <h3>👤 تسجيل بيانات الباحث</h3>
-        <input type="text" id="uName" placeholder="الاسم الكامل...">
-        <input type="text" id="uBio" placeholder="التخصص...">
-        <button class="btn btn-gold" onclick="registerUser()">حفظ وتفعيل العضوية ✅</button>
-    </div>
-
-    <div class="card" id="welcomeBox" style="display:none; border-style: dashed;">
-        <h3 id="greet" style="margin:0; color:var(--gold)"></h3>
-        <button class="btn btn-blue" style="width:auto; padding:5px 15px; font-size:11px; margin: 10px auto;" onclick="localStorage.clear(); location.reload();">تبديل الحساب 🔄</button>
-    </div>
-
-    <!-- جدار المنشورات -->
+    <h2 style="color: var(--gold);">🧬 منصة ZAW للتعاون البحثي الدولي</h2>
+    
     <div class="card">
-        <h3>📢 جدار تبادل الخبرات</h3>
-        <input type="text" id="pMsg" placeholder="اكتبي موضوع البحث هنا...">
-        <button class="btn btn-blue" id="postBtn" onclick="publishMsg()">نشر الإشعار العلمي 🚀</button>
-        <div id="wall">جاري عرض المنشورات...</div>
+        <h3 style="margin-top:0;">👤 دكتورة زينب عبد الله وحيد</h3>
+        <p style="font-size: 13px; opacity: 0.8;">المنصة الآن متصلة عالمياً 🌍</p>
     </div>
 
-    <!-- القاعات -->
-    <div class="card" style="border-color: var(--blue);">
-        <h3>🏛️ قاعات الاجتماعات</h3>
-        <button class="btn btn-blue" onclick="window.open('https://meet.jit.si/ZAW_Research_Global')">دخول القاعة المباشرة 📹</button>
+    <div class="card">
+        <h3>📢 جدار التعاون العلمي</h3>
+        <input type="text" id="scientificMsg" placeholder="اكتبي موضوع البحث هنا...">
+        <button class="btn" onclick="sendToCloud()">نشر الإشعار الآن 🚀</button>
+        <div id="wall">جاري فحص الاتصال بالقاعدة...</div>
     </div>
 
     <script>
-        // وظائف الأزرار المستقلة
-        function registerUser() {
-            const n = document.getElementById('uName').value;
-            const b = document.getElementById('uBio').value;
-            if(n && b) {
-                localStorage.setItem('dr_n', n);
-                localStorage.setItem('dr_b', b);
-                alert("تم الحفظ بنجاح دكتورة!");
-                location.reload();
-            }
-        }
+        // الرابط الخاص بكِ دكتورة زينب من الصورة
+        const firebaseConfig = {
+            databaseURL: "https://zaw-research-hub-default-rtdb.firebaseio.com/"
+        };
 
-        function initApp() {
-            const name = localStorage.getItem('dr_n');
-            if(name) {
-                document.getElementById('regBox').style.display = 'none';
-                document.getElementById('welcomeBox').style.display = 'block';
-                document.getElementById('greet').innerText = "مرحباً دكتورة " + name;
-                updateWallUI();
-            }
-        }
+        // تفعيل الاتصال
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
 
-        function publishMsg() {
-            const name = localStorage.getItem('dr_n');
-            const msg = document.getElementById('pMsg').value;
-            if(!name) { alert("سجلي بياناتكِ أولاً دكتورة!"); return; }
-            if(!msg) return;
-
-            // 1. عرض المنشور محلياً فوراً (بدون انتظار الإنترنت) لضمان عدم تجمد الزر
+        function connectZAW() {
             const wall = document.getElementById('wall');
-            const div = document.createElement('div');
-            div.className = 'post';
-            div.innerHTML = <b>${name}</b>: ${msg}<br><small style='opacity:0.5'>الآن</small>;
-            wall.prepend(div);
-            
-            // 2. مسح الحقل فوراً
-            document.getElementById('pMsg').value = "";
-
-            // 3. محاولة الإرسال للسحابة في الخلفية (إذا فشل لا يهم، الزر لن يجمد)
-            fetch("https://zaw-platform-default-rtdb.firebaseio.com/posts.json", {
-                method: "POST",
-                body: JSON.stringify({ u: name, m: msg, t: new Date().toLocaleTimeString('ar-EG') })
+            // جلب البيانات فوراً وتلقائياً
+            database.ref('research_posts').on('value', (snapshot) => {
+                wall.innerHTML = "";
+                const data = snapshot.val();
+                if (data) {
+                    Object.values(data).reverse().forEach(post => {
+                        const div = document.createElement('div');
+                        div.className = 'post';
+                        div.innerHTML = <b>${post.user}</b>: ${post.msg}<br><small style="color:var(--gold)">${post.time}</small>;
+                        wall.appendChild(div);
+                    });
+                } else {
+                    wall.innerHTML = "الجدار فارغ.. ابدأي بنشر أول فكرة بحثية!";
+                }
+            }, (error) => {
+                wall.innerHTML = "خطأ في الاتصال: تأكدي من ضغط Publish في Firebase";
             });
         }
 
-        function updateWallUI() {
-            // جلب المنشورات بهدوء
-            fetch("https://zaw-platform-default-rtdb.firebaseio.com/posts.json")
-            .then(res => res.json())
-            .then(data => {
-                if(data) {
-                    const wall = document.getElementById('wall');
-                    wall.innerHTML = "";
-                    Object.values(data).reverse().slice(0, 10).forEach(p => {
-                        const div = document.createElement('div');
-                        div.className = 'post';
-                        div.innerHTML = <b>${p.u}</b>: ${p.m}<br><small style='opacity:0.5'>${p.t}</small>;
-                        wall.appendChild(div);
-                    });
-                }
-            }).catch(() => {
-                document.getElementById('wall').innerText = "الوضع المحلي مفعل.";
+        function sendToCloud() {
+            const message = document.getElementById('scientificMsg').value;
+            if (!message) return;
+
+            database.ref('research_posts').push({
+                user: "د. زينب وحيد",
+                msg: message,
+                time: new Date().toLocaleTimeString('ar-EG')
+            }).then(() => {
+                document.getElementById('scientificMsg').value = "";
+            }).catch(err => {
+                alert("فشل النشر! تأكدي أن القواعد (Rules) هي true");
             });
         }
     </script>
