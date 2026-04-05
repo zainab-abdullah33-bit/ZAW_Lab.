@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+[8:13 م، 2026/4/5] زينب عبدالله: <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -10,76 +10,101 @@
     <style>
         :root { --gold: #D4AF37; --blue: #2563eb; --dark: #0f172a; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--dark); color: white; text-align: center; padding: 15px; }
-        .card { background: #1e293b; border: 2px solid var(--gold); border-radius: 15px; padding: 20px; max-width: 450px; margin: 15px auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; font-size: 16px; box-sizing: border-box; }
-        .btn { width: 100%; padding: 15px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.2s; background: var(--blue); color: white; margin-top: 10px; }
-        .btn:active { transform: scale(0.95); background: var(--gold); color: black; }
-        #wall { background: rgba(0,0,0,0.3); border-radius: 10px; padding: 10px; margin-top: 20px; text-align: right; min-height: 100px; border: 1px solid #444; }
-        .post { background: #26354a; border-right: 5px solid var(--gold); padding: 12px; margin-bottom: 10px; border-radius: 8px; font-size: 14px; animation: fadeIn 0.5s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .card { background: #1e293b; border: 2px solid var(--gold); border-radius: 15px; padding: 20px; max-width: 450px; margin: 15px auto; b…
+[8:17 م، 2026/4/5] زينب عبدالله: <!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة ZAW للتعاون العلمي الدولي</title>
+    <style>
+        :root { --gold: #D4AF37; --blue: #2563eb; --dark: #0f172a; --card: #1e293b; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--dark); color: white; text-align: center; padding: 10px; margin: 0; }
+        .card { background: var(--card); border: 2px solid var(--gold); border-radius: 15px; padding: 15px; margin: 10px auto; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        h2, h3 { color: var(--gold); margin: 10px 0; }
+        input { width: 90%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; font-size: 16px; }
+        
+        /* أزرار فائقة الاستجابة */
+        .btn { width: 95%; padding: 15px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; font-size: 15px; margin: 5px 0; display: inline-block; transition: 0.2s; }
+        .btn-blue { background: var(--blue); color: white; box-shadow: 0 4px #1a45a3; }
+        .btn-gold { background: var(--gold); color: black; box-shadow: 0 4px #8a7024; }
+        .btn-green { background: #10b981; color: white; box-shadow: 0 4px #065f46; }
+        .btn:active { transform: translateY(3px); box-shadow: none; }
+
+        #wall { background: rgba(0,0,0,0.3); border-radius: 10px; padding: 10px; margin-top: 15px; text-align: right; min-height: 50px; border: 1px solid #444; }
+        .post { background: #26354a; border-right: 5px solid var(--gold); padding: 10px; margin-bottom: 8px; border-radius: 5px; font-size: 14px; }
+        .room-title { font-size: 12px; color: var(--gold); margin-bottom: 5px; display: block; }
     </style>
 </head>
-<body onload="connectZAW()">
+<body onload="refreshWall()">
 
-    <h2 style="color: var(--gold);">🧬 منصة ZAW للتعاون البحثي الدولي</h2>
-    
+    <h2 style="margin-top:20px;">🧬 منصة ZAW للتعاون البحثي الدولي</h2>
     <div class="card">
-        <h3 style="margin-top:0;">👤 دكتورة زينب عبد الله وحيد</h3>
-        <p style="font-size: 13px; opacity: 0.8;">المنصة الآن متصلة عالمياً 🌍</p>
+        <h3 style="margin:0;">👤 دكتورة زينب عبد الله وحيد</h3>
+        <p style="font-size: 12px; opacity: 0.8;">مرحباً بكِ في مركز القيادة العلمية</p>
     </div>
 
+    <!-- 1. جدار التعاون العلمي -->
     <div class="card">
-        <h3>📢 جدار التعاون العلمي</h3>
-        <input type="text" id="scientificMsg" placeholder="اكتبي موضوع البحث هنا...">
-        <button class="btn" onclick="sendToCloud()">نشر الإشعار الآن 🚀</button>
-        <div id="wall">جاري فحص الاتصال بالقاعدة...</div>
+        <h3>📢 جدار طلبات التعاون (عالمي)</h3>
+        <input type="text" id="msgInput" placeholder="اكتبي موضوع البحث (مثلاً: INSILICO DRUG DISCOVERY)...">
+        <button class="btn btn-blue" onclick="postToWall()">نشر الإشعار العلمي الآن 🚀</button>
+        <div id="wall">جاري جلب المنشورات من السحابة...</div>
+    </div>
+
+    <!-- 2. قاعات المؤتمرات والاجتماعات المباشرة -->
+    <div class="card" style="border-color: var(--blue);">
+        <h3>🏛️ القاعات والاجتماعات المرئية</h3>
+        <button class="btn btn-blue" onclick="window.open('https://meet.jit.si/ZAW_Conference_Hall')">🏛️ قاعة المؤتمرات الكبرى</button>
+        <button class="btn btn-green" onclick="window.open('https://meet.jit.si/ZAW_Microbiology_Room')">🧫 غرفة الأحياء المجهرية</button>
+        <button class="btn btn-gold" onclick="window.open('https://meet.jit.si/ZAW_Bioinformatics_Lab')">💻 مختبر المعلوماتية الحيوية</button>
+        <button class="btn" style="background:#6366f1; color:white;" onclick="window.open('https://meet.jit.si/ZAW_Arab_Researchers')">🌍 غرفة الباحثين العرب والأجانب</button>
     </div>
 
     <script>
-        // الرابط الخاص بكِ دكتورة زينب من الصورة
-        const firebaseConfig = {
-            databaseURL: "https://zaw-research-hub-default-rtdb.firebaseio.com/"
-        };
+        // رابط قاعدة البيانات الخاص بكِ دكتورة زينب
+        const dbUrl = "https://zaw-research-hub-default-rtdb.firebaseio.com/global_science.json";
 
-        // تفعيل الاتصال
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+        async function postToWall() {
+            const msg = document.getElementById('msgInput').value;
+            if(!msg) return;
 
-        function connectZAW() {
-            const wall = document.getElementById('wall');
-            // جلب البيانات فوراً وتلقائياً
-            database.ref('research_posts').on('value', (snapshot) => {
+            const data = { 
+                u: "د. زينب وحيد", 
+                m: msg, 
+                t: new Date().toLocaleTimeString('ar-EG') 
+            };
+
+            // إرسال البيانات
+            await fetch(dbUrl, { method: 'POST', body: JSON.stringify(data) });
+            document.getElementById('msgInput').value = "";
+            refreshWall();
+        }
+
+        async function refreshWall() {
+            try {
+                const res = await fetch(dbUrl);
+                const data = await res.json();
+                const wall = document.getElementById('wall');
                 wall.innerHTML = "";
-                const data = snapshot.val();
-                if (data) {
-                    Object.values(data).reverse().forEach(post => {
-                        const div = document.createElement('div');
-                        div.className = 'post';
-                        div.innerHTML = <b>${post.user}</b>: ${post.msg}<br><small style="color:var(--gold)">${post.time}</small>;
-                        wall.appendChild(div);
+                
+                if(data) {
+                    Object.values(data).reverse().slice(0, 10).forEach(p => {
+                        const d = document.createElement('div');
+                        d.className = 'post';
+                        d.innerHTML = <b>${p.u}</b>: ${p.m} <br><small style="color:var(--gold)">${p.t}</small>;
+                        wall.appendChild(d);
                     });
                 } else {
-                    wall.innerHTML = "الجدار فارغ.. ابدأي بنشر أول فكرة بحثية!";
+                    wall.innerHTML = "الجدار جاهز لاستقبال أفكاركم العلمية.";
                 }
-            }, (error) => {
-                wall.innerHTML = "خطأ في الاتصال: تأكدي من ضغط Publish في Firebase";
-            });
+            } catch(e) {
+                document.getElementById('wall').innerHTML = "تأكدي من تفعيل Rules في Firebase إلى true";
+            }
         }
 
-        function sendToCloud() {
-            const message = document.getElementById('scientificMsg').value;
-            if (!message) return;
-
-            database.ref('research_posts').push({
-                user: "د. زينب وحيد",
-                msg: message,
-                time: new Date().toLocaleTimeString('ar-EG')
-            }).then(() => {
-                document.getElementById('scientificMsg').value = "";
-            }).catch(err => {
-                alert("فشل النشر! تأكدي أن القواعد (Rules) هي true");
-            });
-        }
+        // تحديث تلقائي كل 30 ثانية
+        setInterval(refreshWall, 30000);
     </script>
 </body>
 </html>
