@@ -3,79 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZAW Academic Platform | منصة زينب عبدالله</title>
+    <title>ZAW Global Research Hub</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #D4AF37; --dark-blue: #1A2634; --white: #FFFFFF; }
-        body { font-family: 'Cairo', sans-serif; background-color: var(--dark-blue); color: var(--white); margin: 0; padding: 20px; }
-        .header { border-bottom: 2px solid var(--gold); padding: 20px; margin-bottom: 30px; text-align: center; }
+        body { font-family: 'Cairo', sans-serif; background-color: var(--dark-blue); color: var(--white); margin: 0; padding: 15px; }
+        .navbar { background: rgba(0,0,0,0.3); padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--gold); margin-bottom: 20px; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
-        .card { background: rgba(255,255,255,0.05); padding: 25px; border-radius: 15px; border: 1px solid var(--gold); text-align: center; }
-        .btn { padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; border: none; font-family: 'Cairo'; display: block; text-decoration: none; transition: 0.3s; }
+        .card { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; border: 1px solid var(--gold); }
+        
+        /* محرك البحث العالمي داخل المكتبة */
+        .search-box { background: white; padding: 10px; border-radius: 10px; display: flex; gap: 5px; margin-top: 15px; }
+        .search-box input { flex: 1; border: none; padding: 8px; font-family: 'Cairo'; outline: none; }
+        .search-btn { background: var(--gold); border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        
+        .btn { padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; border: none; font-family: 'Cairo'; display: block; text-decoration: none; text-align: center; }
         .btn-gold { background: var(--gold); color: var(--dark-blue); }
-        .btn-blue { background: #1e88e5; color: white; }
-        .chat-room { background: rgba(0,0,0,0.2); padding: 15px; border-radius: 10px; margin-top: 20px; text-align: right; height: 150px; overflow-y: auto; border: 1px solid #444; }
+        .btn-outline { background: transparent; color: var(--gold); border: 1px solid var(--gold); }
+        .lang-btn { background: var(--gold); color: var(--dark-blue); border: none; padding: 5px 15px; border-radius: 20px; cursor: pointer; font-weight: bold; }
+        .en { display: none; }
     </style>
 </head>
-<body>
+<body id="bodyTag">
 
-    <div class="header">
-        <h1 style="color: var(--gold);">ZAW Academic Hub 🧬</h1>
-        <p>الأستاذة الدكتورة زينب عبدالله وحيد | جامعة التقنية الوسطى</p>
-    </div>
+    <nav class="navbar">
+        <div class="ar"><b>منصة ZAW العالمية للبحوث</b></div>
+        <div class="en"><b>ZAW Global Research Hub</b></div>
+        <button class="lang-btn" onclick="toggleLang()">English / عربي</button>
+    </nav>
 
     <div class="grid">
-        <!-- قسم غرف الدردشة البحثية -->
-        <div class="card">
-            <h3 style="color: var(--gold);">💬 غرف الدردشة المباشرة</h3>
-            <p style="font-size: 14px;">تواصل فوري مع الفرق البحثية (Text Chat)</p>
-            <div class="chat-room" id="chatBox">
-                <p style="font-size: 12px; color: var(--gold);">[نظام]: أهلاً بكِ دكتورة زينب في غرفة الدردشة الأكاديمية.</p>
-                <p style="font-size: 12px;"><b>د. ريكاردو:</b> أهلاً دكتورة، هل أطلعتِ على نتائج GROMACS الأخيرة؟</p>
-            </div>
-            <input type="text" id="chatInput" placeholder="اكتبي رسالتكِ هنا..." style="width: 80%; padding: 8px; margin-top: 10px; border-radius: 5px; border: none;">
-            <button class="btn btn-gold" onclick="sendMessage()" style="width: 15%; display: inline-block;">إرسال</button>
-        </div>
-
-        <!-- قسم المكتبة الرصينة (أبحاثك الحقيقية) -->
-        <div class="card">
-            <h3 style="color: var(--gold);">📚 المكتبة البحثية الرصينة</h3>
-            <p style="font-size: 13px;">النتاج العلمي المنشور في Scopus و Clarivate</p>
+        <!-- قسم المكتبة العالمية -->
+        <div class="card" style="grid-column: 1 / -1;">
+            <h2 class="ar" style="color: var(--gold); margin: 0;">🌐 المكتبة البحثية العالمية الشاملة</h2>
+            <h2 class="en" style="color: var(--gold); margin: 0;">🌐 Global Research Library</h2>
+            <p class="ar">ابحثي في ملايين الأوراق البحثية من Nature, Science, PubMed وغيرها..</p>
+            <p class="en">Search millions of papers from Nature, Science, PubMed, and more..</p>
             
-            <div style="text-align: right; font-size: 13px; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; margin-bottom: 10px;">
-                <b>1. Scientific Reports (Nature)</b><br>
-                <span>بحث حول تجمعات بروتين SOD1 والطفرة G41D.</span>
-                <a href="https://www.nature.com/srep/" target="_blank" style="color: var(--gold); display: block;">عرض البحث 📄</a>
+            <div class="search-box">
+                <input type="text" id="globalSearch" placeholder="أدخلي موضوع البحث (مثلاً: Bioinformatics, Cancer Research)...">
+                <button class="search-btn" onclick="searchWorld()">بحث عالمي 🔎</button>
             </div>
-
-            <div style="text-align: right; font-size: 13px; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px;">
-                <b>2. B&B Reports (Elsevier)</b><br>
-                <span>دراسة تأثير الـ Hesperidin على تجمعات البروتين.</span>
-                <a href="https://www.journals.elsevier.com/biochemistry-and-biophysics-reports" target="_blank" style="color: var(--gold); display: block;">عرض البحث 📄</a>
+            
+            <div style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
+                <a href="https://pubmed.ncbi.nlm.nih.gov/" target="_blank" class="btn btn-outline" style="width: auto; flex: 1;">PubMed 🧬</a>
+                <a href="https://www.sciencedirect.com/" target="_blank" class="btn btn-outline" style="width: auto; flex: 1;">ScienceDirect 🔬</a>
+                <a href="https://scholar.google.com/" target="_blank" class="btn btn-outline" style="width: auto; flex: 1;">Google Scholar 🎓</a>
             </div>
         </div>
 
-        <!-- قاعة الاجتماعات -->
+        <!-- قسم عقد الاجتماعات -->
         <div class="card">
-            <h3 style="color: var(--gold);">📡 عقد اجتماع بحثي</h3>
-            <p>للمناقشات المباشرة والعرض التقديمي (Video)</p>
-            <a href="https://meet.jit.si/ZAW_Research_Global" target="_blank" class="btn btn-blue">بدء الاجتماع الآن 📹</a>
-            <a href="mailto:zainab.abdullah@mtu.edu.iq" class="btn btn-gold">مراسلة عبر الإيميل الجامعي ✉️</a>
+            <h3 class="ar">📡 عقد اجتماع بحثي مباشر</h3>
+            <h3 class="en">📡 Live Research Meeting</h3>
+            <p class="ar" style="font-size: 13px;">مساحة لعقد السيمنارات والمناقشات الدولية.</p>
+            <a href="https://meet.jit.si/ZAW_Global_Hub" target="_blank" class="btn btn-gold">بدء الاجتماع الآن 📹</a>
+        </div>
+
+        <!-- قسم الدردشة -->
+        <div class="card">
+            <h3 class="ar">💬 بوابة التواصل الفوري</h3>
+            <h3 class="en">💬 Instant Collaboration</h3>
+            <p class="ar" style="font-size: 13px;">تبادل الخبرات مع الباحثين حول العالم.</p>
+            <button class="btn btn-gold ar" onclick="alert('جاري إرسال طلبكِ للباحثين...')">إرسال رسالة تعاون ✉️</button>
+            <button class="btn btn-gold en" onclick="alert('Sending Collaboration Request...')">Send Request ✉️</button>
         </div>
     </div>
 
     <script>
-        function sendMessage() {
-            const input = document.getElementById('chatInput');
-            const chatBox = document.getElementById('chatBox');
-            if(input.value.trim() !== "") {
-                const p = document.createElement('p');
-                p.style.fontSize = "12px";
-                p.innerHTML = <b>أنتِ:</b> ${input.value};
-                chatBox.appendChild(p);
-                input.value = "";
-                chatBox.scrollTop = chatBox.scrollHeight;
+        function toggleLang() {
+            const body = document.getElementById('bodyTag');
+            const arEls = document.querySelectorAll('.ar');
+            const enEls = document.querySelectorAll('.en');
+            if (body.dir === "rtl") {
+                body.dir = "ltr";
+                arEls.forEach(el => el.style.display = 'none');
+                enEls.forEach(el => el.style.display = 'block');
+            } else {
+                body.dir = "rtl";
+                arEls.forEach(el => el.style.display = 'block');
+                enEls.forEach(el => el.style.display = 'none');
+            }
+        }
+
+        function searchWorld() {
+            const query = document.getElementById('globalSearch').value;
+            if(query.trim() !== "") {
+                // سيقوم بفتح محرك البحث الأكاديمي للكلمة المطلوبة
+                window.open(https://scholar.google.com/scholar?q=${query}, '_blank');
+            } else {
+                alert("يرجى كتابة موضوع البحث أولاً.");
             }
         }
     </script>
 </body>
+</html>
