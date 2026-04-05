@@ -7,73 +7,74 @@
     <style>
         :root { --gold: #D4AF37; --blue: #2563eb; --dark: #0f172a; }
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--dark); color: white; text-align: center; padding: 10px; margin: 0; }
-        .card { background: #1e293b; border: 2px solid var(--gold); border-radius: 15px; padding: 15px; margin: 10px auto; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        .card { background: #1e293b; border: 2px solid var(--gold); border-radius: 15px; padding: 20px; margin: 15px auto; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
         h3 { color: var(--gold); margin: 10px 0; border-bottom: 1px dashed #444; padding-bottom: 5px; }
         input { width: 90%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; font-size: 16px; }
-        
-        .btn { width: 95%; padding: 14px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; font-size: 14px; margin: 5px 0; transition: 0.2s; color: white; }
+        .btn { width: 95%; padding: 14px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; font-size: 14px; margin: 5px 0; transition: 0.2s; color: white; display: inline-block; text-decoration: none; }
         .btn-blue { background: var(--blue); box-shadow: 0 4px #1a45a3; }
         .btn-gold { background: var(--gold); color: black; box-shadow: 0 4px #8a7024; }
-        .btn-special { background: #8b5cf6; box-shadow: 0 4px #5b21b6; } /* تخصصات */
-        .btn-green { background: #10b981; box-shadow: 0 4px #065f46; } /* دردشة */
-        .btn:active { transform: translateY(3px); box-shadow: none; }
-
+        .btn-special { background: #8b5cf6; box-shadow: 0 4px #5b21b6; }
+        .btn-green { background: #10b981; box-shadow: 0 4px #065f46; }
         #wall { background: rgba(0,0,0,0.3); border-radius: 10px; padding: 10px; margin-top: 15px; text-align: right; min-height: 40px; border: 1px solid #444; font-size: 14px; }
-        .post { background: #26354a; border-right: 4px solid var(--gold); padding: 8px; margin-bottom: 5px; border-radius: 5px; }
+        .post { background: #26354a; border-right: 4px solid var(--gold); padding: 10px; margin-bottom: 5px; border-radius: 5px; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
-<body onload="fetchWall()">
+<body onload="refreshWall()">
 
     <h2 style="color: var(--gold); margin-top:20px;">🧬 منصة ZAW للتعاون البحثي الدولي</h2>
     
-    <!-- الملف الشخصي -->
     <div class="card" style="background: rgba(212, 175, 55, 0.1);">
         <h3 style="border:none;">👤 دكتورة زينب عبد الله وحيد</h3>
         <p style="font-size: 12px; margin:0;">مركز القيادة العلمية والتعاون الدولي</p>
     </div>
 
-    <!-- 1. جدار التعاون العالمي -->
+    <!-- جدار التعاون -->
     <div class="card">
         <h3>📢 جدار طلبات التعاون العلمي</h3>
-        <input type="text" id="mInput" placeholder="اكتبي موضوع البحث (مثلاً: INSILICO DRUG DISCOVERY)...">
-        <button class="btn btn-blue" onclick="sendPost()">نشر الإشعار العلمي الآن 🚀</button>
-        <div id="wall">بانتظار الإشارة من السحابة...</div>
+        <input type="text" id="mInput" placeholder="اكتبي موضوع البحث هنا...">
+        <button class="btn btn-blue" onclick="sendToCloud()">نشر الإشعار العلمي الآن 🚀</button>
+        <div id="wall">بانتظار الإشارة...</div>
     </div>
 
-    <!-- 2. قاعة المؤتمرات والدردشة العامة -->
+    <!-- القاعات المؤتمرات والدردشة -->
     <div class="card" style="border-color: var(--blue);">
         <h3>🏛️ القاعات والاجتماعات المرئية</h3>
-        <button class="btn btn-blue" onclick="window.open('https://meet.jit.si/ZAW_Conference_Hall')">🏛️ دخول قاعة المؤتمرات الكبرى</button>
-        <button class="btn btn-green" onclick="window.open('https://meet.jit.si/ZAW_General_Chat')">💬 غرف الدردشة والتعارف العلمي</button>
+        <a href="https://meet.jit.si/ZAW_Conference_Hall" target="_blank" class="btn btn-blue">🏛️ دخول قاعة المؤتمرات الكبرى</a>
+        <a href="https://meet.jit.si/ZAW_General_Chat" target="_blank" class="btn btn-green">💬 غرف الدردشة والتعارف العلمي</a>
     </div>
 
-    <!-- 3. الغرف البحثية المتخصصة -->
+    <!-- الغرف التخصصية (قسم الأحياء المجهرية والمختبرات) -->
     <div class="card" style="border-color: #8b5cf6;">
         <h3>🧪 الغرف البحثية حسب التخصصات</h3>
-        <button class="btn btn-special" onclick="window.open('https://meet.jit.si/ZAW_Microbiology')">🧫 قسم الأحياء المجهرية</button>
-        <button class="btn btn-special" onclick="window.open('https://meet.jit.si/ZAW_Bioinformatics')">💻 قسم المعلوماتية الحيوية</button>
-        <button class="btn btn-gold" onclick="window.open('https://meet.jit.si/ZAW_Genetics_Lab')">🧬 مختبر الجينات والوراثة</button>
+        <a href="https://meet.jit.si/ZAW_Microbiology" target="_blank" class="btn btn-special">🧫 قسم الأحياء المجهرية</a>
+        <a href="https://meet.jit.si/ZAW_Bioinformatics" target="_blank" class="btn btn-special">💻 قسم المعلوماتية الحيوية</a>
+        <a href="https://meet.jit.si/ZAW_Genetics_Lab" target="_blank" class="btn btn-gold">🧬 مختبر الجينات والوراثة</a>
     </div>
 
     <script>
+        // الرابط المباشر الصحيح
         const dbURL = "https://zaw-research-hub-default-rtdb.firebaseio.com/science.json";
 
-        async function sendPost() {
+        async function sendToCloud() {
             const m = document.getElementById('mInput').value;
             if(!m) return;
             const data = { u: "د. زينب وحيد", m: m, t: new Date().toLocaleTimeString('ar-EG') };
-            await fetch(dbURL, { method: 'POST', body: JSON.stringify(data) });
-            document.getElementById('mInput').value = "";
-            fetchWall();
+            
+            try {
+                await fetch(dbURL, { method: 'POST', body: JSON.stringify(data) });
+                document.getElementById('mInput').value = "";
+                refreshWall();
+            } catch(e) { alert("تأكدي من الإنترنت يا دكتورة"); }
         }
 
-        async function fetchWall() {
+        async function refreshWall() {
             const wall = document.getElementById('wall');
             try {
                 const res = await fetch(dbURL);
                 const data = await res.json();
                 wall.innerHTML = "";
-                if(data) {
+                if(data && Object.keys(data).length > 0) {
                     Object.values(data).reverse().forEach(p => {
                         const d = document.createElement('div');
                         d.className = 'post';
@@ -81,13 +82,13 @@
                         wall.appendChild(d);
                     });
                 } else {
-                    wall.innerHTML = "الجدار جاهز لاستقبال منشوراتكم.";
+                    wall.innerHTML = "الجدار جاهز، انشري أول فكرة!";
                 }
             } catch(e) {
-                wall.innerHTML = "يرجى تحديث الصفحة..";
+                wall.innerHTML = "تنبيه: السحابة لا تستجيب، يرجى تحديث الصفحة.";
             }
         }
-        setInterval(fetchWall, 20000); // تحديث الجدار كل 20 ثانية تلقائياً
+        setInterval(refreshWall, 10000); // تحديث كل 10 ثوانٍ
     </script>
 </body>
 </html>
