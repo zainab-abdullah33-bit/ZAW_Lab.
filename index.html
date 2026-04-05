@@ -2,57 +2,71 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>منصة ZAW الدولية للبحث العلمي</title>
     <style>
-        body { background: #0f172a; color: white; text-align: center; font-family: sans-serif; padding: 20px; }
-        .card { background: #1e293b; border: 2px solid #D4AF37; border-radius: 15px; padding: 20px; max-width: 450px; margin: 10px auto; }
-        input { width: 80%; padding: 10px; margin: 5px; border-radius: 5px; border: none; }
-        .btn { background: #2563eb; color: white; padding: 12px 25px; border-radius: 10px; border: none; cursor: pointer; font-weight: bold; width: 90%; }
-        #wall { background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; margin-top: 15px; text-align: right; border: 1px solid #444; }
-        .post { border-bottom: 1px solid #444; padding: 8px; margin-bottom: 5px; }
+        :root { --gold: #D4AF37; --blue: #2563eb; --dark: #0f172a; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--dark); color: white; text-align: center; padding: 10px; margin: 0; }
+        .card { background: #1e293b; border: 2px solid var(--gold); border-radius: 15px; padding: 20px; margin: 15px auto; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        h3 { color: var(--gold); margin: 10px 0; border-bottom: 1px dashed #444; padding-bottom: 5px; }
+        input { width: 85%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; font-size: 16px; }
+        .btn { width: 95%; padding: 14px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; font-size: 14px; margin: 5px 0; transition: 0.2s; color: white; display: inline-block; text-decoration: none; }
+        .btn-blue { background: var(--blue); box-shadow: 0 4px #1a45a3; }
+        .btn-green { background: #10b981; box-shadow: 0 4px #065f46; }
+        .btn-special { background: #8b5cf6; box-shadow: 0 4px #5b21b6; }
+        #wall { background: rgba(0,0,0,0.3); border-radius: 10px; padding: 10px; margin-top: 15px; text-align: right; min-height: 80px; border: 1px solid #444; }
+        .post { background: #26354a; border-right: 4px solid var(--gold); padding: 10px; margin-bottom: 8px; border-radius: 5px; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-<body onload="loadData()">
+<body onload="startLiveWall()">
 
-    <div class="card">
-        <h2 style="color:#D4AF37;">🧬 دكتورة زينب عبد الله وحيد</h2>
-        <p>مركز القيادة العلمية والتعاون الدولي</p>
+    <h2 style="color: var(--gold); margin-top:20px;">🧬 منصة ZAW للتعاون البحثي الدولي</h2>
+    
+    <div class="card" style="background: rgba(212, 175, 55, 0.1);">
+        <h3 style="border:none;">👤 دكتورة زينب عبد الله وحيد</h3>
+        <p style="font-size: 12px; margin:0;">مركز القيادة العلمية والتعاون الدولي</p>
     </div>
 
+    <!-- جدار التواصل الفوري -->
     <div class="card">
         <h3>📢 جدار التعاون الدولي (بث مباشر)</h3>
-        <input type="text" id="user" placeholder="الاسم (مثلاً: د. زينب)">
-        <input type="text" id="msg" placeholder="الموضوع (مثلاً: Bacteria)">
-        <button onclick="sendData()" class="btn">نشر الإشعار العلمي الآن 🚀</button>
-        <div id="wall">جاري تحديث البيانات من السحابة...</div>
+        <input type="text" id="uName" placeholder="اكتبي اسمكِ (مثلاً: د. زينب)...">
+        <input type="text" id="mInput" placeholder="اكتبي موضوع البحث (مثلاً: Bacteria)...">
+        <button class="btn btn-blue" onclick="sendToCloud()">نشر الإشعار العلمي الآن 🚀</button>
+        <div id="wall">جاري تحديث الجدار العلمي...</div>
     </div>
 
-    <div class="card">
-        <h3>🏛️ القاعات المرئية</h3>
-        <a href="https://meet.jit.si/ZAW_Conference" style="color:#D4AF37; text-decoration:none; display:block; margin:5px;">🏛️ دخول قاعة المؤتمرات الكبرى</a>
-        <a href="https://meet.jit.si/ZAW_Microbiology" style="color:#2563eb; text-decoration:none; display:block; margin:5px;">🧫 مختبر الأحياء المجهرية</a>
+    <!-- القاعات المرئية العامة -->
+    <div class="card" style="border-color: var(--blue);">
+        <h3>🏛️ القاعات والاجتماعات المرئية</h3>
+        <a href="https://meet.jit.si/ZAW_Conference" target="_blank" class="btn btn-blue">🏛️ دخول قاعة المؤتمرات الكبرى</a>
+        <a href="https://meet.jit.si/ZAW_General_Chat" target="_blank" class="btn btn-green">💬 غرف الدردشة والتعارف العلمي</a>
+    </div>
+
+    <!-- الأقسام التخصصية في البايولوجي -->
+    <div class="card" style="border-color: #8b5cf6;">
+        <h3>🧪 الغرف البحثية حسب التخصصات</h3>
+        <a href="https://meet.jit.si/ZAW_Microbiology" target="_blank" class="btn btn-special">🧫 قسم الأحياء المجهرية</a>
+        <a href="https://meet.jit.si/ZAW_Bioinformatics" target="_blank" class="btn btn-special">💻 قسم المعلوماتية الحيوية</a>
+        <a href="https://meet.jit.si/ZAW_Genetics_Lab" target="_blank" class="btn btn-gold" style="background: var(--gold); color: black;">🧬 مختبر الجينات والوراثة</a>
     </div>
 
     <script>
-        // الرابط المباشر والقوي مع إضافة مفتاح الحفظ
-        const dbURL = "https://zaw-research-hub-default-rtdb.firebaseio.com/posts.json";
+        const dbURL = "https://zaw-research-hub-default-rtdb.firebaseio.com/research.json";
 
-        async function sendData() {
-            const u = document.getElementById('user').value || "باحث";
-            const m = document.getElementById('msg').value;
-            if(!m) return;
-            
+        async function sendToCloud() {
+            const name = document.getElementById('uName').value || "باحث دولي";
+            const msg = document.getElementById('mInput').value;
+            if(!msg) return;
             try {
-                await fetch(dbURL, {
-                    method: 'POST',
-                    body: JSON.stringify({ name: u, msg: m, time: new Date().toLocaleTimeString('ar-EG') })
-                });
-                document.getElementById('msg').value = "";
-                loadData();
-            } catch(e) { alert("تأكدي من الإنترنت يا دكتورة"); }
+                await fetch(dbURL, { method: 'POST', body: JSON.stringify({ u: name, m: msg, t: new Date().toLocaleTimeString('ar-EG') }) });
+                document.getElementById('mInput').value = "";
+                startLiveWall();
+            } catch(e) { console.error("Error sending data"); }
         }
 
-        async function loadData() {
+        async function startLiveWall() {
             const wall = document.getElementById('wall');
             try {
                 const res = await fetch(dbURL);
@@ -60,12 +74,15 @@
                 wall.innerHTML = "";
                 if(data) {
                     Object.values(data).reverse().forEach(p => {
-                        wall.innerHTML += <div class="post"><b>${p.name}:</b> ${p.msg} <br><small style="color:#D4AF37">${p.time}</small></div>;
+                        const d = document.createElement('div');
+                        d.className = 'post';
+                        d.innerHTML = <b>${p.u}</b>: ${p.m} <br><small style="color:var(--gold); font-size:10px;">${p.t}</small>;
+                        wall.appendChild(d);
                     });
-                } else { wall.innerHTML = "الجدار بانتظار أول منشور علمي."; }
+                } else { wall.innerHTML = "الجدار جاهز لاستقبال منشوراتكم."; }
             } catch(e) { wall.innerHTML = "بانتظار استجابة السحابة..."; }
         }
-        setInterval(loadData, 3000); // تحديث كل 3 ثوانٍ ليكون "مثل التطبيق"
+        setInterval(startLiveWall, 5000);
     </script>
 </body>
 </html>
