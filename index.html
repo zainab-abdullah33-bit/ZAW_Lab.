@@ -3,79 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZAW Research Platform</title>
+    <title>ZAW Global Research Hub</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #D4AF37; --blue: #1e88e5; --dark: #1A2634; }
-        body { font-family: 'Cairo', sans-serif; background: var(--dark); color: white; margin: 0; padding: 20px; text-align: center; }
-        .card { background: rgba(255,255,255,0.05); border: 2px solid var(--gold); border-radius: 15px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-        input { width: 85%; padding: 15px; border-radius: 10px; border: none; margin: 10px 0; font-size: 16px; font-family: 'Cairo'; }
-        .btn { padding: 15px; border-radius: 10px; cursor: pointer; font-weight: bold; width: 90%; border: none; font-size: 16px; font-family: 'Cairo'; transition: 0.3s; }
+        body { font-family: 'Cairo', sans-serif; background: var(--dark); color: white; margin: 0; padding: 0; text-align: center; }
+        
+        /* شريط علوي للملف الشخصي */
+        .top-bar { background: rgba(0,0,0,0.5); padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--gold); }
+        .user-info { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .avatar { width: 35px; height: 35px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: black; font-weight: bold; }
+
+        .container { padding: 20px; max-width: 800px; margin: auto; }
+        .card { background: rgba(255,255,255,0.07); border: 2px solid var(--gold); border-radius: 15px; padding: 20px; margin-bottom: 20px; }
+        
+        /* نافذة التسجيل المنبثقة */
+        .modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #2c3e50; padding: 30px; border-radius: 20px; border: 2px solid var(--gold); z-index: 1000; width: 80%; max-width: 400px; }
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 999; }
+
+        input { width: 90%; padding: 12px; border-radius: 8px; border: none; margin: 10px 0; font-family: 'Cairo'; }
+        .btn { padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; border: none; font-family: 'Cairo'; transition: 0.3s; }
         .btn-gold { background: var(--gold); color: black; }
-        .btn-blue { background: var(--blue); color: white; margin-top: 15px; }
-        #collabList { margin-top: 20px; text-align: right; background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; }
-        .collab-item { border-bottom: 1px solid var(--gold); padding: 10px; margin-bottom: 5px; animation: fadeIn 0.5s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .btn-blue { background: var(--blue); color: white; }
     </style>
 </head>
-<body>
+<body onload="checkUser()">
 
-    <h1 style="color: var(--gold);">منصة ZAW العالمية</h1>
+    <!-- الشريط العلوي -->
+    <div class="top-bar">
+        <div class="user-info" onclick="showLogin()">
+            <div class="avatar" id="userInitial">؟</div>
+            <span id="userNameHeader">تسجيل دخول الباحث</span>
+        </div>
+        <div style="color: var(--gold); font-weight: bold;">ZAW HUB</div>
+    </div>
 
-    <!-- قسم التعاون -->
-    <div class="card">
-        <h3>🤝 طلب تعاون بحثي جديد</h3>
-        <input type="text" id="nameIn" placeholder="اسم الباحث / Researcher Name">
-        <input type="text" id="topicIn" placeholder="موضوع البحث / Research Topic">
-        <button class="btn btn-gold" id="postBtn" onclick="executePost()">نشر طلب التعاون الآن</button>
+    <div class="container">
+        <h1 id="welcomeMsg">أهلاً بكِ في المنصة العالمية</h1>
         
-        <div id="collabList">
-            <p style="text-align:center; color: #aaa;">الطلبات النشطة ستظهر هنا</p>
+        <!-- كرت الملف الشخصي المصغر -->
+        <div id="profileCard" class="card" style="display:none; background: linear-gradient(45deg, #1A2634, #2c3e50);">
+            <h3 style="margin:0">بطاقة الباحث الرقمية 📇</h3>
+            <p id="pName"></p>
+            <p id="pBio" style="font-size: 13px; color: var(--gold);"></p>
+            <button class="btn btn-blue" style="font-size: 12px; padding: 5px 10px;" onclick="logout()">تسجيل خروج</button>
+        </div>
+
+        <!-- محرك البحث (الذي أصلحناه) -->
+        <div class="card">
+            <h3>🔍 البحث العلمي العالمي</h3>
+            <input type="text" id="sq" placeholder="اكتبي عنوان البحث هنا...">
+            <button class="btn btn-blue" onclick="var v=document.getElementById('sq').value; if(v) window.open('https://scholar.google.com/scholar?q='+encodeURIComponent(v));">بحث رصين 🔎</button>
+        </div>
+
+        <!-- مركز التعاون -->
+        <div class="card">
+            <h3>🤝 طلب تعاون بحثي</h3>
+            <button class="btn btn-gold" onclick="addCollab()">نشر طلب تعاون باسمي</button>
+            <div id="collabArea" style="margin-top:15px; text-align:right;"></div>
         </div>
     </div>
 
-    <!-- قسم البحث العالمي -->
-    <div class="card">
-        <h3>🔍 محرك البحث الأكاديمي العالمي</h3>
-        <input type="text" id="searchQuery" placeholder="ادخل الكلمات المفتاحية للبحث...">
-        <button class="btn btn-blue" id="searchBtn" onclick="executeSearch()">بحث في المجلات الرصينة 🔎</button>
+    <!-- نافذة التسجيل -->
+    <div class="overlay" id="overlay"></div>
+    <div class="modal" id="loginModal">
+        <h3>إنشاء ملف باحث جديد</h3>
+        <input type="text" id="regName" placeholder="الاسم الكامل">
+        <input type="text" id="regBio" placeholder="التخصص الدقيق (مثلاً: Bioinformatics)">
+        <button class="btn btn-gold" onclick="saveUser()">حفظ الملف الشخصي</button>
+        <button class="btn" style="background:transparent; color:white;" onclick="closeLogin()">إلغاء</button>
     </div>
 
     <script>
-        // وظيفة النشر
-        function executePost() {
-            const name = document.getElementById('nameIn').value;
-            const topic = document.getElementById('topicIn').value;
-            const list = document.getElementById('collabList');
+        function showLogin() {
+            document.getElementById('loginModal').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
+        function closeLogin() {
+            document.getElementById('loginModal').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }
 
-            if (name && topic) {
-                // إزالة رسالة "لا توجد طلبات"
-                if (list.innerHTML.includes("الطلبات النشطة")) list.innerHTML = "";
-
-                const div = document.createElement('div');
-                div.className = 'collab-item';
-                div.innerHTML = <strong>👤 الباحث:</strong> ${name}<br><strong>🧬 التخصص:</strong> ${topic};
-                list.prepend(div);
-                
-                alert("تم النشر بنجاح دكتورة زينب! ✅");
-                document.getElementById('nameIn').value = "";
-                document.getElementById('topicIn').value = "";
-            } else {
-                alert("لطفاً، املئي الحقول أولاً دكتورة.");
+        function saveUser() {
+            const name = document.getElementById('regName').value;
+            const bio = document.getElementById('regBio').value;
+            if(name && bio) {
+                localStorage.setItem('zaw_user', name);
+                localStorage.setItem('zaw_bio', bio);
+                alert("تم إنشاء ملفكِ الشخصي بنجاح! 🎉");
+                location.reload();
             }
         }
 
-        // وظيفة البحث
-        function executeSearch() {
-            const query = document.getElementById('searchQuery').value;
-            if (query) {
-                const url = "https://scholar.google.com/scholar?q=" + encodeURIComponent(query);
-                window.open(url, '_blank');
-            } else {
-                alert("اكتبي شيئاً للبحث عنه أولاً.");
+        function checkUser() {
+            const savedName = localStorage.getItem('zaw_user');
+            const savedBio = localStorage.getItem('zaw_bio');
+            if(savedName) {
+                document.getElementById('userNameHeader').innerText = savedName;
+                document.getElementById('userInitial').innerText = savedName.charAt(0).toUpperCase();
+                document.getElementById('welcomeMsg').innerText = "أهلاً دكتورة " + savedName;
+                document.getElementById('profileCard').style.display = 'block';
+                document.getElementById('pName').innerText = "الباحث: " + savedName;
+                document.getElementById('pBio').innerText = "التخصص: " + savedBio;
             }
+        }
+
+        function logout() {
+            localStorage.clear();
+            location.reload();
+        }
+
+        function addCollab() {
+            const name = localStorage.getItem('zaw_user');
+            const bio = localStorage.getItem('zaw_bio');
+            if(!name) {
+                alert("لطفاً، سجلي دخولكِ أولاً لتعريف الباحثين بكِ.");
+                showLogin();
+                return;
+            }
+            const area = document.getElementById('collabArea');
+            const div = document.createElement('div');
+            div.style.borderRight = "3px solid #D4AF37";
+            div.style.padding = "10px";
+            div.style.margin = "10px 0";
+            div.style.background = "rgba(255,255,255,0.05)";
+            div.innerHTML = <b>${name}</b> طلب تعاوناً في <i>${bio}</i>;
+            area.prepend(div);
+            alert("تم نشر طلبكِ باسم ملفكِ الشخصي! ✅");
         }
     </script>
-
 </body>
 </html>
