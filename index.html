@@ -9,81 +9,85 @@
         :root { --gold: #D4AF37; --dark-blue: #1A2634; --white: #FFFFFF; }
         body { font-family: 'Cairo', sans-serif; background-color: var(--dark-blue); color: var(--white); margin: 0; transition: 0.5s; }
         
-        /* واجهة التسجيل */
         #auth-container { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
-        .card { background: rgba(255,255,255,0.05); padding: 40px; border-radius: 20px; border: 2px solid var(--gold); text-align: center; width: 350px; }
+        .card { background: rgba(255,255,255,0.05); padding: 40px; border-radius: 20px; border: 2px solid var(--gold); text-align: center; width: 380px; }
         .profile-img { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--gold); margin-bottom: 20px; }
-        input { width: 90%; padding: 12px; margin: 10px 0; border-radius: 10px; border: none; }
-        button { width: 100%; padding: 12px; background: var(--gold); color: var(--dark-blue); border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.3s; }
-        button:hover { background: #b8962d; transform: scale(1.05); }
+        
+        input { width: 90%; padding: 12px; margin: 10px 0; border-radius: 10px; border: none; font-family: 'Cairo'; }
+        
+        .btn-group { display: flex; gap: 10px; margin-top: 15px; }
+        button { flex: 1; padding: 12px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 14px; transition: 0.3s; font-family: 'Cairo'; }
+        
+        .btn-create { background: var(--gold); color: var(--dark-blue); }
+        .btn-login { background: rgba(255,255,255,0.1); color: white; border: 1px solid var(--gold); }
+        button:hover { transform: scale(1.05); opacity: 0.9; }
 
-        /* لوحة التحكم (المختبر) */
         #dashboard { display: none; padding: 40px; }
         .header-hub { border-bottom: 2px solid var(--gold); padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
         .search-box { width: 100%; max-width: 600px; padding: 15px; border-radius: 30px; border: 2px solid var(--gold); background: rgba(255,255,255,0.1); color: white; font-size: 18px; text-align: center; margin: 0 auto 40px auto; display: block; }
         
-        .researchers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 25px; }
+        .researchers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
         .researcher-card { background: rgba(255,255,255,0.08); padding: 20px; border-radius: 15px; border-top: 4px solid var(--gold); text-align: center; transition: 0.3s; }
-        .research researcher-card:hover { transform: translateY(-10px); background: rgba(255,255,255,0.15); }
         .tag { background: var(--gold); color: black; padding: 4px 10px; border-radius: 5px; font-size: 12px; font-weight: bold; }
-        
         .status-msg { color: #4BB543; margin-top: 15px; font-weight: bold; display: none; }
     </style>
 </head>
 <body>
 
-    <!-- قسم التسجيل -->
     <div id="auth-container">
         <div class="card">
             <img src="https://raw.githubusercontent.com/zainab-abdullah33-bit/ZAW_Lab/main/zaw_profile.jpg" alt="Zainab" class="profile-img">
             <h2 style="color: var(--gold); margin: 0;">ZAW Research Hub</h2>
-            <p style="font-size: 14px;">بوابة الباحثين المتطورة</p>
+            <p style="font-size: 14px; opacity: 0.8;">بوابة الباحثين المتطورة</p>
+            
             <input type="email" id="email" placeholder="البريد الجامعي أو الرسمي">
             <input type="password" id="password" placeholder="كلمة المرور">
-            <button onclick="handleAuth()">إنشاء حساب باحث جديد</button>
-            <div id="status" class="status-msg">✅ تم تسجيلك كباحث جديد بنجاح!</div>
-            <button id="go-to-hub" style="margin-top:20px; display:none; background: #4BB543; color: white;" onclick="showDashboard()">دخول للمختبر الرقمي ➔</button>
+            
+            <div class="btn-group">
+                <button class="btn-create" onclick="handleAction('create')">إنشاء حساب جديد</button>
+                <button class="btn-login" onclick="handleAction('login')">تسجيل دخول</button>
+            </div>
+
+            <div id="status" class="status-msg">✅ تم التحقق من البيانات بنجاح!</div>
+            <button id="go-to-hub" style="margin-top:20px; display:none; background: #4BB543; color: white; width:100%;" onclick="showDashboard()">دخول للمختبر الرقمي ➔</button>
         </div>
     </div>
 
-    <!-- قسم لوحة التحكم (المختبر الرقمي) -->
     <div id="dashboard">
         <div class="header-hub">
-            <h1>مرحباً بكِ في مختبركِ الرقمي د. زينب 🧬</h1>
-            <button style="width: 120px;" onclick="location.reload()">تسجيل خروج</button>
+            <h1>مرحباً بكِ د. زينب عبدالله في مختبركِ الرقمي 🧬</h1>
+            <button style="width: 120px; background: #ff4d4d; color: white;" onclick="location.reload()">تسجيل خروج</button>
         </div>
 
-        <input type="text" class="search-box" id="searchInput" onkeyup="searchResearchers()" placeholder="🔍 ابحث عن باحث (Microbiology, Bioinformatics, SOD1)...">
+        <input type="text" class="search-box" id="searchInput" onkeyup="searchResearchers()" placeholder="🔍 ابحث عن تخصص (Microbiology, Bioinformatics, Cell Biology)...">
 
-        <h3 style="color: var(--gold);">الباحثين المقترحين للانضمام لمجموعتكِ:</h3>
+        <h3 style="color: var(--gold);">الباحثين المتوفرين للتعاون العلمي:</h3>
         
         <div class="researchers-grid" id="researcherList">
-            <!-- باحث 1 -->
             <div class="researcher-card">
-                <h3 style="margin: 10px 0;">د. أحمد علي</h3>
-                <p class="tag">Microbiology</p>
-                <p style="font-size: 14px; opacity: 0.8;">مهتم بأبحاث مقاومة المضادات الحيوية</p>
-                <button style="padding: 5px; font-size: 12px;">طلب تعاون بحثي</button>
-            </div>
-            <!-- باحث 2 -->
-            <div class="researcher-card">
-                <h3 style="margin: 10px 0;">د. سارة جاسم</h3>
+                <h3>د. سارة جاسم</h3>
                 <p class="tag">Bioinformatics</p>
                 <p style="font-size: 14px; opacity: 0.8;">متخصصة في GROMACS و Molecular Dynamics</p>
-                <button style="padding: 5px; font-size: 12px;">طلب تعاون بحثي</button>
+                <button style="padding: 5px; font-size: 12px; background: var(--gold);">طلب تعاون</button>
             </div>
-            <!-- باحث 3 -->
             <div class="researcher-card">
-                <h3 style="margin: 10px 0;">د. زينب عبدالله</h3>
+                <h3>د. زينب عبدالله وحيد</h3>
                 <p class="tag">Molecular Biology</p>
-                <p style="font-size: 14px; opacity: 0.8;">Protein Aggregation & Drug Design</p>
-                <button style="padding: 5px; font-size: 12px;">الملف الشخصي</button>
+                <p style="font-size: 14px; opacity: 0.8;">Protein Aggregation & In silico Drug Design</p>
+                <button style="padding: 5px; font-size: 12px; background: var(--gold);">الملف الشخصي</button>
+            </div>
+            <div class="researcher-card">
+                <h3>د. محمد الهاشمي</h3>
+                <p class="tag">Microbiology</p>
+                <p style="font-size: 14px; opacity: 0.8;">Antibiotic Resistance Research</p>
+                <button style="padding: 5px; font-size: 12px; background: var(--gold);">طلب تعاون</button>
             </div>
         </div>
     </div>
 
     <script>
-        function handleAuth() {
+        function handleAction(type) {
+            // هنا مستقبلاً نربط مع Firebase الفعلي
             document.getElementById('status').style.display = 'block';
             document.getElementById('go-to-hub').style.display = 'block';
         }
@@ -91,13 +95,11 @@
         function showDashboard() {
             document.getElementById('auth-container').style.display = 'none';
             document.getElementById('dashboard').style.display = 'block';
-            document.body.style.backgroundColor = "#0d1117";
         }
 
         function searchResearchers() {
             let input = document.getElementById('searchInput').value.toLowerCase();
             let cards = document.getElementsByClassName('researcher-card');
-            
             for (let i = 0; i < cards.length; i++) {
                 let text = cards[i].innerText.toLowerCase();
                 cards[i].style.display = text.includes(input) ? "block" : "none";
