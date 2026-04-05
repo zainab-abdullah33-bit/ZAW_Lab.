@@ -4,55 +4,81 @@
     <meta charset="UTF-8">
     <title>منصة التعاون البحثي الدولي</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f172a; color: white; text-align: center; padding: 20px; }
-        .box { background: #1e293b; border: 2px solid #D4AF37; border-radius: 15px; padding: 20px; margin: 15px auto; max-width: 500px; }
-        h1 { color: #D4AF37; }
-        input { width: 85%; padding: 12px; margin: 10px 0; border-radius: 8px; border: none; font-size: 16px; }
-        .btn { width: 90%; padding: 15px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; font-size: 17px; margin: 5px 0; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #0f172a; color: white; text-align: center; padding: 10px; }
+        .box { background: #1e293b; border: 1.5px solid #D4AF37; border-radius: 12px; padding: 15px; margin: 10px auto; max-width: 450px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        h2, h3 { color: #D4AF37; margin-bottom: 10px; }
+        input { width: 90%; padding: 10px; margin: 5px 0; border-radius: 5px; border: none; font-size: 14px; }
+        .btn { width: 95%; padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; font-size: 15px; margin: 5px 0; }
         .btn-gold { background: #D4AF37; color: black; }
         .btn-blue { background: #2563eb; color: white; }
-        #resDisplay { background: rgba(255,255,255,0.1); padding: 10px; border-radius: 10px; margin-top: 10px; border-right: 5px solid #D4AF37; text-align: right; }
+        
+        /* جدار التواصل الاجتماعي العلمي */
+        #socialWall { background: #0f172a; border-radius: 10px; padding: 10px; margin-top: 10px; max-height: 200px; overflow-y: auto; text-align: right; }
+        .post { background: #1e293b; border-right: 4px solid #D4AF37; padding: 10px; margin-bottom: 8px; border-radius: 5px; font-size: 13px; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
-<body>
+<body onload="loadUser()">
 
-    <h1>🧬 منصة التعاون البحثي الدولي</h1>
+    <h2>🧬 منصة التعاون البحثي الدولي</h2>
 
-    <!-- 1. ملف الباحث - مفعل ومباشر -->
+    <!-- 1. الملف الشخصي -->
     <div class="box">
-        <h3>👤 ملف الباحث الشخصي</h3>
-        <input type="text" id="n1" placeholder="اكتبي اسمكِ الكامل هنا...">
-        <input type="text" id="b1" placeholder="تخصصكِ الدقيق...">
-        <button class="btn btn-gold" onclick="localStorage.setItem('name', document.getElementById('n1').value); localStorage.setItem('bio', document.getElementById('b1').value); alert('تم حفظ ملفكِ بنجاح دكتورة!'); location.reload();">
-            تفعيل وحفظ ملفي الشخصي ✅
-        </button>
-        <div id="resDisplay">
-            <script>
-                var n = localStorage.getItem('name') || "لم يتم التسجيل";
-                var b = localStorage.getItem('bio') || "زائر";
-                document.write("<b>الباحث:</b> " + n + "<br><b>التخصص:</b> " + b);
-            </script>
+        <h3>👤 هويتي العلمية</h3>
+        <input type="text" id="un" placeholder="الاسم الكامل...">
+        <input type="text" id="ub" placeholder="التخصص الدقيق...">
+        <button class="btn btn-gold" onclick="localStorage.setItem('n', document.getElementById('un').value); localStorage.setItem('b', document.getElementById('ub').value); alert('تم الحفظ!'); location.reload();">حفظ الهوية ✅</button>
+        <div id="userInfo" style="margin-top:10px; font-size:14px; color:#cbd5e1;"></div>
+    </div>
+
+    <!-- 2. جدار التواصل العلمي (طلب تعاون) -->
+    <div class="box">
+        <h3>🤝 جدار التعاون الدولي</h3>
+        <p style="font-size: 12px; opacity: 0.8;">انشري طلباً ليظهر لزملائك الباحثين فوراً</p>
+        <button class="btn btn-gold" onclick="addPost()">نشر طلب تعاون بحثي 📢</button>
+        <div id="socialWall">
+            <div style="text-align:center; color:#555; font-size:12px;">لا توجد منشورات تعاون حالياً</div>
         </div>
     </div>
 
-    <!-- 2. البحث العلمي - مفعل برابط مباشر -->
+    <!-- 3. البحث العلمي -->
     <div class="box">
-        <h3>🔍 محرك البحث الأكاديمي</h3>
-        <input type="text" id="searchBox" placeholder="موضوع البحث...">
-        <button class="btn btn-blue" onclick="var q = document.getElementById('searchBox').value; if(q) { window.open('https://scholar.google.com/scholar?q=' + encodeURIComponent(q), '_blank'); } else { alert('يرجى كتابة موضوع البحث أولاً'); }">
-            تشغيل محرك البحث الآن 🔎
-        </button>
+        <h3>🔍 المكتبة الرقمية</h3>
+        <input type="text" id="sq" placeholder="عنوان البحث...">
+        <button class="btn btn-blue" onclick="var q=document.getElementById('sq').value; if(q) window.open('https://scholar.google.com/scholar?q='+encodeURIComponent(q));">بحث رصين 🔎</button>
     </div>
 
-    <!-- 3. قاعة الاجتماعات - مفعلة برابط مباشر -->
+    <!-- 4. القاعة -->
     <div class="box">
-        <h3>🏛️ قاعة الاجتماعات الدولية</h3>
-        <button class="btn btn-blue" onclick="window.open('https://meet.jit.si/ZAW_Research_2026', '_blank')">
-            دخول القاعة (فيديو) 📹
-        </button>
+        <h3>🏛️ قاعة المؤتمرات</h3>
+        <button class="btn btn-blue" onclick="window.open('https://meet.jit.si/ZAW_Conference_2026')">دخول الاجتماع 📹</button>
     </div>
 
-    <p style="font-size: 12px; color: #64748b;">بوابة الأستاذة الدكتورة زينب عبدالله وحيد</p>
+    <script>
+        function loadUser() {
+            var n = localStorage.getItem('n');
+            var b = localStorage.getItem('b');
+            if(n) {
+                document.getElementById('userInfo').innerHTML = "<b>مرحباً د. " + n + "</b><br>" + b;
+                document.getElementById('un').value = n;
+                document.getElementById('ub').value = b;
+            }
+        }
 
+        function addPost() {
+            var n = localStorage.getItem('n');
+            var b = localStorage.getItem('b');
+            if(!n) { alert("لطفاً دكتورة، سجلي اسمكِ أولاً في الأعلى."); return; }
+            
+            var wall = document.getElementById('socialWall');
+            if(wall.innerHTML.includes("لا توجد منشورات")) wall.innerHTML = "";
+            
+            var time = new Date().toLocaleTimeString('ar-EG');
+            var post = document.createElement('div');
+            post.className = 'post';
+            post.innerHTML = "<b>👤 الباحث: " + n + "</b><br>🎯 " + b + "<br><small style='color:#D4AF37'>يرغب في بدء تعاون بحثي دولي مشترك (" + time + ")</small>";
+            wall.prepend(post);
+        }
+    </script>
 </body>
 </html>
