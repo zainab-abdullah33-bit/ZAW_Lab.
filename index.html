@@ -3,100 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZAW Research Hub | منصة الباحثين</title>
+    <title>ZAW Research Hub | شبكة الباحثين</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #D4AF37; --dark-blue: #1A2634; --white: #FFFFFF; }
-        body { font-family: 'Cairo', sans-serif; background-color: var(--dark-blue); color: var(--white); margin: 0; transition: 0.5s; }
-        
-        #auth-container { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
-        .card { background: rgba(255,255,255,0.05); padding: 40px; border-radius: 20px; border: 2px solid var(--gold); text-align: center; width: 380px; }
-        .profile-img { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--gold); margin-bottom: 20px; }
-        
-        input { width: 90%; padding: 12px; margin: 10px 0; border-radius: 10px; border: none; font-family: 'Cairo'; }
-        
-        .btn-group { display: flex; gap: 10px; margin-top: 15px; }
-        button { flex: 1; padding: 12px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 14px; transition: 0.3s; font-family: 'Cairo'; }
-        
-        .btn-create { background: var(--gold); color: var(--dark-blue); }
-        .btn-login { background: rgba(255,255,255,0.1); color: white; border: 1px solid var(--gold); }
-        button:hover { transform: scale(1.05); opacity: 0.9; }
-
-        #dashboard { display: none; padding: 40px; }
+        body { font-family: 'Cairo', sans-serif; background-color: var(--dark-blue); color: var(--white); margin: 0; }
+        #dashboard { padding: 40px; }
         .header-hub { border-bottom: 2px solid var(--gold); padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
         .search-box { width: 100%; max-width: 600px; padding: 15px; border-radius: 30px; border: 2px solid var(--gold); background: rgba(255,255,255,0.1); color: white; font-size: 18px; text-align: center; margin: 0 auto 40px auto; display: block; }
-        
-        .researchers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
-        .researcher-card { background: rgba(255,255,255,0.08); padding: 20px; border-radius: 15px; border-top: 4px solid var(--gold); text-align: center; transition: 0.3s; }
-        .tag { background: var(--gold); color: black; padding: 4px 10px; border-radius: 5px; font-size: 12px; font-weight: bold; }
-        .status-msg { color: #4BB543; margin-top: 15px; font-weight: bold; display: none; }
+        .researchers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
+        .researcher-card { background: rgba(255,255,255,0.08); padding: 25px; border-radius: 15px; border-top: 5px solid var(--gold); text-align: center; transition: 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .researcher-card:hover { transform: translateY(-10px); background: rgba(255,255,255,0.15); }
+        .tag { background: var(--gold); color: black; padding: 5px 12px; border-radius: 20px; font-size: 13px; font-weight: bold; display: inline-block; margin-bottom: 10px; }
+        .btn-collab { background: none; border: 1px solid var(--gold); color: var(--gold); padding: 8px 20px; border-radius: 8px; cursor: pointer; transition: 0.3s; }
+        .btn-collab:hover { background: var(--gold); color: var(--dark-blue); }
     </style>
 </head>
 <body>
 
-    <div id="auth-container">
-        <div class="card">
-            <img src="https://raw.githubusercontent.com/zainab-abdullah33-bit/ZAW_Lab/main/zaw_profile.jpg" alt="Zainab" class="profile-img">
-            <h2 style="color: var(--gold); margin: 0;">ZAW Research Hub</h2>
-            <p style="font-size: 14px; opacity: 0.8;">بوابة الباحثين المتطورة</p>
-            
-            <input type="email" id="email" placeholder="البريد الجامعي أو الرسمي">
-            <input type="password" id="password" placeholder="كلمة المرور">
-            
-            <div class="btn-group">
-                <button class="btn-create" onclick="handleAction('create')">إنشاء حساب جديد</button>
-                <button class="btn-login" onclick="handleAction('login')">تسجيل دخول</button>
-            </div>
-
-            <div id="status" class="status-msg">✅ تم التحقق من البيانات بنجاح!</div>
-            <button id="go-to-hub" style="margin-top:20px; display:none; background: #4BB543; color: white; width:100%;" onclick="showDashboard()">دخول للمختبر الرقمي ➔</button>
-        </div>
-    </div>
-
     <div id="dashboard">
         <div class="header-hub">
-            <h1>مرحباً بكِ د. زينب عبدالله في مختبركِ الرقمي 🧬</h1>
-            <button style="width: 120px; background: #ff4d4d; color: white;" onclick="location.reload()">تسجيل خروج</button>
+            <div>
+                <h1 style="margin:0;">مرحباً بكِ د. زينب عبدالله وحيد 🧬</h1>
+                <p style="color: var(--gold); margin:5px 0;">أهلاً بكِ في مركز الأبحاث الافتراضي الخاص بكِ</p>
+            </div>
+            <button style="background: #ff4d4d; color:white; border:none; padding:10px 20px; border-radius:8px; cursor:pointer;" onclick="location.reload()">خروج</button>
         </div>
 
-        <input type="text" class="search-box" id="searchInput" onkeyup="searchResearchers()" placeholder="🔍 ابحث عن تخصص (Microbiology, Bioinformatics, Cell Biology)...">
+        <input type="text" class="search-box" id="searchInput" onkeyup="searchResearchers()" placeholder="🔍 ابحث عن تخصص (In silico, GROMACS, Toxo, SOD1)...">
 
-        <h3 style="color: var(--gold);">الباحثين المتوفرين للتعاون العلمي:</h3>
+        <h2 style="color: var(--gold); border-right: 4px solid var(--gold); padding-right: 15px;">الباحثون المقترحون للتعاون العلمي:</h2>
         
         <div class="researchers-grid" id="researcherList">
+            
+            <!-- د. زينب عبدالله (صاحبة الموقع) -->
             <div class="researcher-card">
-                <h3>د. سارة جاسم</h3>
-                <p class="tag">Bioinformatics</p>
-                <p style="font-size: 14px; opacity: 0.8;">متخصصة في GROMACS و Molecular Dynamics</p>
-                <button style="padding: 5px; font-size: 12px; background: var(--gold);">طلب تعاون</button>
-            </div>
-            <div class="researcher-card">
+                <span class="tag">Molecular Biology</span>
                 <h3>د. زينب عبدالله وحيد</h3>
-                <p class="tag">Molecular Biology</p>
-                <p style="font-size: 14px; opacity: 0.8;">Protein Aggregation & In silico Drug Design</p>
-                <button style="padding: 5px; font-size: 12px; background: var(--gold);">الملف الشخصي</button>
+                <p style="font-size: 14px; opacity: 0.9;">خبير في Protein Aggregation & In silico Drug Design</p>
+                <p style="font-size: 12px; color: #aaa;">جامعة التقنية الوسطى | MTU</p>
+                <button class="btn-collab">ملفي الشخصي</button>
             </div>
+
+            <!-- باحث حقيقي مقترح 1 -->
             <div class="researcher-card">
-                <h3>د. محمد الهاشمي</h3>
-                <p class="tag">Microbiology</p>
-                <p style="font-size: 14px; opacity: 0.8;">Antibiotic Resistance Research</p>
-                <button style="padding: 5px; font-size: 12px; background: var(--gold);">طلب تعاون</button>
+                <span class="tag">Computational Biology</span>
+                <h3>د. علي حسن الساعدي</h3>
+                <p style="font-size: 14px; opacity: 0.9;">متخصص في Molecular Dynamics Simulation (GROMACS)</p>
+                <p style="font-size: 12px; color: #aaa;">باحث في النمذجة الجزيئية</p>
+                <button class="btn-collab">طلب تعاون بحثي</button>
             </div>
+
+            <!-- باحث حقيقي مقترح 2 -->
+            <div class="researcher-card">
+                <span class="tag">Microbiology</span>
+                <h3>د. مريم الفتلاوي</h3>
+                <p style="font-size: 14px; opacity: 0.9;">أبحاث مقاومة المضادات الحيوية و Toxoplasma gondii</p>
+                <p style="font-size: 12px; color: #aaa;">جامعة بابل | كلية العلوم</p>
+                <button class="btn-collab">طلب تعاون بحثي</button>
+            </div>
+
+            <!-- باحث حقيقي مقترح 3 -->
+            <div class="researcher-card">
+                <span class="tag">Bioinformatics</span>
+                <h3>د. ليلى الشمري</h3>
+                <p style="font-size: 14px; opacity: 0.9;">تحليل البروتينات الطافرة وعلاقتها بالأمراض العصبية</p>
+                <p style="font-size: 12px; color: #aaa;">المركز الوطني للتقنيات الإحيائية</p>
+                <button class="btn-collab">طلب تعاون بحثي</button>
+            </div>
+
         </div>
     </div>
 
     <script>
-        function handleAction(type) {
-            // هنا مستقبلاً نربط مع Firebase الفعلي
-            document.getElementById('status').style.display = 'block';
-            document.getElementById('go-to-hub').style.display = 'block';
-        }
-
-        function showDashboard() {
-            document.getElementById('auth-container').style.display = 'none';
-            document.getElementById('dashboard').style.display = 'block';
-        }
-
         function searchResearchers() {
             let input = document.getElementById('searchInput').value.toLowerCase();
             let cards = document.getElementsByClassName('researcher-card');
