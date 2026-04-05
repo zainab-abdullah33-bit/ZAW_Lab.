@@ -3,103 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZAW Global Hub</title>
+    <title>ZAW Research Platform</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #D4AF37; --blue: #1e88e5; --dark: #1A2634; }
-        body { font-family: 'Cairo', sans-serif; background: var(--dark); color: white; margin: 0; padding: 15px; text-align: center; }
-        .card { background: rgba(255,255,255,0.05); border: 1.5px solid var(--gold); border-radius: 15px; padding: 20px; margin-bottom: 20px; }
-        .btn { padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; border: none; margin-top: 10px; font-family: 'Cairo'; }
+        body { font-family: 'Cairo', sans-serif; background: var(--dark); color: white; margin: 0; padding: 20px; text-align: center; }
+        .card { background: rgba(255,255,255,0.05); border: 2px solid var(--gold); border-radius: 15px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        input { width: 85%; padding: 15px; border-radius: 10px; border: none; margin: 10px 0; font-size: 16px; font-family: 'Cairo'; }
+        .btn { padding: 15px; border-radius: 10px; cursor: pointer; font-weight: bold; width: 90%; border: none; font-size: 16px; font-family: 'Cairo'; transition: 0.3s; }
         .btn-gold { background: var(--gold); color: black; }
-        .btn-blue { background: var(--blue); color: white; }
-        input { width: 90%; padding: 12px; border-radius: 8px; border: none; margin: 5px 0; font-family: 'Cairo'; }
-        #collabList { text-align: right; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 10px; max-height: 200px; overflow-y: auto; }
-        .lang-btn { position: fixed; top: 10px; left: 10px; z-index: 1000; padding: 5px 15px; background: var(--gold); border-radius: 20px; cursor: pointer; border: none; font-weight: bold; }
-        .en-text { display: none; }
+        .btn-blue { background: var(--blue); color: white; margin-top: 15px; }
+        #collabList { margin-top: 20px; text-align: right; background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; }
+        .collab-item { border-bottom: 1px solid var(--gold); padding: 10px; margin-bottom: 5px; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
-<body id="mainBody">
+<body>
 
-    <button class="lang-btn" onclick="changeLang()">English / عربي</button>
+    <h1 style="color: var(--gold);">منصة ZAW العالمية</h1>
 
-    <h1 style="color: var(--gold);" class="ar-text">منصة ZAW للتعاون البحثي العالمي</h1>
-    <h1 style="color: var(--gold); display:none" class="en-text">ZAW Global Research Collaboration</h1>
-
-    <!-- 1. مركز التعاون المفتوح (لكل الباحثين) -->
+    <!-- قسم التعاون -->
     <div class="card">
-        <h2 class="ar-text">🤝 مركز طلبات التعاون البحثي</h2>
-        <h2 class="en-text" style="display:none">🤝 Research Collaboration Center</h2>
-        <p class="ar-text">أدخل بياناتك لفتح باب التعاون مع باحثين آخرين</p>
+        <h3>🤝 طلب تعاون بحثي جديد</h3>
+        <input type="text" id="nameIn" placeholder="اسم الباحث / Researcher Name">
+        <input type="text" id="topicIn" placeholder="موضوع البحث / Research Topic">
+        <button class="btn btn-gold" id="postBtn" onclick="executePost()">نشر طلب التعاون الآن</button>
         
-        <input type="text" id="researcherName" placeholder="اسم الباحث / Researcher Name">
-        <input type="text" id="researchTopic" placeholder="موضوع البحث المقترح / Research Topic">
-        <button class="btn btn-gold" onclick="postCollab()">نشر طلب تعاون / Post Request</button>
-        
-        <div id="collabList" style="margin-top: 15px;">
-            <p style="font-size: 12px; color: var(--gold);">طلبات التعاون الحالية تظهر هنا..</p>
+        <div id="collabList">
+            <p style="text-align:center; color: #aaa;">الطلبات النشطة ستظهر هنا</p>
         </div>
     </div>
 
-    <!-- 2. المكتبة العالمية -->
+    <!-- قسم البحث العالمي -->
     <div class="card">
-        <h2 class="ar-text">🌐 محرك البحث الأكاديمي العالمي</h2>
-        <input type="text" id="searchBox" placeholder="ابحث في ملايين البحوث العالمية...">
-        <button class="btn btn-blue" onclick="doSearch()">بحث في المجلات الرصينة 🔎</button>
-    </div>
-
-    <!-- 3. قاعة الاجتماعات -->
-    <div class="card">
-        <h2 class="ar-text">📡 عقد اجتماع بحثي فوري</h2>
-        <button class="btn btn-blue" onclick="window.open('https://meet.jit.si/ZAW_Global_Meeting', '_blank')">دخول القاعة الافتراضية 📹</button>
+        <h3>🔍 محرك البحث الأكاديمي العالمي</h3>
+        <input type="text" id="searchQuery" placeholder="ادخل الكلمات المفتاحية للبحث...">
+        <button class="btn btn-blue" id="searchBtn" onclick="executeSearch()">بحث في المجلات الرصينة 🔎</button>
     </div>
 
     <script>
-        // دالة نشر طلب التعاون
-        function postCollab() {
-            const name = document.getElementById('researcherName').value;
-            const topic = document.getElementById('researchTopic').value;
+        // وظيفة النشر
+        function executePost() {
+            const name = document.getElementById('nameIn').value;
+            const topic = document.getElementById('topicIn').value;
             const list = document.getElementById('collabList');
-            
-            if(name && topic) {
-                const item = document.createElement('div');
-                item.style.borderBottom = "1px solid #444";
-                item.style.padding = "10px";
-                item.innerHTML = `<b>${name}:</b> يطلب تعاوناً في: <i>${topic}</i> 
-                                <button onclick="window.open('https://meet.jit.si/ZAW_Collab_${name}','_blank')" 
-                                style="background:var(--blue); color:white; border:none; padding:3px 8px; border-radius:5px; cursor:pointer; margin-right:10px;">انضمام للباحث</button>`;
-                list.prepend(item);
-                alert("تم نشر طلبك بنجاح دكتورة! ✅");
-                document.getElementById('researcherName').value = "";
-                document.getElementById('researchTopic').value = "";
+
+            if (name && topic) {
+                // إزالة رسالة "لا توجد طلبات"
+                if (list.innerHTML.includes("الطلبات النشطة")) list.innerHTML = "";
+
+                const div = document.createElement('div');
+                div.className = 'collab-item';
+                div.innerHTML = <strong>👤 الباحث:</strong> ${name}<br><strong>🧬 التخصص:</strong> ${topic};
+                list.prepend(div);
+                
+                alert("تم النشر بنجاح دكتورة زينب! ✅");
+                document.getElementById('nameIn').value = "";
+                document.getElementById('topicIn').value = "";
             } else {
-                alert("يرجى ملء البيانات أولاً");
+                alert("لطفاً، املئي الحقول أولاً دكتورة.");
             }
         }
 
-        // دالة البحث العالمي
-        function doSearch() {
-            const q = document.getElementById('searchBox').value;
-            if(q) {
-                window.open(https://scholar.google.com/scholar?q=${q}, '_blank');
-            }
-        }
-
-        // دالة اللغة
-        function changeLang() {
-            const body = document.getElementById('mainBody');
-            const ar = document.querySelectorAll('.ar-text');
-            const en = document.querySelectorAll('.en-text');
-            
-            if(body.dir === "rtl") {
-                body.dir = "ltr";
-                ar.forEach(el => el.style.display = 'none');
-                en.forEach(el => el.style.display = 'block');
+        // وظيفة البحث
+        function executeSearch() {
+            const query = document.getElementById('searchQuery').value;
+            if (query) {
+                const url = "https://scholar.google.com/scholar?q=" + encodeURIComponent(query);
+                window.open(url, '_blank');
             } else {
-                body.dir = "rtl";
-                ar.forEach(el => el.style.display = 'block');
-                en.forEach(el => el.style.display = 'none');
+                alert("اكتبي شيئاً للبحث عنه أولاً.");
             }
         }
     </script>
+
 </body>
 </html>
