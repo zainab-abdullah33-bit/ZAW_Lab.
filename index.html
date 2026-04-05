@@ -3,99 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZAW Global Academic Platform</title>
+    <title>ZAW Global Hub | المنصة الأكاديمية</title>
+    
+    <!-- إعدادات التطبيق للموبايل -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="ZAW Hub">
+    <link rel="apple-touch-icon" href="zaw_profile.jpg">
+    
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #D4AF37; --dark-blue: #1A2634; --white: #FFFFFF; --gray: #f4f4f4; }
-        body { font-family: 'Cairo', sans-serif; background-color: var(--dark-blue); color: var(--white); margin: 0; }
+        :root { --gold: #D4AF37; --dark-blue: #1A2634; }
+        body { font-family: 'Cairo', sans-serif; background-color: var(--dark-blue); color: white; margin: 0; text-align: center; }
         
-        .navbar { background: rgba(255,255,255,0.05); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--gold); }
-        .hero { text-align: center; padding: 60px 20px; background: linear-gradient(to bottom, #1A2634, #2c3e50); }
+        /* زر تثبيت التطبيق */
+        #installBanner { display: none; background: var(--gold); color: var(--dark-blue); padding: 15px; position: fixed; bottom: 0; width: 100%; font-weight: bold; cursor: pointer; z-index: 1000; box-shadow: 0 -5px 15px rgba(0,0,0,0.3); }
         
-        /* قسم رفع البحوث العام */
-        .upload-section { max-width: 800px; margin: -50px auto 40px; background: white; color: #333; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-        .form-group { margin-bottom: 15px; text-align: right; }
-        label { display: block; font-weight: bold; margin-bottom: 5px; color: var(--dark-blue); }
-        select, input, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-family: 'Cairo'; }
-        
-        .btn-upload { background: var(--gold); color: var(--dark-blue); border: none; padding: 15px 30px; border-radius: 10px; cursor: pointer; font-weight: bold; width: 100%; font-size: 18px; margin-top: 10px; }
-        
-        .categories-nav { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin: 20px 0; }
-        .cat-tag { background: rgba(212, 175, 55, 0.2); color: var(--gold); padding: 5px 15px; border-radius: 20px; cursor: pointer; font-size: 14px; border: 1px solid var(--gold); }
+        .main-container { padding: 40px 20px; }
+        .app-card { background: rgba(255,255,255,0.1); border-radius: 20px; padding: 30px; border: 1px solid var(--gold); margin-top: 20px; }
+        .pulse { animation: pulse-animation 2s infinite; }
+        @keyframes pulse-animation { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <nav class="navbar">
-        <h2 style="color: var(--gold); margin: 0;">ZAW Academic Hub 🌐</h2>
-        <div>
-            <span>مرحباً، د. زينب عبدالله وحيد</span>
-        </div>
-    </nav>
-
-    <div class="hero">
-        <h1>منصة التعاون العلمي والبحثي الشاملة</h1>
-        <p>مساحة الأكاديميين لمشاركة البحوث، البيانات، والخبرات عبر التخصصات</p>
+    <!-- بنر التثبيت يظهر لمستخدمي الأندرويد والمتصفحات الداعمة -->
+    <div id="installBanner" onclick="installApp()">
+        اضغطي هنا لتثبيت "منصة ZAW" على شاشة هاتفكِ 📱✨
     </div>
 
-    <div class="upload-section">
-        <h3 style="text-align: center; color: var(--dark-blue);">إضافة نتاج علمي جديد 📤</h3>
-        
-        <div class="form-group">
-            <label>عنوان البحث أو مجموعة البيانات:</label>
-            <input type="text" id="researchTitle" placeholder="أدخل عنوان نتاجك العلمي هنا...">
-        </div>
-
-        <div class="form-group">
-            <label>التخصص العام:</label>
-            <select id="category">
-                <option>علوم طبية وصيدلانية</option>
-                <option>هندسة وتقنيات</option>
-                <option>علوم صرفة (كيمياء، فيزياء، أحياء)</option>
-                <option>علوم إنسانية واجتماعية</option>
-                <option>فنون وعمارة</option>
-                <option>قانون وعلوم سياسية</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label>نوع الملف:</label>
-            <div style="display: flex; gap: 20px;">
-                <label style="font-weight: normal;"><input type="radio" name="filetype"> بحث منشور (PDF)</label>
-                <label style="font-weight: normal;"><input type="radio" name="filetype"> بيانات خام (Dataset)</label>
-                <label style="font-weight: normal;"><input type="radio" name="filetype"> سيرة ذاتية (CV)</label>
+    <div class="main-container">
+        <h1 style="color: var(--gold);">ZAW Academic Hub</h1>
+        <div class="app-card">
+            <img src="zaw_profile.jpg" style="width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--gold); margin-bottom: 15px;" onerror="this.src='https://via.placeholder.com/100/D4AF37/1A2634?text=ZAW'">
+            <h2>مرحباً بكِ دكتورة زينب</h2>
+            <p class="pulse">المنصة الآن جاهزة لتكون تطبيقكِ الخاص</p>
+            
+            <hr style="border: 0.5px solid rgba(212,175,55,0.3); margin: 20px 0;">
+            
+            <div style="text-align: right; font-size: 14px;">
+                <p>✅ دعم كافة التخصصات العلمية</p>
+                <p>✅ رفع البحوث والداتا (PDF/Excel)</p>
+                <p>✅ تواصل دولي مباشر</p>
             </div>
         </div>
-
-        <div class="form-group">
-            <label>اختر الملف:</label>
-            <input type="file" style="border: none;">
-        </div>
-
-        <button class="btn-upload" onclick="publish()">نشر وتوثيق النتاج العلمي ✨</button>
-    </div>
-
-    <div style="text-align: center; padding: 20px;">
-        <h2 style="color: var(--gold);">تصفح البحوث حسب التخصص</h2>
-        <div class="categories-nav">
-            <span class="cat-tag">كل البحوث</span>
-            <span class="cat-tag">الطبية</span>
-            <span class="cat-tag">الهندسية</span>
-            <span class="cat-tag">الإنسانية</span>
-            <span class="cat-tag">الزراعية</span>
-        </div>
+        
+        <p style="margin-top: 30px; font-size: 13px; opacity: 0.7;">
+            * لمستخدمي iPhone: اضغطي على زر "المشاركة" (Share) ثم اختاري "Add to Home Screen".
+        </p>
     </div>
 
     <script>
-        function publish() {
-            const title = document.getElementById('researchTitle').value;
-            if(title) {
-                alert("دكتورة زينب، سيتم الآن رفع '" + title + "' وتوثيقه باسمكِ في قاعدة البيانات العالمية للمنصة.");
-            } else {
-                alert("يرجى إدخال عنوان البحث أولاً.");
+        let deferredPrompt;
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('installBanner').style.display = 'block';
+        });
+
+        async function installApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    console.log('User accepted the install prompt');
+                }
+                deferredPrompt = null;
+                document.getElementById('installBanner').style.display = 'none';
             }
         }
     </script>
-
 </body>
 </html>
