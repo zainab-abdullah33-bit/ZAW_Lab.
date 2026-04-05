@@ -3,53 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة التعاون البحثي الدولي</title>
-    <!-- محرك خفيف جداً للربط -->
+    <title>منصة ZAW للتعاون البحثي</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
-        :root { --gold: #D4AF37; --blue: #2563eb; --dark: #0f172a; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--dark); color: white; text-align: center; margin: 0; padding: 15px; }
-        .card { background: #1e293b; border: 2px solid var(--gold); border-radius: 15px; padding: 20px; margin: 15px auto; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; font-size: 16px; box-sizing: border-box; }
-        .btn { width: 100%; padding: 15px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 10px; transition: 0.2s; background: var(--gold); color: black; }
+        :root { --gold: #D4AF37; --blue: #2563eb; --dark: #0f172a; --card: #1e293b; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--dark); color: white; margin: 0; padding: 10px; text-align: center; }
+        .container { max-width: 500px; margin: auto; }
+        .card { background: var(--card); border: 2px solid var(--gold); border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
+        h2, h3 { color: var(--gold); margin: 5px 0; font-size: 1.2em; }
+        input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; box-sizing: border-box; }
+        
+        /* أزرار فائقة الاستجابة */
+        .btn { width: 100%; padding: 14px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; font-size: 15px; margin: 5px 0; transition: 0.2s; display: block; }
+        .btn-gold { background: var(--gold); color: black; }
         .btn-blue { background: var(--blue); color: white; }
-        .btn:active { transform: translateY(2px); filter: brightness(1.2); }
-        #wall { background: rgba(0,0,0,0.3); border-radius: 10px; padding: 10px; margin-top: 15px; text-align: right; border: 1px solid #444; min-height: 100px; max-height: 300px; overflow-y: auto; }
-        .post { background: #26354a; border-right: 5px solid var(--gold); padding: 12px; margin-bottom: 10px; border-radius: 8px; font-size: 14px; }
-        #profileDisplay { display: none; background: rgba(212, 175, 55, 0.1); border: 2px dashed var(--gold); padding: 15px; border-radius: 12px; margin-bottom: 20px; }
+        .btn-green { background: #10b981; color: white; }
+        .btn:active { transform: scale(0.96); opacity: 0.8; }
+
+        #wall { background: rgba(0,0,0,0.3); border-radius: 10px; padding: 10px; margin-top: 10px; max-height: 250px; overflow-y: auto; text-align: right; border: 1px solid #444; }
+        .post { background: #26354a; border-right: 4px solid var(--gold); padding: 8px; margin-bottom: 8px; border-radius: 5px; font-size: 13px; }
+        #profileInfo { display: none; background: rgba(212, 175, 55, 0.1); border: 1px dashed var(--gold); padding: 10px; border-radius: 10px; margin-bottom: 10px; }
     </style>
 </head>
-<body onload="initSystem()">
+<body onload="initApp()">
 
-    <h2 style="color: var(--gold);">🧬 منصة التعاون البحثي الدولي</h2>
+    <div class="container">
+        <h2>🧬 منصة التعاون البحثي الدولي</h2>
 
-    <!-- الملف الشخصي المحفوظ -->
-    <div id="profileDisplay" class="card">
-        <h3 style="margin:0">👤 ملف الباحثة: <span id="savedName" style="color:var(--gold)"></span></h3>
-        <p id="savedBio" style="opacity: 0.8; margin: 5px 0;"></p>
-        <button class="btn btn-blue" style="width:auto; padding:5px 15px; font-size:12px;" onclick="clearData()">تغيير الحساب</button>
-    </div>
+        <div id="profileInfo" class="card">
+            <h3 style="font-size:1em;">👤 الباحثة: <span id="savedN"></span></h3>
+            <p id="savedB" style="font-size:0.8em; margin:0; opacity:0.8;"></p>
+        </div>
 
-    <!-- إنشاء الحساب (يظهر مرة واحدة) -->
-    <div class="card" id="loginCard">
-        <h3>🔐 إنشاء الملف الأكاديمي</h3>
-        <input type="text" id="uName" placeholder="الاسم الكامل...">
-        <input type="text" id="uBio" placeholder="التخصص...">
-        <button class="btn" onclick="saveData()">حفظ البيانات للأبد ✅</button>
-    </div>
+        <div class="card" id="loginCard">
+            <h3>🔐 تفعيل هوية الباحث</h3>
+            <input type="text" id="uName" placeholder="الاسم الكامل...">
+            <input type="text" id="uBio" placeholder="التخصص الدقيق...">
+            <button class="btn btn-gold" onclick="saveData()">حفظ التفعيل الدائم ✅</button>
+        </div>
 
-    <!-- جدار التعاون العالمي -->
-    <div class="card">
-        <h3>📢 جدار التعاون (عالمي)</h3>
-        <input type="text" id="postMsg" placeholder="اكتبي طلبكِ البحثي...">
-        <button class="btn btn-blue" onclick="publishPost()">نشر للعالم 🚀</button>
-        <button class="btn" style="background:#475569; color:white; font-size:13px;" onclick="loadPosts()">تحديث الجدار لرؤية منشورات الزملاء 🔄</button>
-        <div id="wall">اضغطي "تحديث" لرؤية المنشورات...</div>
+        <div class="card">
+            <h3>📢 جدار التعاون (العربي والأجنبي)</h3>
+            <input type="text" id="msg" placeholder="اكتبي طلب التعاون هنا...">
+            <button class="btn btn-blue" onclick="sendPost()">نشر الإشعار للعالم 🚀</button>
+            <button class="btn" style="background:#475569; color:white; font-size:12px;" onclick="loadPosts()">تحديث الجدار لرؤية الزملاء 🔄</button>
+            <div id="wall">جاري جلب المنشورات...</div>
+        </div>
+
+        <div class="card" style="border-color: var(--blue);">
+            <h3>🏛️ قاعات الاجتماعات المباشرة</h3>
+            <button class="btn btn-blue" onclick="window.open('https://meet.jit.si/ZAW_Conference_Main', '_blank')">🏛️ القاعة الكبرى (المؤتمرات)</button>
+            <button class="btn btn-green" onclick="window.open('https://meet.jit.si/ZAW_Arabic_Scientists', '_blank')">🌍 غرفة الباحثين العرب</button>
+            <button class="btn btn-gold" onclick="window.open('https://meet.jit.si/ZAW_International_Lab', '_blank')">🔬 المختبر الدولي (للأجانب)</button>
+        </div>
     </div>
 
     <script>
-        // إعدادات القاعدة (نسخة خفيفة)
+        // إعدادات القاعدة
         const config = { databaseURL: "https://zaw-platform-default-rtdb.firebaseio.com/" };
         if (!firebase.apps.length) firebase.initializeApp(config);
         const db = firebase.database();
@@ -61,42 +72,34 @@
                 localStorage.setItem('dr_n', n);
                 localStorage.setItem('dr_b', b);
                 location.reload();
-            }
+            } else { alert("أكملي البيانات دكتورة"); }
         }
 
-        function initSystem() {
+        function initApp() {
             const n = localStorage.getItem('dr_n');
             const b = localStorage.getItem('dr_b');
             if(n) {
                 document.getElementById('loginCard').style.display = 'none';
-                document.getElementById('profileDisplay').style.display = 'block';
-                document.getElementById('savedName').innerText = n;
-                document.getElementById('savedBio').innerText = b;
-                loadPosts(); // تحميل المنشورات تلقائياً عند الفتح
+                document.getElementById('profileInfo').style.display = 'block';
+                document.getElementById('savedN').innerText = n;
+                document.getElementById('savedB').innerText = b;
+                loadPosts();
             }
         }
 
-        function publishPost() {
-            const name = localStorage.getItem('dr_n');
-            const msg = document.getElementById('postMsg').value;
-            if(!name) return alert("سجلي أولاً");
-            if(!msg) return;
+        function sendPost() {
+            const n = localStorage.getItem('dr_n');
+            const m = document.getElementById('msg').value;
+            if(!n) return alert("سجلي دخولكِ أولاً");
+            if(!m) return;
 
-            db.ref('research_posts').push({
-                u: name,
-                m: msg,
-                t: new Date().toLocaleTimeString('ar-EG')
-            }).then(() => {
-                document.getElementById('postMsg').value = "";
-                loadPosts();
-            });
+            db.ref('final_wall').push({ u: n, m: m, t: new Date().toLocaleTimeString('ar-EG') })
+            .then(() => { document.getElementById('msg').value = ""; loadPosts(); });
         }
 
         function loadPosts() {
-            const wall = document.getElementById('wall');
-            wall.innerHTML = "جاري جلب المنشورات...";
-            
-            db.ref('research_posts').limitToLast(15).once('value', (s) => {
+            db.ref('final_wall').limitToLast(10).once('value', (s) => {
+                const wall = document.getElementById('wall');
                 wall.innerHTML = "";
                 const data = s.val();
                 if(data) {
@@ -106,15 +109,8 @@
                         d.innerHTML = <b>${p.u}</b>: ${p.m} <br><small style="color:var(--gold)">${p.t}</small>;
                         wall.appendChild(d);
                     });
-                } else {
-                    wall.innerHTML = "لا توجد منشورات حالياً.";
-                }
+                } else { wall.innerHTML = "لا توجد منشورات حالياً."; }
             });
-        }
-
-        function clearData() {
-            localStorage.clear();
-            location.reload();
         }
     </script>
 </body>
