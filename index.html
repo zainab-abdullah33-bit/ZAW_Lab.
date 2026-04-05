@@ -3,79 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZAW Research Hub | شبكة الباحثين</title>
+    <title>ZAW Research Hub | الشبكة العالمية</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #D4AF37; --dark-blue: #1A2634; --white: #FFFFFF; }
         body { font-family: 'Cairo', sans-serif; background-color: var(--dark-blue); color: var(--white); margin: 0; }
         #dashboard { padding: 40px; }
+        
         .header-hub { border-bottom: 2px solid var(--gold); padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
         .search-box { width: 100%; max-width: 600px; padding: 15px; border-radius: 30px; border: 2px solid var(--gold); background: rgba(255,255,255,0.1); color: white; font-size: 18px; text-align: center; margin: 0 auto 40px auto; display: block; }
-        .researchers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
-        .researcher-card { background: rgba(255,255,255,0.08); padding: 25px; border-radius: 15px; border-top: 5px solid var(--gold); text-align: center; transition: 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-        .researcher-card:hover { transform: translateY(-10px); background: rgba(255,255,255,0.15); }
-        .tag { background: var(--gold); color: black; padding: 5px 12px; border-radius: 20px; font-size: 13px; font-weight: bold; display: inline-block; margin-bottom: 10px; }
-        .btn-collab { background: none; border: 1px solid var(--gold); color: var(--gold); padding: 8px 20px; border-radius: 8px; cursor: pointer; transition: 0.3s; }
-        .btn-collab:hover { background: var(--gold); color: var(--dark-blue); }
+        
+        .researchers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; }
+        .researcher-card { background: rgba(255,255,255,0.08); padding: 25px; border-radius: 15px; border-top: 5px solid var(--gold); text-align: center; position: relative; }
+        .country-flag { position: absolute; top: 10px; left: 15px; font-size: 20px; }
+        .tag { background: var(--gold); color: black; padding: 4px 10px; border-radius: 5px; font-size: 12px; font-weight: bold; }
+        
+        /* Modal Style */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); overflow-y: auto; }
+        .modal-content { background: var(--dark-blue); margin: 2% auto; padding: 30px; border: 2px solid var(--gold); width: 450px; border-radius: 20px; text-align: center; }
+        input, select { width: 90%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid var(--gold); background: none; color: white; font-family: 'Cairo'; }
+        .btn-action { background: var(--gold); color: var(--dark-blue); border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; }
     </style>
 </head>
 <body>
 
     <div id="dashboard">
         <div class="header-hub">
-            <div>
-                <h1 style="margin:0;">مرحباً بكِ د. زينب عبدالله وحيد 🧬</h1>
-                <p style="color: var(--gold); margin:5px 0;">أهلاً بكِ في مركز الأبحاث الافتراضي الخاص بكِ</p>
-            </div>
-            <button style="background: #ff4d4d; color:white; border:none; padding:10px 20px; border-radius:8px; cursor:pointer;" onclick="location.reload()">خروج</button>
+            <h1>مختبر ZAW للأبحاث الدولية 🌐</h1>
+            <button style="background:none; border:1px solid var(--gold); color:var(--gold); padding:8px 15px; border-radius:8px; cursor:pointer;" onclick="openProfile()">إعدادات ملفي ⚙️</button>
         </div>
 
-        <input type="text" class="search-box" id="searchInput" onkeyup="searchResearchers()" placeholder="🔍 ابحث عن تخصص (In silico, GROMACS, Toxo, SOD1)...">
+        <input type="text" class="search-box" id="searchInput" onkeyup="searchResearchers()" placeholder="🔍 ابحث عن باحث، تخصص، أو دولة...">
 
-        <h2 style="color: var(--gold); border-right: 4px solid var(--gold); padding-right: 15px;">الباحثون المقترحون للتعاون العلمي:</h2>
-        
         <div class="researchers-grid" id="researcherList">
-            
-            <!-- د. زينب عبدالله (صاحبة الموقع) -->
+            <!-- بطاقة د. زينب -->
             <div class="researcher-card">
+                <span class="country-flag" id="display-flag">🇮🇶</span>
                 <span class="tag">Molecular Biology</span>
-                <h3>د. زينب عبدالله وحيد</h3>
-                <p style="font-size: 14px; opacity: 0.9;">خبير في Protein Aggregation & In silico Drug Design</p>
-                <p style="font-size: 12px; color: #aaa;">جامعة التقنية الوسطى | MTU</p>
-                <button class="btn-collab">ملفي الشخصي</button>
+                <h3 id="display-name">د. زينب عبدالله وحيد</h3>
+                <p id="display-uni">جامعة التقنية الوسطى | MTU</p>
+                <p id="display-bio" style="font-size: 14px; opacity: 0.8;">In silico Drug Design & Protein Aggregation</p>
             </div>
 
-            <!-- باحث حقيقي مقترح 1 -->
+            <!-- باحث دولي 1 (البرازيل) -->
             <div class="researcher-card">
-                <span class="tag">Computational Biology</span>
-                <h3>د. علي حسن الساعدي</h3>
-                <p style="font-size: 14px; opacity: 0.9;">متخصص في Molecular Dynamics Simulation (GROMACS)</p>
-                <p style="font-size: 12px; color: #aaa;">باحث في النمذجة الجزيئية</p>
-                <button class="btn-collab">طلب تعاون بحثي</button>
+                <span class="country-flag">🇧🇷</span>
+                <span class="tag">Toxoplasmosis Expert</span>
+                <h3>د. ريكاردو سيلفا</h3>
+                <p>جامعة ساو باولو | USP</p>
+                <p style="font-size: 14px; opacity: 0.8;">HMG-Box protein in Toxoplasma gondii</p>
+                <button class="btn-action" style="background:none; border:1px solid var(--gold); color:var(--gold);">تواصل للتعاون الدولي</button>
             </div>
 
-            <!-- باحث حقيقي مقترح 2 -->
+            <!-- باحث دولي 2 (المغرب) -->
             <div class="researcher-card">
-                <span class="tag">Microbiology</span>
-                <h3>د. مريم الفتلاوي</h3>
-                <p style="font-size: 14px; opacity: 0.9;">أبحاث مقاومة المضادات الحيوية و Toxoplasma gondii</p>
-                <p style="font-size: 12px; color: #aaa;">جامعة بابل | كلية العلوم</p>
-                <button class="btn-collab">طلب تعاون بحثي</button>
-            </div>
-
-            <!-- باحث حقيقي مقترح 3 -->
-            <div class="researcher-card">
+                <span class="country-flag">🇲🇦</span>
                 <span class="tag">Bioinformatics</span>
-                <h3>د. ليلى الشمري</h3>
-                <p style="font-size: 14px; opacity: 0.9;">تحليل البروتينات الطافرة وعلاقتها بالأمراض العصبية</p>
-                <p style="font-size: 12px; color: #aaa;">المركز الوطني للتقنيات الإحيائية</p>
-                <button class="btn-collab">طلب تعاون بحثي</button>
+                <h3>د. إدريس العلوي</h3>
+                <p>جامعة محمد الخامس | الرباط</p>
+                <p style="font-size: 14px; opacity: 0.8;">Molecular Dynamics & GROMACS Expert</p>
+                <button class="btn-action" style="background:none; border:1px solid var(--gold); color:var(--gold);">تواصل للتعاون الدولي</button>
             </div>
+        </div>
+    </div>
 
+    <!-- نافذة الإعدادات المتقدمة -->
+    <div id="profileModal" class="modal">
+        <div class="modal-content">
+            <h2 style="color: var(--gold);">تحديث الملف الأكاديمي الدولي</h2>
+            <input type="text" id="edit-name" placeholder="الاسم الأكاديمي الكامل">
+            <input type="text" id="edit-uni" placeholder="الجامعة أو المركز البحثي">
+            <input type="text" id="edit-bio" placeholder="التخصص الدقيق">
+            <select id="edit-country">
+                <option value="🇮🇶">العراق 🇮🇶</option>
+                <option value="🇧🇷">البرازيل 🇧🇷</option>
+                <option value="🇲🇦">المغرب 🇲🇦</option>
+                <option value="🇪🇬">مصر 🇪🇬</option>
+                <option value="🇩🇰">الدنمارك 🇩🇰</option>
+            </select>
+            <button class="btn-action" onclick="saveProfile()">حفظ البيانات الدولية</button>
+            <p style="color: #ff4d4d; cursor:pointer; margin-top:15px;" onclick="closeProfile()">إغلاق بدون حفظ</p>
         </div>
     </div>
 
     <script>
+        function openProfile() {
+            document.getElementById('profileModal').style.display = "block";
+            document.getElementById('edit-name').value = document.getElementById('display-name').innerText;
+            document.getElementById('edit-uni').value = document.getElementById('display-uni').innerText;
+            document.getElementById('edit-bio').value = document.getElementById('display-bio').innerText;
+        }
+
+        function closeProfile() { document.getElementById('profileModal').style.display = "none"; }
+
+        function saveProfile() {
+            document.getElementById('display-name').innerText = document.getElementById('edit-name').value;
+            document.getElementById('display-uni').innerText = document.getElementById('edit-uni').value;
+            document.getElementById('display-bio').innerText = document.getElementById('edit-bio').value;
+            document.getElementById('display-flag').innerText = document.getElementById('edit-country').value;
+            closeProfile();
+            alert("تم تحديث بياناتكِ في الشبكة العالمية بنجاح!");
+        }
+
         function searchResearchers() {
             let input = document.getElementById('searchInput').value.toLowerCase();
             let cards = document.getElementsByClassName('researcher-card');
