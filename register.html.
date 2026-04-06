@@ -3,83 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZAW - Researcher Registration</title>
+    <title>ZAW - Join Research Network</title>
     <style>
-        body {
-            background-color: #000; /* خلفية سوداء مثل موقعك */
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        /* هنا نضع "لمسة التصميم" الزجاجية */
-        .glass-form {
-            max-width: 500px;
-            width: 90%;
-            padding: 40px;
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            border-radius: 25px;
-            font-family: 'Arial', sans-serif;
-            color: #fff;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-        }
-        input {
-            width: 100%;
-            padding: 12px;
-            margin-top: 8px;
-            margin-bottom: 20px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid #444;
-            border-radius: 10px;
-            color: #fff;
-            box-sizing: border-box; /* لضمان عدم خروج الحقول عن الإطار */
-        }
-        input:focus {
-            border-color: #D4AF37;
-            outline: none;
-        }
-        .gold-btn {
-            width: 100%;
-            background: linear-gradient(45deg, #D4AF37, #FFD700);
-            border: none;
-            padding: 15px;
-            border-radius: 12px;
-            color: #000;
-            font-weight: bold;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .gold-btn:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
-        }
+        body { background-color: #000; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; font-family: sans-serif; }
+        .glass-form { max-width: 450px; width: 90%; padding: 40px; background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 25px; color: #fff; box-shadow: 0 15px 35px rgba(0,0,0,0.5); }
+        h2 { color: #D4AF37; text-align: center; }
+        input { width: 100%; padding: 12px; margin: 10px 0; background: rgba(255,255,255,0.05); border: 1px solid #444; border-radius: 10px; color: #fff; box-sizing: border-box; }
+        .gold-btn { width: 100%; background: linear-gradient(45deg, #D4AF37, #FFD700); border: none; padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 10px; }
     </style>
 </head>
 <body>
 
 <div class="glass-form">
-    <h2 style="color: #D4AF37; text-align: center; margin-bottom: 30px;">Create Researcher Profile ✨</h2>
-    
-    <form>
-        <label>Full Name & Academic Title</label>
-        <input type="text" placeholder="Dr. Zainab Abdullah">
-
-        <label>University / Institute</label>
-        <input type="text" placeholder="Middle Technical University">
-
-        <label>ORCID iD</label>
-        <input type="text" placeholder="0000-0000-0000-0000">
-
-        <label>Professional Email</label>
-        <input type="email" placeholder="name@university.edu">
-
-        <button type="submit" class="gold-btn">Create Profile & Join Network 🌍</button>
+    <h2>Create Researcher Profile ✨</h2>
+    <form id="regForm">
+        <input type="text" id="fullName" placeholder="Full Name & Title" required>
+        <input type="text" id="univ" placeholder="University / Institute" required>
+        <input type="text" id="orcid" placeholder="ORCID iD" required>
+        <input type="email" id="email" placeholder="Professional Email" required>
+        <input type="password" id="pass" placeholder="Create Password" required>
+        <button type="submit" class="gold-btn" id="submitBtn">Create Profile & Join 🌍</button>
     </form>
 </div>
+
+<!-- ربط Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+  // الكود الخاص بكِ
+  const firebaseConfig = {
+    apiKey: "AIzaSyAqC7a5CRtjMRmuBwPWC5TXWMQkMGIlQuQ",
+    authDomain: "zaw-research-hub.firebaseapp.com",
+    projectId: "zaw-research-hub",
+    storageBucket: "zaw-research-hub.firebasestorage.app",
+    messagingSenderId: "750460537109",
+    appId: "1:750460537109:web:687d785a83a3c8d2d2011c"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  // منطق التسجيل
+  document.getElementById('regForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    btn.innerText = "Processing...";
+
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('pass').value;
+    const name = document.getElementById('fullName').value;
+    const orcid = document.getElementById('orcid').value;
+
+    try {
+      // 1. إنشاء الحساب
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      
+      // 2. حفظ البيانات في Firestore
+      await addDoc(collection(db, "researchers"), {
+        uid: userCredential.user.uid,
+        name: name,
+        university: document.getElementById('univ').value,
+        orcid: orcid,
+        email: email,
+        timestamp: new Date()
+      });
+
+      alert("Welcome to ZAW! Profile Created.");
+      window.location.href = "index.html"; // العودة للرئيسية بعد النجاح
+    } catch (error) {
+      alert("Error: " + error.message);
+      btn.innerText = "Create Profile & Join 🌍";
+    }
+  });
+</script>
 
 </body>
 </html>
