@@ -1,130 +1,62 @@
-<!DOCTYPE html>
-<html lang="ar">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZAW - Professional Research Network</title>
-    <style>
-        :root { --gold: #D4AF37; --bg: #050505; --card: #121212; --text: #e0e0e0; }
-        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; margin: 0; transition: 0.3s; }
-        .rtl { direction: rtl; text-align: right; }
-        .ltr { direction: ltr; text-align: left; }
-        
-        /* Navigation & Profile Summary */
-        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 15px 5%; background: #111; border-bottom: 2px solid var(--gold); sticky: top; z-index: 1000; }
-        .profile-mini { display: flex; align-items: center; gap: 10px; border: 1px solid #333; padding: 5px 15px; border-radius: 30px; background: #1a1a1a; }
-        .h-index-badge { background: var(--gold); color: #000; padding: 2px 8px; border-radius: 5px; font-weight: bold; font-size: 0.8rem; }
-
-        .main-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; max-width: 1100px; margin: 20px auto; padding: 0 15px; }
-
-        /* Sidebar Profile Card */
-        .sidebar-card { background: var(--card); padding: 20px; border-radius: 20px; border: 1px solid #222; position: sticky; top: 90px; height: fit-content; }
-        .stat-item { display: flex; justify-content: space-between; margin: 10px 0; border-bottom: 1px solid #222; padding-bottom: 5px; }
-
-        /* Feed & Posts */
-        .post-box { background: var(--card); padding: 20px; border-radius: 20px; border: 1px solid #222; margin-bottom: 25px; }
-        textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 10px; resize: none; box-sizing: border-box; }
-        .btn-gold { background: linear-gradient(45deg, var(--gold), #FFD700); color: #000; border: none; padding: 10px 25px; border-radius: 20px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-
-        .post-card { background: var(--card); border-radius: 15px; padding: 20px; margin-bottom: 20px; border: 1px solid #222; }
-        .interaction-bar { display: flex; gap: 20px; margin-top: 15px; padding-top: 10px; border-top: 1px solid #222; }
-        .like-btn { cursor: pointer; color: #888; transition: 0.3s; }
-        .like-btn:hover { color: var(--gold); }
-    </style>
-</head>
-<body class="rtl" id="appBody">
-
-<nav class="navbar">
-    <div style="color:var(--gold); font-weight:bold; font-size:1.4rem;">ZAW ✨</div>
-    <div class="profile-mini">
-        <span id="userNameNav">Dr. Zainab</span>
-        <span class="h-index-badge">h-index: 12</span>
-        <button onclick="toggleLang()" style="background:none; border:1px solid var(--gold); color:var(--gold); cursor:pointer; border-radius:10px;">EN/AR</button>
-    </div>
-</nav>
-
-<div class="main-grid">
-    <!-- Sidebar: Profile Stats -->
-    <aside class="sidebar-card">
-        <h3 id="sideTitle">الملف الأكاديمي</h3>
-        <div class="stat-item"><span>Papers:</span> <span>24</span></div>
-        <div class="stat-item"><span>Citations:</span> <span>450</span></div>
-        <div class="stat-item"><span>Field:</span> <span style="font-size:0.8rem; color:var(--gold);">Bio-Informatics</span></div>
-        <button class="btn-gold" style="width:100%; font-size:0.8rem;">Edit ORCID Data</button>
-    </aside>
-
-    <!-- Main Feed -->
-    <main>
-        <div class="post-box">
-            <textarea id="postInput" placeholder="انشري تحديثاً علمياً جديداً..."></textarea>
-            <button class="btn-gold" onclick="addPost()">نشر في الشبكة</button>
-        </div>
-
-        <div id="feed">
-            <!-- المنشورات تظهر هنا -->
-        </div>
-    </main>
-</div>
-
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, push, onValue, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getDatabase, ref, push, onValue, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyAqC7a5CRtjMRmuBwPWC5TXWMQkMGIlQuQ",
-        databaseURL: "https://zaw-research-hub-default-rtdb.firebaseio.com",
-        projectId: "zaw-research-hub"
-    };
+  // إعدادات الاتصال برابط قاعدة بياناتكِ الذي أرسلتِه
+  const firebaseConfig = {
+    apiKey: "AIzaSyAqC7a5CRtjMRmuBwPWC5TXWMQkMGIlQuQ",
+    authDomain: "zaw-research-hub.firebaseapp.com",
+    // هذا هو الرابط الذي نسختِه، قمت بوضعه هنا للربط المباشر
+    databaseURL: "https://zaw-research-hub-default-rtdb.firebaseio.com", 
+    projectId: "zaw-research-hub",
+    storageBucket: "zaw-research-hub.appspot.com",
+    messagingSenderId: "750460537109",
+    appId: "1:750460537109:web:687d785a83a3c8d2d2011c"
+  };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
 
-    // نظام اللغات
-    let isAr = true;
-    window.toggleLang = () => {
-        isAr = !isAr;
-        document.getElementById('appBody').className = isAr ? 'rtl' : 'ltr';
-        document.getElementById('sideTitle').innerText = isAr ? 'الملف الأكاديمي' : 'Academic Profile';
-        document.getElementById('postInput').placeholder = isAr ? 'انشري تحديثاً علمياً جديداً...' : 'Post a new scientific update...';
-    };
+  // وظيفة نشر المنشور لكي يظهر في صفحة الداتا
+  window.addPost = () => {
+    const content = document.getElementById('postInput').value;
+    if(!content) return;
 
-    // إضافة منشور
-    window.addPost = () => {
-        const content = document.getElementById('postInput').value;
-        if(!content) return;
-        push(ref(db, 'posts'), {
-            author: "Dr. Zainab Abdullah",
-            text: content,
-            likes: 0,
-            date: new Date().toLocaleDateString()
-        });
+    // إرسال البيانات إلى "مجلد" اسمه posts داخل قاعدة بيانات ZAW
+    push(ref(db, 'posts'), {
+      author: "د. زينب عبدالله",
+      text: content,
+      likes: 0,
+      date: new Date().toLocaleString('ar-EG')
+    }).then(() => {
+        alert("تم النشر بنجاح! انظري لشاشة Firebase الآن");
         document.getElementById('postInput').value = "";
-    };
-
-    // الإعجاب
-    window.likePost = (id, currentLikes) => {
-        update(ref(db, 'posts/' + id), { likes: currentLikes + 1 });
-    };
-
-    // عرض المنشورات
-    onValue(ref(db, 'posts'), (snap) => {
-        const data = snap.val();
-        let html = "";
-        for(let id in data) {
-            html = `
-                <div class="post-card">
-                    <strong>🎓 ${data[id].author}</strong> <small style="color:#666">| ${data[id].date}</small>
-                    <p style="margin:15px 0;">${data[id].text}</p>
-                    <div class="interaction-bar">
-                        <span class="like-btn" onclick="likePost('${id}', ${data[id].likes})">👍 ${data[id].likes || 0}</span>
-                        <span style="color:#888; cursor:pointer;">💬 Comment</span>
-                        <span style="color:#888; cursor:pointer;">📑 Cite</span>
-                    </div>
-                </div>
-            ` + html;
-        }
-        document.getElementById('feed').innerHTML = html;
     });
+  };
+
+  // وظيفة الإعجاب (تغير الرقم في الداتا مباشرة)
+  window.likePost = (postId, currentLikes) => {
+    update(ref(db, 'posts/' + postId), {
+      likes: (currentLikes || 0) + 1
+    });
+  };
+
+  // عرض المنشورات حياً من الداتا
+  onValue(ref(db, 'posts'), (snapshot) => {
+    const data = snapshot.val();
+    let html = "";
+    for(let id in data) {
+      html = `
+        <div class="post-card" style="background:#121212; padding:20px; border-radius:15px; margin-bottom:15px; border:1px solid #222;">
+          <strong style="color:#D4AF37;">🎓 ${data[id].author}</strong>
+          <p style="color:white; margin:15px 0;">${data[id].text}</p>
+          <div style="display:flex; gap:20px;">
+            <span style="cursor:pointer; color:#888;" onclick="likePost('${id}', ${data[id].likes})">👍 ${data[id].likes || 0}</span>
+            <span style="color:#888;">💬 Comment</span>
+          </div>
+        </div>
+      ` + html;
+    }
+    document.getElementById('feed').innerHTML = html;
+  });
 </script>
-</body>
-</html>
