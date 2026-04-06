@@ -1,62 +1,131 @@
+<!DOCTYPE html>
+<html lang="ar" id="htmlTag">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZAW Research Hub | المنصة العلمية</title>
+    <style>
+        :root { --gold: #D4AF37; --dark: #080808; --card: #151515; --text: #f0f0f0; }
+        body { background: var(--dark); color: var(--text); font-family: 'Segoe UI', sans-serif; margin: 0; transition: 0.4s; }
+        .rtl { direction: rtl; text-align: right; }
+        .ltr { direction: ltr; text-align: left; }
+        
+        /* Navbar */
+        .nav { display: flex; justify-content: space-between; align-items: center; padding: 15px 6%; background: rgba(0,0,0,0.8); border-bottom: 2px solid var(--gold); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; }
+        .logo { font-size: 1.6rem; font-weight: bold; color: var(--gold); text-shadow: 0 0 10px rgba(212,175,55,0.3); }
+        .lang-btn { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 6px 15px; border-radius: 20px; cursor: pointer; font-weight: bold; }
+
+        /* Content Layout */
+        .container { max-width: 850px; margin: 30px auto; padding: 0 20px; }
+        
+        /* Post Box (Modern UI) */
+        .post-card { background: var(--card); border-radius: 20px; padding: 25px; border: 1px solid #222; box-shadow: 0 10px 40px rgba(0,0,0,0.6); margin-bottom: 30px; }
+        textarea { width: 100%; background: #000; border: 1px solid #333; color: white; padding: 15px; border-radius: 12px; resize: none; font-size: 1.1rem; box-sizing: border-box; outline: none; transition: 0.3s; }
+        textarea:focus { border-color: var(--gold); box-shadow: 0 0 8px rgba(212,175,55,0.2); }
+        
+        .publish-btn { background: linear-gradient(45deg, var(--gold), #f1c40f); color: black; border: none; padding: 12px 35px; border-radius: 25px; font-weight: bold; cursor: pointer; margin-top: 15px; transition: 0.3s; }
+        .publish-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(212,175,55,0.4); }
+
+        /* Feed */
+        .feed-item { background: var(--card); border-radius: 18px; padding: 20px; margin-bottom: 20px; border-left: 5px solid var(--gold); animation: fadeIn 0.5s ease; }
+        .author { color: var(--gold); font-weight: bold; display: block; margin-bottom: 8px; }
+        .interaction { display: flex; gap: 25px; margin-top: 15px; border-top: 1px solid #222; padding-top: 12px; color: #888; font-size: 0.9rem; }
+        .like-btn { cursor: pointer; transition: 0.2s; }
+        .like-btn:hover { color: var(--gold); transform: scale(1.1); }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="rtl" id="bodyWrap">
+
+<nav class="nav">
+    <div class="logo">ZAW RESEARCH HUB ✨</div>
+    <button class="lang-btn" onclick="toggleLang()" id="langSwitcher">English</button>
+</nav>
+
+<div class="container">
+    <div class="post-card">
+        <h3 id="welcomeHeader">مرحباً دكتورة زينب، انشري تحديثاً علمياً...</h3>
+        <textarea id="postContent" placeholder="اكتبي ملخص البحث أو الفكرة هنا..."></textarea>
+        <button class="publish-btn" onclick="sendPost()" id="pubBtn">نشر الآن 🌍</button>
+    </div>
+
+    <div id="liveFeed">
+        <!-- المنشورات ستظهر هنا بتنسيق راقٍ -->
+    </div>
+</div>
+
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getDatabase, ref, push, onValue, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, push, onValue, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-  // إعدادات الاتصال برابط قاعدة بياناتكِ الذي أرسلتِه
-  const firebaseConfig = {
-    apiKey: "AIzaSyAqC7a5CRtjMRmuBwPWC5TXWMQkMGIlQuQ",
-    authDomain: "zaw-research-hub.firebaseapp.com",
-    // هذا هو الرابط الذي نسختِه، قمت بوضعه هنا للربط المباشر
-    databaseURL: "https://zaw-research-hub-default-rtdb.firebaseio.com", 
-    projectId: "zaw-research-hub",
-    storageBucket: "zaw-research-hub.appspot.com",
-    messagingSenderId: "750460537109",
-    appId: "1:750460537109:web:687d785a83a3c8d2d2011c"
-  };
+    const firebaseConfig = {
+        apiKey: "AIzaSyAqC7a5CRtjMRmuBwPWC5TXWMQkMGIlQuQ",
+        databaseURL: "https://zaw-research-hub-default-rtdb.firebaseio.com", 
+        projectId: "zaw-research-hub"
+    };
 
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
 
-  // وظيفة نشر المنشور لكي يظهر في صفحة الداتا
-  window.addPost = () => {
-    const content = document.getElementById('postInput').value;
-    if(!content) return;
+    // نظام اللغات المدمج
+    let isAr = true;
+    window.toggleLang = () => {
+        isAr = !isAr;
+        const html = document.getElementById('htmlTag');
+        const body = document.getElementById('bodyWrap');
+        const header = document.getElementById('welcomeHeader');
+        const input = document.getElementById('postContent');
+        const btn = document.getElementById('pubBtn');
+        const switcher = document.getElementById('langSwitcher');
 
-    // إرسال البيانات إلى "مجلد" اسمه posts داخل قاعدة بيانات ZAW
-    push(ref(db, 'posts'), {
-      author: "د. زينب عبدالله",
-      text: content,
-      likes: 0,
-      date: new Date().toLocaleString('ar-EG')
-    }).then(() => {
-        alert("تم النشر بنجاح! انظري لشاشة Firebase الآن");
-        document.getElementById('postInput').value = "";
+        body.className = isAr ? 'rtl' : 'ltr';
+        html.lang = isAr ? 'ar' : 'en';
+        header.innerText = isAr ? 'مرحباً دكتورة زينب، انشري تحديثاً علمياً...' : 'Welcome Dr. Zainab, post a scientific update...';
+        input.placeholder = isAr ? 'اكتبي ملخص البحث أو الفكرة هنا...' : 'Write your research summary or idea here...';
+        btn.innerText = isAr ? 'نشر الآن 🌍' : 'Post Now 🌍';
+        switcher.innerText = isAr ? 'English' : 'العربية';
+    };
+
+    // وظيفة النشر الحقيقي في Firebase
+    window.sendPost = () => {
+        const text = document.getElementById('postContent').value;
+        if(!text.trim()) return;
+
+        push(ref(db, 'posts'), {
+            author: "Dr. Zainab Abdullah",
+            content: text,
+            likes: 0,
+            time: new Date().toLocaleString(isAr ? 'ar-EG' : 'en-GB')
+        });
+        document.getElementById('postContent').value = "";
+    };
+
+    // الإعجاب (تحديث الداتا مباشرة)
+    window.likePost = (id, currentLikes) => {
+        update(ref(db, 'posts/' + id), { likes: (currentLikes || 0) + 1 });
+    };
+
+    // العرض الحي (هذا ما سيجعل الداتا تتغير في حاسبتكِ فوراً)
+    onValue(ref(db, 'posts'), (snapshot) => {
+        const data = snapshot.val();
+        let html = "";
+        const keys = Object.keys(data || {}).reverse();
+        keys.forEach(id => {
+            html += `
+                <div class="feed-item">
+                    <span class="author">🎓 ${data[id].author}</span>
+                    <div style="font-size:1.1rem; line-height:1.6;">${data[id].content}</div>
+                    <div class="interaction">
+                        <span class="like-btn" onclick="likePost('${id}', ${data[id].likes})">👍 ${data[id].likes || 0}</span>
+                        <span>💬 مناقشة</span>
+                        <span style="font-size:0.8rem; color:#555;">${data[id].time}</span>
+                    </div>
+                </div>
+            `;
+        });
+        document.getElementById('liveFeed').innerHTML = html || "<p style='text-align:center; color:#555;'>No posts yet. Start the conversation!</p>";
     });
-  };
-
-  // وظيفة الإعجاب (تغير الرقم في الداتا مباشرة)
-  window.likePost = (postId, currentLikes) => {
-    update(ref(db, 'posts/' + postId), {
-      likes: (currentLikes || 0) + 1
-    });
-  };
-
-  // عرض المنشورات حياً من الداتا
-  onValue(ref(db, 'posts'), (snapshot) => {
-    const data = snapshot.val();
-    let html = "";
-    for(let id in data) {
-      html = `
-        <div class="post-card" style="background:#121212; padding:20px; border-radius:15px; margin-bottom:15px; border:1px solid #222;">
-          <strong style="color:#D4AF37;">🎓 ${data[id].author}</strong>
-          <p style="color:white; margin:15px 0;">${data[id].text}</p>
-          <div style="display:flex; gap:20px;">
-            <span style="cursor:pointer; color:#888;" onclick="likePost('${id}', ${data[id].likes})">👍 ${data[id].likes || 0}</span>
-            <span style="color:#888;">💬 Comment</span>
-          </div>
-        </div>
-      ` + html;
-    }
-    document.getElementById('feed').innerHTML = html;
-  });
 </script>
+</body>
+</html>
