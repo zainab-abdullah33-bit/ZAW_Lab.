@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ar" id="mainHtml">
+<head>
+    <meta charset="UTF-8">
+    <title>ZAW - Scientific Network</title>
+    <style>
+        :root { --gold: #D4AF37; --dark: #0a0a0a; }
+        body { background: var(--dark); color: white; font-family: 'Segoe UI', Tahoma; margin: 0; transition: 0.3s; }
+        .navbar { display: flex; justify-content: space-between; padding: 20px; background: rgba(255,255,255,0.05); border-bottom: 1px solid var(--gold); }
+        .container { max-width: 800px; margin: 20px auto; padding: 10px; }
+        .post-box { background: #1a1a1a; padding: 20px; border-radius: 15px; border: 1px solid #333; margin-bottom: 20px; }
+        textarea { width: 100%; background: #000; border: 1px solid #444; color: white; padding: 10px; border-radius: 10px; height: 80px; resize: none; box-sizing: border-box; }
+        .btn-gold { background: var(--gold); color: black; border: none; padding: 10px 25px; border-radius: 20px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .feed-card { background: #111; padding: 15px; border-radius: 12px; margin-bottom: 15px; border-left: 4px solid var(--gold); }
+        .lang-btn { background: none; border: 1px solid var(--gold); color: var(--gold); padding: 5px 15px; border-radius: 15px; cursor: pointer; }
+        /* اتجاهات اللغة */
+        .rtl { direction: rtl; text-align: right; }
+        .ltr { direction: ltr; text-align: left; }
+    </style>
+</head>
+<body class="rtl" id="mainBody">
+
+<div class="navbar">
+    <div id="logo">ZAW Network ✨</div>
+    <button class="lang-btn" onclick="toggleLanguage()" id="langBtn">English</button>
+</div>
+
+<div class="container">
+    <div class="post-box">
+        <h3 id="welcomeTxt">مرحباً دكتورة زينب، شاركي بحثكِ اليوم</h3>
+        <textarea id="postInput" placeholder="ماذا يدور في ذهنكِ علمياً؟"></textarea>
+        <button class="btn-gold" onclick="publishPost()" id="publishBtn">نشر المنشور</button>
+    </div>
+
+    <div id="feedArea">
+        <!-- المنشورات ستظهر هنا -->
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyAqC7a5CRtjMRmuBwPWC5TXWMQkMGIlQuQ",
+        databaseURL: "https://zaw-research-hub-default-rtdb.firebaseio.com",
+        projectId: "zaw-research-hub"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // قاموس اللغات
+    const langData = {
+        ar: { welcome: "مرحباً دكتورة زينب، شاركي بحثكِ اليوم", placeholder: "ماذا يدور في ذهنكِ علمياً؟", publish: "نشر المنشور", btn: "English", dir: "rtl" },
+        en: { welcome: "Welcome Dr. Zainab, share your research", placeholder: "What's on your scientific mind?", publish: "Publish Post", btn: "العربية", dir: "ltr" }
+    };
+
+    let currentLang = 'ar';
+
+    window.toggleLanguage = function() {
+        currentLang = currentLang === 'ar' ? 'en' : 'ar';
+        const data = langData[currentLang];
+        
+        document.getElementById('welcomeTxt').innerText = data.welcome;
+        document.getElementById('postInput').placeholder = data.placeholder;
+        document.getElementById('publishBtn').innerText = data.publish;
+        document.getElementById('langBtn').innerText = data.btn;
+        document.getElementById('mainBody').className = data.dir;
+    };
+
+    // وظيفة النشر الحقيقي في Firebase
+    window.publishPost = function() {
+        const text = document.getElementById('postInput').value;
+        if(text.trim() === "") return;
+
+        push(ref(db, 'posts'), {
+            content: text,
+            author: "Dr. Zainab Abdullah",
+            timestamp: new Date().toLocaleString(),
+            lang: currentLang
+        });
+        document.getElementById('postInput').value = "";
+    };
+
+    // جلب المنشورات وعرضها فوراً (التفاعل الحي)
+    onValue(ref(db, 'posts'), (snapshot) => {
+        const posts = snapshot.val();
+        let html = "";
+        for(let id in posts) {
+            html = `<div class="feed-card">
+                        <strong>${posts[id].author}</strong>
+                        <p>${posts[id].content}</p>
+                        <small>${posts[id].timestamp}</small>
+                    </div>` + html;
+        }
+        document.getElementById('feedArea').innerHTML = html;
+    });
+</script>
+</body>
+</html>
