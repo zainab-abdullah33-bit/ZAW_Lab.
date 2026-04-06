@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZAW - Researcher Registration</title>
+    <style>
+        body {
+            background-color: #000; /* خلفية سوداء مثل موقعك */
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        /* هنا نضع "لمسة التصميم" الزجاجية */
+        .glass-form {
+            max-width: 500px;
+            width: 90%;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 25px;
+            font-family: 'Arial', sans-serif;
+            color: #fff;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 8px;
+            margin-bottom: 20px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid #444;
+            border-radius: 10px;
+            color: #fff;
+            box-sizing: border-box; /* لضمان عدم خروج الحقول عن الإطار */
+        }
+        input:focus {
+            border-color: #D4AF37;
+            outline: none;
+        }
+        .gold-btn {
+            width: 100%;
+            background: linear-gradient(45deg, #D4AF37, #FFD700);
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            color: #000;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .gold-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+<div class="glass-form">
+    <h2 style="color: #D4AF37; text-align: center; margin-bottom: 30px;">Create Researcher Profile ✨</h2>
+    
+    <form>
+        <label>Full Name & Academic Title</label>
+        <input type="text" placeholder="Dr. Zainab Abdullah">
+
+        <label>University / Institute</label>
+        <input type="text" placeholder="Middle Technical University">
+
+        <label>ORCID iD</label>
+        <input type="text" placeholder="0000-0000-0000-0000">
+
+        <label>Professional Email</label>
+        <input type="email" placeholder="name@university.edu">
+
+        <button type="submit" class="gold-btn">Create Profile & Join Network 🌍</button>
+    </form>
+</div>
+
+</body>
+</html>
