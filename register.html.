@@ -26,16 +26,16 @@
     </form>
 </div>
 
-<!-- ربط Firebase SDK -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
   import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+  import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-  // الكود الخاص بكِ
+  // الكود الخاص بكِ (Realtime Database Config)
   const firebaseConfig = {
     apiKey: "AIzaSyAqC7a5CRtjMRmuBwPWC5TXWMQkMGIlQuQ",
     authDomain: "zaw-research-hub.firebaseapp.com",
+    databaseURL: "https://zaw-research-hub-default-rtdb.firebaseio.com",
     projectId: "zaw-research-hub",
     storageBucket: "zaw-research-hub.firebasestorage.app",
     messagingSenderId: "750460537109",
@@ -44,9 +44,8 @@
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
-  const db = getFirestore(app);
+  const db = getDatabase(app);
 
-  // منطق التسجيل
   document.getElementById('regForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const btn = document.getElementById('submitBtn');
@@ -56,23 +55,23 @@
     const password = document.getElementById('pass').value;
     const name = document.getElementById('fullName').value;
     const orcid = document.getElementById('orcid').value;
+    const university = document.getElementById('univ').value;
 
     try {
       // 1. إنشاء الحساب
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       
-      // 2. حفظ البيانات في Firestore
-      await addDoc(collection(db, "researchers"), {
-        uid: userCredential.user.uid,
+      // 2. حفظ البيانات في Realtime Database
+      await set(ref(db, 'researchers/' + userCredential.user.uid), {
         name: name,
-        university: document.getElementById('univ').value,
+        university: university,
         orcid: orcid,
         email: email,
-        timestamp: new Date()
+        joinedAt: new Date().toISOString()
       });
 
       alert("Welcome to ZAW! Profile Created.");
-      window.location.href = "index.html"; // العودة للرئيسية بعد النجاح
+      window.location.href = "index.html"; 
     } catch (error) {
       alert("Error: " + error.message);
       btn.innerText = "Create Profile & Join 🌍";
