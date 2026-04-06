@@ -1,45 +1,72 @@
 <!DOCTYPE html>
-<html lang="ar" id="mainHtml">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <title>ZAW - Scientific Network</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZAW - Researcher Dashboard</title>
     <style>
-        :root { --gold: #D4AF37; --dark: #0a0a0a; }
-        body { background: var(--dark); color: white; font-family: 'Segoe UI', Tahoma; margin: 0; transition: 0.3s; }
-        .navbar { display: flex; justify-content: space-between; padding: 20px; background: rgba(255,255,255,0.05); border-bottom: 1px solid var(--gold); }
-        .container { max-width: 800px; margin: 20px auto; padding: 10px; }
-        .post-box { background: #1a1a1a; padding: 20px; border-radius: 15px; border: 1px solid #333; margin-bottom: 20px; }
-        textarea { width: 100%; background: #000; border: 1px solid #444; color: white; padding: 10px; border-radius: 10px; height: 80px; resize: none; box-sizing: border-box; }
-        .btn-gold { background: var(--gold); color: black; border: none; padding: 10px 25px; border-radius: 20px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .feed-card { background: #111; padding: 15px; border-radius: 12px; margin-bottom: 15px; border-left: 4px solid var(--gold); }
-        .lang-btn { background: none; border: 1px solid var(--gold); color: var(--gold); padding: 5px 15px; border-radius: 15px; cursor: pointer; }
-        /* اتجاهات اللغة */
+        :root { --gold: #D4AF37; --dark-bg: #050505; --card-bg: #121212; }
+        body { background: var(--dark-bg); color: #e0e0e0; font-family: 'Segoe UI', Arial, sans-serif; margin: 0; transition: 0.3s; }
         .rtl { direction: rtl; text-align: right; }
         .ltr { direction: ltr; text-align: left; }
+        
+        /* Navigation */
+        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 15px 5%; background: #111; border-bottom: 2px solid var(--gold); position: sticky; top: 0; z-index: 1000; }
+        .logo { font-size: 1.5rem; font-weight: bold; color: var(--gold); letter-spacing: 2px; }
+        
+        /* Main Layout */
+        .main-container { max-width: 800px; margin: 30px auto; padding: 0 15px; }
+        
+        /* Post Box */
+        .post-box { background: var(--card-bg); padding: 20px; border-radius: 20px; border: 1px solid #222; box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-bottom: 30px; }
+        textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 15px; border-radius: 12px; resize: none; font-size: 1rem; box-sizing: border-box; }
+        .actions { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; }
+        
+        /* Buttons */
+        .btn-post { background: linear-gradient(45deg, var(--gold), #FFD700); color: #000; border: none; padding: 10px 30px; border-radius: 25px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .btn-post:hover { transform: scale(1.05); box-shadow: 0 0 15px var(--gold); }
+        .lang-switch { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 5px 15px; border-radius: 20px; cursor: pointer; }
+
+        /* Feed Cards */
+        .post-card { background: var(--card-bg); border-radius: 15px; padding: 20px; margin-bottom: 20px; border: 1px solid #222; }
+        .post-header { display: flex; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #222; padding-bottom: 10px; }
+        .post-header strong { color: var(--gold); margin-left: 10px; margin-right: 10px; }
+        .post-content { font-size: 1.1rem; line-height: 1.6; margin: 15px 0; }
+        .post-time { font-size: 0.8rem; color: #666; }
+
+        /* Comments Section */
+        .comment-section { margin-top: 15px; padding-top: 10px; border-top: 1px dotted #333; }
+        .comment { font-size: 0.9rem; background: #1a1a1a; padding: 8px 12px; border-radius: 10px; margin-top: 5px; }
     </style>
 </head>
-<body class="rtl" id="mainBody">
+<body class="rtl" id="bodyTag">
 
-<div class="navbar">
-    <div id="logo">ZAW Network ✨</div>
-    <button class="lang-btn" onclick="toggleLanguage()" id="langBtn">English</button>
-</div>
+<nav class="navbar">
+    <div class="logo">ZAW NETWORK</div>
+    <button class="lang-switch" onclick="toggleLang()" id="langBtn">English</button>
+</nav>
 
-<div class="container">
+<div class="main-container">
+    <!-- Post Creation -->
     <div class="post-box">
-        <h3 id="welcomeTxt">مرحباً دكتورة زينب، شاركي بحثكِ اليوم</h3>
-        <textarea id="postInput" placeholder="ماذا يدور في ذهنكِ علمياً؟"></textarea>
-        <button class="btn-gold" onclick="publishPost()" id="publishBtn">نشر المنشور</button>
+        <h3 id="welcomeMsg">دكتورة زينب، ما هو جديد أبحاثكِ اليوم؟</h3>
+        <textarea id="postInput" placeholder="اكتبي ملخص البحث أو الفكرة العلمية هنا..."></textarea>
+        <div class="actions">
+            <input type="file" id="fileInput" style="display:none">
+            <small style="color:var(--gold); cursor:pointer" onclick="document.getElementById('fileInput').click()">📎 Attach File</small>
+            <button class="btn-post" onclick="submitPost()" id="postBtn">نشر الآن</button>
+        </div>
     </div>
 
-    <div id="feedArea">
-        <!-- المنشورات ستظهر هنا -->
+    <!-- Live Feed Area -->
+    <div id="zawFeed">
+        <!-- المنشورات تظهر هنا تلقائياً -->
     </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref, push, onValue, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyAqC7a5CRtjMRmuBwPWC5TXWMQkMGIlQuQ",
@@ -50,51 +77,59 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // قاموس اللغات
-    const langData = {
-        ar: { welcome: "مرحباً دكتورة زينب، شاركي بحثكِ اليوم", placeholder: "ماذا يدور في ذهنكِ علمياً؟", publish: "نشر المنشور", btn: "English", dir: "rtl" },
-        en: { welcome: "Welcome Dr. Zainab, share your research", placeholder: "What's on your scientific mind?", publish: "Publish Post", btn: "العربية", dir: "ltr" }
+    // نظام اللغات
+    const translations = {
+        ar: { welcome: "دكتورة زينب، ما هو جديد أبحاثكِ اليوم؟", placeholder: "اكتبي ملخص البحث أو الفكرة العلمية هنا...", post: "نشر الآن", btn: "English", dir: "rtl" },
+        en: { welcome: "Dr. Zainab, any new research updates today?", placeholder: "Write your research summary or idea here...", post: "Post Now", btn: "العربية", dir: "ltr" }
     };
 
-    let currentLang = 'ar';
-
-    window.toggleLanguage = function() {
-        currentLang = currentLang === 'ar' ? 'en' : 'ar';
-        const data = langData[currentLang];
-        
-        document.getElementById('welcomeTxt').innerText = data.welcome;
-        document.getElementById('postInput').placeholder = data.placeholder;
-        document.getElementById('publishBtn').innerText = data.publish;
-        document.getElementById('langBtn').innerText = data.btn;
-        document.getElementById('mainBody').className = data.dir;
+    let lang = 'ar';
+    window.toggleLang = () => {
+        lang = lang === 'ar' ? 'en' : 'ar';
+        document.getElementById('bodyTag').className = translations[lang].dir;
+        document.getElementById('welcomeMsg').innerText = translations[lang].welcome;
+        document.getElementById('postInput').placeholder = translations[lang].placeholder;
+        document.getElementById('postBtn').innerText = translations[lang].post;
+        document.getElementById('langBtn').innerText = translations[lang].btn;
     };
 
-    // وظيفة النشر الحقيقي في Firebase
-    window.publishPost = function() {
+    // إرسال المنشور
+    window.submitPost = () => {
         const text = document.getElementById('postInput').value;
-        if(text.trim() === "") return;
+        if(!text) return;
 
         push(ref(db, 'posts'), {
+            author: "Dr. Zainab Abdullah", // يمكن ربطها لاحقاً ببيانات الـ Auth
             content: text,
-            author: "Dr. Zainab Abdullah",
-            timestamp: new Date().toLocaleString(),
-            lang: currentLang
+            time: new Date().toLocaleString('en-GB'),
+            timestamp: serverTimestamp()
         });
         document.getElementById('postInput').value = "";
     };
 
-    // جلب المنشورات وعرضها فوراً (التفاعل الحي)
+    // عرض المنشورات حياً
     onValue(ref(db, 'posts'), (snapshot) => {
-        const posts = snapshot.val();
-        let html = "";
-        for(let id in posts) {
-            html = `<div class="feed-card">
-                        <strong>${posts[id].author}</strong>
-                        <p>${posts[id].content}</p>
-                        <small>${posts[id].timestamp}</small>
-                    </div>` + html;
-        }
-        document.getElementById('feedArea').innerHTML = html;
+        const data = snapshot.val();
+        let feedHtml = "";
+        const postsArray = Object.keys(data || {}).reverse(); // عرض الأحدث أولاً
+        
+        postsArray.forEach(id => {
+            const post = data[id];
+            feedHtml += `
+                <div class="post-card">
+                    <div class="post-header">
+                        <strong>🎓 ${post.author}</strong>
+                        <span class="post-time">${post.time}</span>
+                    </div>
+                    <div class="post-content">${post.content}</div>
+                    <div class="comment-section">
+                        <small style="color:var(--gold)">💬 Discussion Thread</small>
+                        <div class="comment">بانتظار مناقشات الزملاء حول هذا البحث...</div>
+                    </div>
+                </div>
+            `;
+        });
+        document.getElementById('zawFeed').innerHTML = feedHtml || "<p style='text-align:center'>No posts yet. Be the first!</p>";
     });
 </script>
 </body>
